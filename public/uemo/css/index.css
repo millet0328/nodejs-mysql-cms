@@ -1,0 +1,330 @@
+html,
+body {
+	position: relative;
+}
+
+body {
+	background: #FFF;
+	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	color: #000;
+	margin: 0;
+	padding: 0;
+}
+
+
+/*公共类*/
+
+.tran5 {
+	transition: all 0.5s;
+}
+
+.relative {
+	position: relative;
+}
+
+.swiper-box {
+	height: 700px;
+}
+
+.swiper-container {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+}
+
+.swiper-slide {
+	text-align: center;
+	font-size: 18px;
+	background: #fff;
+	/* Center slide text vertically */
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+
+.swiper-slide a {
+	display: block;
+	width: 100%;
+	height: 700px;
+	background: top center no-repeat;
+}
+
+nav>ul>li {
+	float: left;
+	padding: 0 20px;
+	line-height: 40px;
+	position: relative;
+}
+
+nav>ul>li>a:hover {
+	color: #03d522;
+}
+
+header {
+	padding: 20px 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 100;
+}
+
+header.mini {
+	padding: 10px 0;
+	background-color: #FFF;
+	box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.15);
+}
+
+.subMenu {
+	position: absolute;
+	top: 65px;
+	right: 0;
+	opacity: 0;
+	width: 210px;
+	border-top: 2px solid #03D522;
+}
+
+nav>ul>li:hover .subMenu {
+	top: 50px;
+	opacity: 1;
+}
+
+.subMenu li {
+	background-color: #FFFFFF;
+	border-bottom: 1px solid #EEEEEE;
+	padding: 5px 30px;
+	transition: all 0.5s;
+	font-size: 12px;
+	overflow: hidden;
+}
+
+.subMenu li:hover {
+	padding-left: 40px;
+	background-color: #F4F4F4;
+}
+
+.subMenu li i {
+	margin-top: 15px;
+	transition: all 0.5s;
+	opacity: 0;
+}
+
+.subMenu li:hover i {
+	opacity: 1;
+}
+
+
+/*统计数据*/
+
+.data-box {
+	background-color: #FFFFFF;
+	padding: 55px 0;
+}
+
+.data-box li {
+	float: left;
+	width: 33.33%;
+	text-align: center;
+	font-size: 14px;
+	color: #959595;
+	border-right: 1px solid rgba(0, 0, 0, 0.08);
+	box-sizing: border-box;
+}
+
+.data-box li:last-child {
+	border-right: 0;
+}
+
+.data-box li span {
+	font-size: 48px;
+	color: #3c3c3c;
+}
+
+.main {
+	position: relative;
+	z-index: 10;
+}
+
+
+/*案例展示*/
+
+.work-box {
+	text-align: center;
+	background-color: #FFFFFF;
+}
+
+.work-box .title-box {
+	padding-bottom: 50px;
+}
+
+.work-box .title-box .cn {
+	font-size: 26px;
+	color: #444;
+}
+
+.work-box .title-box .en {
+	font-size: 14px;
+	color: #ADADAD;
+}
+
+.work-box .cate-box a {
+	display: inline-block;
+	padding: 8px 40px;
+	font-size: 12px;
+}
+
+.work-box .cate-box a:hover {
+	color: #03D522;
+}
+
+.work-box .photo img {
+	width: 280px;
+	display: block;
+}
+
+.work-box .title {
+	font-size: 14px;
+	color: #333;
+	padding-top: 10px;
+}
+
+.work-box .title-en {
+	font-size: 12px;
+	color: #999;
+}
+
+.work-box li {
+	float: left;
+	margin: 10px;
+}
+
+.work-box .photo {
+	overflow: hidden;
+}
+
+.work-box li:hover img {
+	transform: scale(1.1);
+}
+
+.work-box li:hover .title-en {
+	transform: translateY(-10px);
+	opacity: 0;
+}
+
+.work-box li:hover .title {
+	transform: translateY(5px);
+	color: #03D522;
+}
+
+.work-box .more {
+	display: inline-block;
+	width: 360px;
+	height: 58px;
+	line-height: 58px;
+	font-size: 20px;
+	margin: 80px auto 50px auto;
+	border: 1px solid #dfdfdf;
+	border-radius: 50px;
+	color: #03D522;
+}
+
+.work-box .more i {
+	transform: translateX(-20px);
+	opacity: 0;
+}
+
+.work-box .more:hover {
+	background-color: #03D522;
+	color: #FFFFFF;
+	border: 1px solid #FFFFFF;
+}
+
+.work-box .more:hover i {
+	color: #FFFFFF;
+	transform: translateX(10px);
+	opacity: 1;
+}
+
+
+/*team*/
+
+.team-box {
+	background-color: #FFFFFF;
+}
+
+.team-box li {
+	float: left;
+	width: 275px;
+	margin: 20px 12px;
+	border: 3px solid #FFFFFF;
+	transition: all 0.5s;
+	overflow: hidden;
+}
+
+.team-box li:hover {
+	border: 3px solid #383838;
+	height: 460px;
+}
+
+.team-box .photo>img {
+	width: 275px;
+	display: block;
+}
+
+.team-box .photo {
+	transition: all 0.5s;
+}
+
+.team-box li:hover .photo {
+	transform: translateY(-50px);
+}
+
+.team-box .info {
+	padding: 33px 20px;
+	background-color: #FFFFFF;
+	transition: all 0.5s;
+}
+
+.info .name {
+	font-size: 20px;
+	color: #474747;
+}
+
+.team-box li:hover .name {
+	color: white;
+}
+
+.info .position {
+	font-size: 12px;
+	color: #999999;
+	margin-top: 6px;
+}
+
+.info .des {
+	font-size: 13px;
+	color: #898989;
+	margin-top: 20px;
+	height: 0;
+	overflow: hidden;
+	transition: all 0.5s;
+}
+
+.team-box li:hover .des {
+	height: auto;
+}
+
+.team-box li:hover .info {
+	background-color: #383838;
+	color: #FFFFFF;
+	transform: translateY(-50px);
+}
