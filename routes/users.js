@@ -52,14 +52,48 @@ router.get('/info', function (req, res, next) {
     });
   })
 });
+
 // 编辑资料
-// id,username,password,fullname,tel
 router.post('/edit', function (req, res, next) {
- 
+  var sql = 'UPDATE users SET username = ?,fullname = ?,tel = ? WHERE user_id = ?';
+  pool.query(sql, [req.body.username, req.body.fullname, req.body.tel, req.body.id], function (error, results) {
+    res.json({
+      status: true,
+      msg: "修改成功"
+    });
+  })
 });
 // 删除账户
+router.post('/delete', function (req, res, next) {
+  var sql = 'DELETE FROM users WHERE user_id = ?'
+  pool.query(sql, [req.body.id], function (error, results, fielde) {
+    // 如果删除成功
+    if (results.affectedRows > 0) {
+      res.json({
+        status: true,
+        msg: "删除成功"
+      });
+      return
+    } else {
+      res.json({
+        status: false,
+        msg: "删除失败"
+      });
+    }
 
-// 获取用户列表，不要显示密码
+  })
+})
+
+// 获取用户列表，不能显示密码
+router.get('/list', function (req, res, next) {
+  var sql = 'SELECT user_id,username,fullname,tel FROM users';
+  pool.query(sql, function (error, results) {
+    res.json({
+      status: true,
+      data: results
+    });
+  })
+});
 
 
 module.exports = router;
