@@ -1,0 +1,43 @@
+.navbar {
+	margin-bottom: 0;
+}
+
+html,
+body {
+	min-height: 100%;
+}
+
+.main {
+	position: relative;
+	height: 100%;
+	box-sizing: border-box;
+	padding-top: 52px;
+}
+
+.left-side {
+	position: absolute;
+	top: 52px;
+	left: 0;
+	bottom: 0;
+	width: 300px;
+	padding-right: 15px;
+}
+
+.right-content {
+	margin-left: 300px;
+	min-height: 400px;
+	padding-right: 15px;
+	padding-top: 4px;
+}
+
+.breadcrumb {
+	margin-bottom: 0;
+}
+
+.right-content .title {
+	font-size: 28px;
+}
+
+.right-content .alert-info h3 {
+	margin-top: 0;
+}

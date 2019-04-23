@@ -76,8 +76,7 @@ router.get('/category/list', function (req, res, next) {
 // 添加新的文章
 router.post("/article/add/", function (req, res) {
     var sql = 'INSERT INTO article (category_id , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ? , CURRENT_TIMESTAMP() , ?)';
-    pool.query(sql, [req.body.category_id, req.body.title, req.body.description, req.body.content , req.body.main_photo], function (error, results) {
-        console.log(error);
+    pool.query(sql, [req.body.category_id, req.body.title, req.body.description, req.body.content, req.body.main_photo], function (error, results) {
         res.json({
             status: true,
             msg: "添加成功"
@@ -88,6 +87,8 @@ router.post("/article/add/", function (req, res) {
 router.post('/article/delete', function name(req, res) {
     var sql = 'DELETE FROM article WHERE article_id = ?';
     pool.query(sql, [req.body.id], function (error, results) {
+        console.log(results);
+
         res.json({
             status: true,
             msg: "删除成功"
@@ -115,10 +116,21 @@ router.post('/article/edit', function (req, res) {
         });
     });
 });
-// 获取文章列表
-router.get("/article/list", function (req, res) {
-    var sql = 'SELECT * FROM article WHERE category_id = ?';
-    pool.query(sql, [req.query.id], function (error, results) {
+// 获取所有文章列表,默认按照日期降序排序，分页 pagesize(一页数量) pageindex(第几页)
+/**
+ * 1   LIMIT 10    OFFSET 0
+ * 2   LIMIT 10    OFFSET 10
+ * 3   LIMIT 10    OFFSET 20
+ * 4   LIMIT 10    OFFSET 30
+ * ....
+ * n   LIMIT 10    OFFSET 10*(n-1)
+ */
+router.get("/article/all", function (req, res) {
+    var pagesize = parseInt(req.query.pagesize);
+    var pageindex = req.query.pageindex;
+    var offset = pagesize * (pageindex - 1);
+    var sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time  FROM `article` ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?';
+    pool.query(sql, [pagesize, offset], function (error, results) {
         res.json({
             status: true,
             msg: "获取成功",
@@ -126,6 +138,21 @@ router.get("/article/list", function (req, res) {
         });
     });
 });
+// 获取指定分类下的文章列表,默认按照日期降序排序，分页 pagesize(一页数量) pageindex(第几页)
+router.get("/article/byCategory", function (req, res) {
+    var pagesize = parseInt(req.query.pagesize);
+    var pageindex = req.query.pageindex;
+    var offset = pagesize * (pageindex - 1);
+    var sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time  FROM `article` ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? WHERE category_id = ?';
+    pool.query(sql, [pagesize, offset, req.query.id], function (error, results) {
+        res.json({
+            status: true,
+            msg: "获取成功",
+            data: results
+        });
+    });
+});
+
 
 
 module.exports = router;

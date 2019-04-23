@@ -7,10 +7,23 @@ var pool = require('../config/mysql').pool;
 router.post('/register', function (req, res) {
   var sql = 'INSERT INTO users (username,`password`,fullname,tel) VALUES (?,?,?,?)'
   pool.query(sql, [req.body.username, req.body.password, req.body.fullname, req.body.tel], function (error, results, fields) {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    if (results.affectedRows <= 0) {
+      // 注册失败
+      res.json({
+        status: false,
+        msg: results
+      });
+      return;
+    }
     // 注册成功
     res.json({
       status: true,
-      msg: "注册成功！"
+      msg: "注册成功！",
+      uid: results.insertId
     });
   });
 

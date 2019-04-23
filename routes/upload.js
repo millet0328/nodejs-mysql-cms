@@ -62,3 +62,6 @@ router.post("/upload/common", upload.single('file'), function (req, res) {
         data: [fileFolder + filename + extName]
     });
 });
+
+
+module.exports = router;
