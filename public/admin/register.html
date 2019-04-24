@@ -58,6 +58,50 @@
 		window.onload = function () {
 			// 查找元素
 			var oReg = document.getElementById("regBtn");
+			var oUsername = document.getElementById("InputUsername");
+			var oPassword = document.getElementById("InputPassword");
+			var oFullname = document.getElementById("InputFullname");
+			var oTel = document.getElementById("InputTel");
+			// 判读用户名是否为邮箱格式
+			oUsername.onblur = function () {
+				var usernameReg =
+					/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+				var usernameFlag = usernameReg.test(oUsername.value);
+				console.log(usernameFlag)
+				if (usernameFlag) {
+					this.parentNode.setAttribute("class", "form-group has-success");
+				} else {
+					this.parentNode.setAttribute("class", "form-group has-error");
+				}
+			}
+			// 判断密码是否不小于六位数
+			oPassword.onblur = function () {
+				if (oPassword.value.length > 6) {
+					this.parentNode.setAttribute("class", "form-group has-success");
+				} else {
+					this.parentNode.setAttribute("class", "form-group has-error");
+				}
+			}
+			// 判断姓名只能是汉字
+			oFullname.onblur = function () {
+				var fullnameReg = /^[\u0391-\uFFE5]+$/;
+				var fullnameFlag = fullnameReg.test(oFullname.value);
+				if (fullnameFlag) {
+					this.parentNode.setAttribute("class", "form-group has-success");
+				} else {
+					this.parentNode.setAttribute("class", "form-group has-error");
+				}
+			}
+			// 判断手机号
+			oTel.onblur = function () {
+				var telReg = /^1[34578]\d{9}$/;
+				var telFlag = telReg.test(oTel.value);
+				if (telFlag) {
+					this.parentNode.setAttribute("class", "form-group has-success");
+				} else {
+					this.parentNode.setAttribute("class", "form-group has-error");
+				}
+			}
 			// 绑定事件
 			oReg.onclick = function () {
 				// 获取value
@@ -66,6 +110,16 @@
 				var fullname = document.getElementById("InputFullname").value;
 				var tel = document.getElementById("InputTel").value;
 				// 表单验证 (略...)
+				var check = $(".checkbox input").prop("checked");
+				$("input").trigger("blur");
+				var errorNum = $(".has-error").length;
+				if (!check) {
+					alert("请核实输入内容并仔细阅读用户隐私协议后勾选以示同意");
+					return false;
+				}
+				if (errorNum) {
+					return false;
+				}
 				// 验证通过，发送ajax
 				var ajax = new XMLHttpRequest();
 				// 参数配置

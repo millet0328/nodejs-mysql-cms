@@ -64,13 +64,23 @@ router.post('/category/edit', function (req, res, next) {
 });
 // 获取所有分类
 router.get('/category/list', function (req, res, next) {
-    var sql = 'SELECT category_id,name,parent_id FROM category';
+    var sql = 'SELECT * FROM category';
     pool.query(sql, function (error, results) {
         res.json({
             status: true,
             data: results
         });
     })
+});
+// 获取一级分类
+router.get("/category/first", function (req, res) {
+    var sql = 'SELECT * FROM category WHERE parent_id = 0';
+    pool.query(sql, function (error, results) {
+        res.json({
+            status: true,
+            data: results
+        });
+    });
 });
 
 // 添加新的文章
