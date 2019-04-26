@@ -252,7 +252,8 @@
                                 <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-10">
-                                <img src="img/editor.png" class="img-responsive" alt="">
+                                <!-- 编辑器 -->
+                                <div id="editor"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -269,6 +270,16 @@
     <script src="lib/jQuery/jquery-1.12.4.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
     <script src="lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="lib/wangEditor/wangEditor.min.js"></script>
+    <script>
+        var E = window.wangEditor
+        var editor = new E('#editor')
+        // 配置服务器端API地址
+        editor.customConfig.uploadImgServer = '/admin/upload/common';
+        editor.customConfig.uploadFileName = 'file';
+
+        editor.create();
+    </script>
 </body>
 
 </html>

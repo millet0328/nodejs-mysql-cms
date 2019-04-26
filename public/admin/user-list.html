@@ -359,10 +359,13 @@
 				// 转存id
 				$("#saveBtn").data("id", uid);
 				// 将对应的数据填充至表单
-				var $td = $(this).parents("tr").children();
-				$("#username").val($td.eq(1).text());
-				$("#fullname").val($td.eq(2).text());
-				$("#tel").val($td.eq(3).text());
+				$.getJSON("/users/info/", {
+					id: uid
+				}, function (res) {
+					$("#username").val(res.data.username);
+					$("#fullname").val(res.data.fullname);
+					$("#tel").val(res.data.tel);
+				});
 				// 显示Modal
 				$("#editModal").modal("show");
 			});

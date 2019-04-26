@@ -64,7 +64,7 @@ router.post('/category/edit', function (req, res, next) {
 });
 // 获取所有分类
 router.get('/category/list', function (req, res, next) {
-    var sql = 'SELECT * FROM category';
+    var sql = 'SELECT c1.*,c2.`name` AS parent_name FROM `category` c1 left JOIN category c2 ON c1.parent_id = c2.category_id';
     pool.query(sql, function (error, results) {
         res.json({
             status: true,

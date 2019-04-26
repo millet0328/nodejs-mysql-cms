@@ -106,7 +106,8 @@
                             </a>
                         </h4>
                     </div>
-                    <div id="collapse3" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+                    <div id="collapse3" class="panel-collapse collapse in" role="tabpanel"
+                        aria-labelledby="headingThree">
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <a href="category-list.html">
@@ -213,7 +214,7 @@
                                 <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="" placeholder="请输入分类名称">
+                                <input type="text" class="form-control" id="category_name" placeholder="请输入分类名称">
                             </div>
                         </div>
                         <div class="form-group">
@@ -222,15 +223,14 @@
                                 <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-10">
-                                <select class="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
+                                <select id="parent" class="form-control">
+                                    <option value="0">无</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="button" class="btn btn-primary">保存修改</button>
+                                <button type="button" id="updateBtn" class="btn btn-primary">保存修改</button>
                             </div>
                         </div>
                     </form>
@@ -242,6 +242,59 @@
     <script src="lib/jQuery/jquery-1.12.4.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
     <script src="lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        //获取地址栏的url参数
+        function GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        }
+        var id = GetRequest().id;
+        // 获取一级分类
+        $.getJSON("/admin/category/first", function (res) {
+            if (res.status) {
+                var html = '';
+                res.data.forEach(function (item) {
+                    html += `<option value="${item.category_id}">${item.name}</option>`
+                });
+                $("#parent").append(html);
+                // 获取分类详情
+                $.getJSON("/admin/category/detail", {
+                    id: id
+                }, function (res) {
+                    if (res.status) {
+                        $("#category_name").val(res.data.name);
+                        $("#parent").val(res.data.parent_id);
+                    }
+                });
+            }
+        });
+
+        // 编辑
+        $("#updateBtn").click(function () {
+            //获取表单value
+            var category_name = $("#category_name").val();
+            var pid = $("#parent").val();
+            // 发送ajax
+            $.post('/admin/category/edit', {
+                id: id,
+                name: category_name,
+                parent_id: pid,
+            }, function (res) {
+                if (res.status) {
+                    location.href = "category-list.html";
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

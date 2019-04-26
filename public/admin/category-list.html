@@ -210,15 +210,17 @@
 							<tr>
 								<th>#</th>
 								<th>分类名称</th>
+								<th>父级ID</th>
 								<th>父级分类</th>
 								<th>操作</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<!-- <tr>
 								<td>1</td>
 								<td>科技</td>
 								<td>1</td>
+								<td>科技</td>
 								<td>
 									<button type="button" class="btn btn-default btn-xs">
 										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
@@ -227,7 +229,7 @@
 										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
 									</button>
 								</td>
-							</tr>
+							</tr> -->
 						</tbody>
 					</table>
 				</div>
@@ -240,6 +242,35 @@
 	<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
 	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 	<script src="lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			//获取分类列表
+			$.getJSON("/admin/category/list", function (res) {
+				if (res.status) {
+					var html = '';
+					res.data.forEach(function (item) {
+						html += `
+						<tr>
+								<td>${item.category_id}</td>
+								<td>${item.name}</td>
+								<td>${item.parent_id}</td>
+								<td>${item.parent_name || "无"}</td>
+								<td>
+									<a href="category-edit.html?id=${item.category_id}" class="btn btn-default btn-xs">
+										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
+									</a>
+									<button type="button" class="btn btn-default btn-xs">
+										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
+									</button>
+								</td>
+							</tr>`
+					});
+					$("tbody").append(html);
+				}
+			});
+
+		});
+	</script>
 </body>
 
 </html>
