@@ -97,12 +97,22 @@ router.post("/article/add/", function (req, res) {
 router.post('/article/delete', function name(req, res) {
     var sql = 'DELETE FROM article WHERE article_id = ?';
     pool.query(sql, [req.body.id], function (error, results) {
-        console.log(results);
-
+        if (error) {
+            console.log(error);
+            return false;
+        }
+        if (!results.affectedRows) {
+            res.json({
+                status: false,
+                msg: results
+            });
+            return false;
+        }
         res.json({
             status: true,
             msg: "删除成功"
         });
+
     });
 });
 // 获取指定id的文章详情
@@ -139,7 +149,7 @@ router.get("/article/all", function (req, res) {
     var pagesize = parseInt(req.query.pagesize);
     var pageindex = req.query.pageindex;
     var offset = pagesize * (pageindex - 1);
-    var sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time  FROM `article` ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?';
+    var sql = 'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.category_id = c.category_id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?';
     pool.query(sql, [pagesize, offset], function (error, results) {
         res.json({
             status: true,
@@ -153,7 +163,7 @@ router.get("/article/byCategory", function (req, res) {
     var pagesize = parseInt(req.query.pagesize);
     var pageindex = req.query.pageindex;
     var offset = pagesize * (pageindex - 1);
-    var sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time  FROM `article` ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? WHERE category_id = ?';
+    var sql = 'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.category_id = c.category_id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? WHERE category_id = ?';
     pool.query(sql, [pagesize, offset, req.query.id], function (error, results) {
         res.json({
             status: true,

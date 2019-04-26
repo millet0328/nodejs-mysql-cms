@@ -12,6 +12,14 @@
     <link href="lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <style>
+        .preview img {
+            border: 1px solid #eee;
+            padding: 5px;
+            max-height: 200px;
+            max-width: 100%;
+        }
+    </style>
     <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
     <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
     <!--[if lt IE 9]>
@@ -213,7 +221,7 @@
                                 <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="" placeholder="请输入文章标题">
+                                <input type="text" class="form-control" name="title" placeholder="请输入文章标题">
                             </div>
                         </div>
                         <div class="form-group">
@@ -222,7 +230,8 @@
                                 <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-10">
-                                <textarea name="" class="form-control" placeholder="博客内容的简单摘要" rows="3"></textarea>
+                                <textarea name="description" class="form-control" placeholder="博客内容的简单摘要"
+                                    rows="3"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -231,9 +240,8 @@
                                 <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-10">
-                                <select class="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
+                                <select name="category_id" id="parent" class="form-control">
+
                                 </select>
                             </div>
                         </div>
@@ -243,7 +251,16 @@
                                 <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-10">
-                                <input type="file">
+                                <div class="clearfix">
+                                    <input class="pull-left" name="file" id="uploadInput" type="file">
+                                    <button class="btn btn-default pull-right" id="uploadBtn" type="button">上传</button>
+                                    <!-- 隐藏数据 -->
+                                    <input name="main_photo" id="main_photo" value="" type="hidden">
+                                </div>
+                                <!-- 预览 -->
+                                <div class="preview">
+                                    <img src="" alt="">
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -254,11 +271,13 @@
                             <div class="col-sm-10">
                                 <!-- 编辑器 -->
                                 <div id="editor"></div>
+                                <!-- 隐藏数据 -->
+                                <input name="content" id="content" type="hidden">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="button" class="btn btn-primary">发布文章</button>
+                                <button type="button" id="releaseBtn" class="btn btn-primary">发布文章</button>
                             </div>
                         </div>
                     </form>
@@ -277,8 +296,102 @@
         // 配置服务器端API地址
         editor.customConfig.uploadImgServer = '/admin/upload/common';
         editor.customConfig.uploadFileName = 'file';
-
+        editor.customConfig.onchange = function (html) {
+            // 监控变化，同步更新到 hidden
+            $("#content").val(html)
+        }
         editor.create();
+    </script>
+    <!-- <script>
+        // js上传文件
+        var fileInput = document.getElementById("uploadInput");
+        var uploadBtn = document.getElementById("uploadBtn");
+        var previewImg = document.querySelector(".preview img");
+
+        uploadBtn.onclick = function () {
+            // 获取file对象
+            var file = fileInput.files[0];
+            // formData对象
+            var form = new FormData();
+            // 填充file数据
+            form.append("file", file);
+            // 发送ajax
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "/admin/upload/common", true);
+            ajax.send(form);
+            // 响应回调函数
+            ajax.onreadystatechange = function () {
+                if (ajax.readyState == 4) {
+                    var res = JSON.parse(ajax.responseText);
+                    // 上传成功
+                    if (res.errno == 0) {
+                        // 显示预览图
+                        previewImg.src = res.data[0];
+                    } else {
+                        alert(res.msg);
+                    }
+                }
+            }
+        };
+    </script> -->
+    <script>
+        // 获取一级分类
+        $.getJSON("/admin/category/first", function (res) {
+            if (res.status) {
+                var html = '';
+                res.data.forEach(function (item) {
+                    html += `<option value="${item.category_id}">${item.name}</option>`
+                });
+                $("#parent").append(html);
+            }
+        });
+
+        $("#uploadBtn").click(function () {
+            // 获取file对象
+            var file = $("#uploadInput")[0].files[0];
+            // formData对象
+            var form = new FormData();
+            // 填充file数据
+            form.append("file", file);
+            // 发送ajax
+            $.ajax({
+                type: "POST",
+                url: "/admin/upload/common",
+                contentType: false,
+                processData: false,
+                data: form,
+                success: function (res) {
+                    // 上传成功
+                    if (res.errno == 0) {
+                        // 显示预览图
+                        $(".preview img").attr("src", res.data[0]);
+                        // 修改隐藏数据
+                        $("#main_photo").val(res.data[0]);
+                    } else {
+                        alert(res.msg);
+                    }
+                }
+            });
+        });
+
+        // 发布文章
+        $("#releaseBtn").click(function () {
+            // 序列化表单
+            var formData = $("form").serialize();
+            // 发送ajax
+            $.ajax({
+                type: "POST",
+                url: "/admin/article/add/",
+                data: formData,
+                success: function (res) {
+                    if (res.status) {
+                        alert(res.msg);
+                        // 刷新页面
+                        location.reload();
+                    }
+                }
+            })
+        });
     </script>
 </body>
 

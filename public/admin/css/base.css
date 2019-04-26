@@ -19,12 +19,12 @@ body {
 	top: 52px;
 	left: 0;
 	bottom: 0;
-	width: 300px;
+	width: 240px;
 	padding-right: 15px;
 }
 
 .right-content {
-	margin-left: 300px;
+	margin-left: 240px;
 	min-height: 400px;
 	padding-right: 15px;
 	padding-top: 4px;
@@ -40,4 +40,8 @@ body {
 
 .right-content .alert-info h3 {
 	margin-top: 0;
+}
+
+.modal-body .alert {
+	margin-bottom: 0;
 }
