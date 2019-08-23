@@ -38,7 +38,7 @@ router.post('/login', function(req, res) {
             res.json({
                 status: true,
                 msg: "登录成功！",
-                uid: results[0].user_id
+                uid: results[0].id
             });
         } else {
             res.json({
@@ -53,7 +53,7 @@ router.post('/login', function(req, res) {
 // 获取用户资料 id=?
 router.get('/info', function(req, res, next) {
     let { id } = req.query;
-    var sql = 'SELECT username,fullname,tel FROM users WHERE user_id = ? ';
+    var sql = 'SELECT username,fullname,tel FROM users WHERE id = ? ';
     pool.query(sql, [id], function(error, results) {
         if (results.length == 0) {
             res.json({
@@ -70,7 +70,7 @@ router.get('/info', function(req, res, next) {
 });
 
 // 编辑资料
-router.post('/edit', function(req, res, next) {
+router.post('/update', function(req, res, next) {
     let { id, username, fullname, tel, role } = req.body;
 	let sql = 'UPDATE users SET username = ?,fullname = ?,tel = ?,role = ? WHERE id = ?';
 	pool.query(sql, [username, fullname, tel, role, id], function(error, results) {
@@ -105,8 +105,8 @@ router.post('/delete', function(req, res, next) {
 
 // 获取用户列表，不能显示密码
 router.get('/list', function(req, res, next) {
-    var sql = 'SELECT user_id,username,fullname,tel FROM users';
-    pool.query(sql, function(error, results) {
+    var sql = 'SELECT id,username,fullname,tel,role FROM users';
+    pool.query(sql,[], function(error, results) {
         res.json({
             status: true,
             data: results

@@ -20,7 +20,7 @@ var uuidv1 = require('uuid/v1');
  * 
  * @apiSuccess {String[]} data 返回图片地址.
  */
-router.post("/upload/common", upload.single('file'), function (req, res) {
+router.post("/common", upload.single('file'), function (req, res) {
     //文件类型
     var type = req.file.mimetype;
     var size = req.file.size;
