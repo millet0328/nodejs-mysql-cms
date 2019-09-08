@@ -9,14 +9,14 @@ var images = require("images");
 var uuidv1 = require('uuid/v1');
 
 /**
- * @api {post} /api/upload/common/ 通用图片上传API
+ * @api {post} /upload/common/ 通用图片上传API
  * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，不限制尺寸，存储至details文件夹
- * @apiName upload/common/
+ * @apiName uploadCommon
  * @apiGroup Upload Image
  * 
  * @apiParam {File} file File文件对象;
  * 
- * @apiSampleRequest /api/upload/common/
+ * @apiSampleRequest /upload/common/
  * 
  * @apiSuccess {String[]} data 返回图片地址.
  */

@@ -4,22 +4,24 @@ var router = express.Router();
 var pool = require('../config/mysql').pool;
 
 /**
- * @api {post} /user/register 注册普通用户
- * @apiName UserRegister
- * @apiGroup User
+ * @api {post} /admin/register 注册管理员账户
+ * @apiName AdminRegister
+ * @apiGroup Admin
  *
  * @apiParam { String } username 用户名.
  * @apiParam { String } password 密码.
- * @apiParam { String } fullname 姓名.
+ * @apiParam { String } nickname 昵称.
  * @apiParam { String } sex 性别.
  * @apiParam { String } tel 手机号码.
+ * @apiParam { String } [email] 邮箱地址.
+ * @apiParam { String } [avatar] 头像地址.
  *
- * @apiSampleRequest /user/register
+ * @apiSampleRequest /admin/register
  */
 router.post('/register', function (req, res) {
-    let { username, password, fullname, sex, tel } = req.body;
+    let { username, password, nickname, sex, tel, email, avatar } = req.body;
     // 查询账户是否重名
-    let sql = 'SELECT * FROM users WHERE username = ?';
+    let sql = 'SELECT * FROM admin WHERE username = ?';
     pool.query(sql, [username], function (error, results) {
         if (error) throw error;
         // 有重名
@@ -31,8 +33,8 @@ router.post('/register', function (req, res) {
             return;
         }
         // 不存在重名
-        var sql = 'INSERT INTO users (username,password,fullname,sex,tel) VALUES (?,?,?,?,?)';
-        pool.query(sql, [username, password, fullname, sex, tel], function (error, results) {
+        let sql = 'INSERT INTO admin (username,password,nickname,sex,tel,email,avatar) VALUES (?,?,?,?,?,?,?)';
+        pool.query(sql, [username, password, nickname, sex, tel, email, avatar], function (error, results) {
             if (error) throw error;
             if (results.affectedRows == 1) {
                 res.json({
@@ -43,21 +45,22 @@ router.post('/register', function (req, res) {
             }
         });
     });
-
 });
+
 /**
- * @api {post} /user/login 登录普通用户
- * @apiName UserLogin
- * @apiGroup User
+ * @api {post} /admin/login 登录管理员账户
+ * @apiName AdminLogin
+ * @apiGroup Admin
  *
  * @apiParam { String } username 用户名.
  * @apiParam { String } password 密码.
  *
- * @apiSampleRequest /user/login
+ * @apiSampleRequest /admin/login
  */
+
 router.post('/login', function (req, res) {
     let { username, password } = req.body;
-    let sql = 'SELECT * FROM users WHERE username = ? AND `password` = ?';
+    let sql = 'SELECT * FROM `admin` WHERE username = ? AND password = ?';
     pool.query(sql, [username, password], function (error, results) {
         if (error) throw error;
         if (results.length == 0) {
@@ -75,17 +78,17 @@ router.post('/login', function (req, res) {
 
 });
 /**
- * @api {get} /user/info 获取用户个人资料
- * @apiName UserInfo
- * @apiGroup User
+ * @api {get} /admin/info 获取管理员个人资料
+ * @apiName AdminInfo
+ * @apiGroup Admin
  *
- * @apiParam { Number } id 用户id.
+ * @apiParam { Number } id 管理员id.
  *
- * @apiSampleRequest /user/info
+ * @apiSampleRequest /admin/info
  */
-router.get('/info', function (req, res) {
+router.get('/info', function (req, res, next) {
     let { id } = req.query;
-    var sql = 'SELECT username,fullname,sex,tel FROM users WHERE id = ? ';
+    var sql = 'SELECT username, nickname, sex, tel, email, avatar FROM admin WHERE id = ? ';
     pool.query(sql, [id], function (error, results) {
         if (error) throw error;
         if (results.length == 0) {
@@ -103,23 +106,25 @@ router.get('/info', function (req, res) {
 });
 
 /**
- * @api {post} /user/info 编辑个人资料
- * @apiName UserUpdate
- * @apiGroup User
+ * @api {post} /admin/info 编辑管理员个人资料
+ * @apiName AdminUpdate
+ * @apiGroup Admin
  *
- * @apiParam { Number } id 用户id.
+ * @apiParam { Number } id 管理员id.
  * @apiParam { String } username 用户名.
- * @apiParam { String } fullname 姓名.
+ * @apiParam { String } nickname 昵称.
  * @apiParam { String } sex 性别.
  * @apiParam { String } tel 手机号码.
+ * @apiParam { String } email 邮箱地址.
+ * @apiParam { String } avatar 头像地址.
  *
- * @apiSampleRequest /user/info
+ * @apiSampleRequest /admin/info
  */
 
 router.post('/info', function (req, res) {
-    let { id, username, fullname, sex, tel } = req.body;
-    let sql = 'UPDATE users SET username = ?,fullname = ?,sex = ?,tel = ? WHERE id = ?';
-    pool.query(sql, [username, fullname, sex, tel, id], function (error, results) {
+    let { id, username, nickname, sex, tel, email, avatar } = req.body;
+    let sql = 'UPDATE admin SET username = ?,nickname = ?,sex = ?,tel = ?,email = ?, avatar = ? WHERE id = ?';
+    pool.query(sql, [username, nickname, sex, tel, email, avatar, id], function (error, results) {
         if (error) throw error;
         res.json({
             status: true,
@@ -127,19 +132,19 @@ router.post('/info', function (req, res) {
         })
     });
 });
-/**
- * @api {post} /user/delete 删除账户
- * @apiName UserDelete
- * @apiGroup User
- *
- * @apiParam { Number } id 用户id.
- *
- * @apiSampleRequest /user/delete
- */
 
+/**
+ * @api {post} /admin/delete 删除账户
+ * @apiName AdminDelete
+ * @apiGroup Admin
+ *
+ * @apiParam { Number } id 管理员id.
+ *
+ * @apiSampleRequest /admin/delete
+ */
 router.post('/delete', function (req, res) {
     let { id } = req.body;
-    let sql = 'DELETE FROM users WHERE id = ?';
+    let sql = 'DELETE FROM admin WHERE id = ?';
     pool.query(sql, [id], function (error, results) {
         if (error) throw error;
         res.json({
@@ -147,18 +152,18 @@ router.post('/delete', function (req, res) {
             msg: "删除成功"
         });
     })
-})
+});
 
 /**
- * @api {get} /user/list 获取用户列表
- * @apiName UserList
- * @apiGroup User
+ * @api {get} /admin/list 获取管理员列表
+ * @apiName AdminList
+ * @apiGroup Admin
  *
- * @apiSampleRequest /user/list
+ * @apiSampleRequest /admin/list
  */
 
 router.get('/list', function (req, res) {
-    var sql = 'SELECT id,username,fullname,sex,tel FROM users';
+    var sql = 'SELECT id, username, nickname, sex, tel, email, avatar FROM admin';
     pool.query(sql, [], function (error, results) {
         if (error) throw error;
         res.json({
@@ -167,6 +172,5 @@ router.get('/list', function (req, res) {
         });
     })
 });
-
 
 module.exports = router;
