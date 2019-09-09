@@ -92,10 +92,17 @@ router.post('/edit', function (req, res) {
     var sql = 'UPDATE article SET category_id = ? , title = ? , description = ? , content = ? , main_photo = ? WHERE article_id = ?';
     pool.query(sql, [category_id, title, description, content, main_photo, id], function (error, results) {
         if (error) throw error;
+        if (!results.affectedRows) {
+            res.json({
+                status: false,
+                msg: "修改失败！"
+            });
+            return;
+        }
         res.json({
             status: true,
-            msg: "编辑成功",
-        });
+            msg: "修改成功！"
+        })
     });
 });
 // 获取所有文章列表,默认按照日期降序排序，分页 pagesize(一页数量) pageindex(第几页)

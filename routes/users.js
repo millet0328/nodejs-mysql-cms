@@ -121,6 +121,13 @@ router.post('/info', function (req, res) {
     let sql = 'UPDATE users SET username = ?,fullname = ?,sex = ?,tel = ? WHERE id = ?';
     pool.query(sql, [username, fullname, sex, tel, id], function (error, results) {
         if (error) throw error;
+        if (!results.affectedRows) {
+            res.json({
+                status: false,
+                msg: "修改失败！"
+            });
+            return;
+        }
         res.json({
             status: true,
             msg: "修改成功！"

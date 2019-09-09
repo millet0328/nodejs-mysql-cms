@@ -85,10 +85,17 @@ router.post('/edit', function (req, res) {
     let { id, name, parent_id } = req.body;
     pool.query(sql, [name, parent_id, id], function (error, results) {
         if (error) throw error;
+        if (!results.affectedRows) {
+            res.json({
+                status: false,
+                msg: "修改失败！"
+            });
+            return;
+        }
         res.json({
             status: true,
-            msg: "修改成功"
-        });
+            msg: "修改成功！"
+        })
     })
 
 });
