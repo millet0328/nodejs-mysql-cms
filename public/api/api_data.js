@@ -74,6 +74,7 @@ define({ "api": [
     "type": "post",
     "url": "/admin/login",
     "title": "登录管理员账户",
+    "description": "<p>登录成功， 返回token, 请在头部headers中设置Authorization: <code>Bearer ${token}</code>, 所有请求都必须携带token;</p>",
     "name": "AdminLogin",
     "group": "Admin",
     "parameter": {
@@ -109,6 +110,7 @@ define({ "api": [
     "type": "post",
     "url": "/admin/register",
     "title": "注册管理员账户",
+    "description": "<p>注册成功， 返回token, 请在头部headers中设置Authorization: <code>Bearer ${token}</code>,所有请求都必须携带token;</p>",
     "name": "AdminRegister",
     "group": "Admin",
     "parameter": {
@@ -132,8 +134,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "nickname",
-            "description": "<p>昵称.</p>"
+            "field": "fullname",
+            "description": "<p>姓名.</p>"
           },
           {
             "group": "Parameter",
@@ -155,13 +157,6 @@ define({ "api": [
             "optional": true,
             "field": "email",
             "description": "<p>邮箱地址.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "avatar",
-            "description": "<p>头像地址.</p>"
           }
         ]
       }
@@ -202,8 +197,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "nickname",
-            "description": "<p>昵称.</p>"
+            "field": "fullname",
+            "description": "<p>姓名.</p>"
           },
           {
             "group": "Parameter",
@@ -503,6 +498,7 @@ define({ "api": [
     "type": "post",
     "url": "/category/add",
     "title": "添加分类",
+    "description": "<p>注意：目前最多支持二级分类</p>",
     "name": "AddCategory",
     "group": "Category",
     "parameter": {
@@ -564,21 +560,6 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/category/first",
-    "title": "获取一级分类",
-    "name": "CategoryFirst",
-    "group": "Category",
-    "sampleRequest": [
-      {
-        "url": "/category/first"
-      }
-    ],
-    "version": "0.0.0",
-    "filename": "routes/category.js",
-    "groupTitle": "Category"
-  },
-  {
-    "type": "get",
     "url": "/category/list",
     "title": "获取所有分类",
     "name": "CategoryList",
@@ -593,10 +574,38 @@ define({ "api": [
     "groupTitle": "Category"
   },
   {
+    "type": "get",
+    "url": "/category/sub",
+    "title": "获取子级分类",
+    "name": "CategorySub",
+    "group": "Category",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>父级id。一级分类的父类id=0;</p>"
+          }
+        ]
+      }
+    },
+    "sampleRequest": [
+      {
+        "url": "/category/sub"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "routes/category.js",
+    "groupTitle": "Category"
+  },
+  {
     "type": "post",
     "url": "/category/delete",
     "title": "删除指定id分类",
-    "description": "<p>注意：删除指定id分类,同时会删除其子分类</p>",
+    "description": "<p>注意：删除指定id分类,如果其拥有子级分类不允许删除，必须清空子分类才可删除。</p>",
     "name": "DeleteCategory",
     "group": "Category",
     "parameter": {
@@ -667,8 +676,90 @@ define({ "api": [
     "type": "post",
     "url": "/upload/common/",
     "title": "通用图片上传API",
-    "description": "<p>上传图片会自动检测图片质量，压缩图片，体积&lt;2M，不限制尺寸，存储至details文件夹</p>",
+    "description": "<p>上传图片会自动检测图片质量，压缩图片，体积&lt;2M，不限制尺寸，avatar存储至avatar文件夹,common存储至common文件夹</p>",
     "name": "uploadCommon",
+    "group": "Upload_Image",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>File文件对象;</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "\"common\"",
+              "\"avatar\""
+            ],
+            "optional": false,
+            "field": "type",
+            "description": "<p>上传类型：avatar--头像上传；common--通用上传；</p>"
+          }
+        ]
+      }
+    },
+    "sampleRequest": [
+      {
+        "url": "/upload/common/"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data",
+            "description": "<p>返回图片地址.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/upload.js",
+    "groupTitle": "Upload_Image"
+  },
+  {
+    "type": "post",
+    "url": "/upload/delete",
+    "title": "删除图片API",
+    "description": "<p>如果上传错误的图片，通过此API删除错误的图片</p>",
+    "name": "uploadDelete",
+    "group": "Upload_Image",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "src",
+            "description": "<p>图片文件路径,注：src='./images/goods/file.jpg'，必须严格按照规范路径，'./images'不可省略;</p>"
+          }
+        ]
+      }
+    },
+    "sampleRequest": [
+      {
+        "url": "/upload/delete"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "routes/upload.js",
+    "groupTitle": "Upload_Image"
+  },
+  {
+    "type": "post",
+    "url": "/upload/editor/",
+    "title": "富文本编辑器图片上传API",
+    "description": "<p>上传图片会自动检测图片质量，压缩图片，体积&lt;2M，不限制尺寸，存储至details文件夹</p>",
+    "name": "uploadEditor",
     "group": "Upload_Image",
     "parameter": {
       "fields": {
@@ -685,7 +776,7 @@ define({ "api": [
     },
     "sampleRequest": [
       {
-        "url": "/upload/common/"
+        "url": "/upload/editor/"
       }
     ],
     "success": {
@@ -838,8 +929,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "fullname",
-            "description": "<p>姓名.</p>"
+            "field": "nickname",
+            "description": "<p>昵称.</p>"
           },
           {
             "group": "Parameter",
@@ -894,8 +985,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "fullname",
-            "description": "<p>姓名.</p>"
+            "field": "nickname",
+            "description": "<p>昵称.</p>"
           },
           {
             "group": "Parameter",

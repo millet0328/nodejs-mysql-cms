@@ -7,14 +7,12 @@
 	background-size: cover;
 }
 
-html,
-body {
+html, body {
 	min-height: 100%;
 	position: relative;
 }
 
-.user-register,
-.user-login {
+.user-register, .user-login {
 	width: 400px;
 	position: absolute;
 	right: 60px;
@@ -65,4 +63,63 @@ body {
 
 .modal-body .alert {
 	margin-bottom: 0;
+}
+
+/* 表格垂直居中 */
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+	vertical-align: middle;
+}
+
+/* upload组件 */
+
+.upload-box {
+	width: 150px;
+	height: 150px;
+	line-height: 150px;
+	border: 1px solid #eeeeee;
+	border-radius: 4px;
+	overflow: hidden;
+	position: relative;
+}
+
+.upload-box .glyphicon-plus {
+	font-size: 24px;
+}
+
+.upload-box .file {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	opacity: 0;
+}
+
+.upload-box .cover {
+	content: "";
+	display: block;
+	font-size: 14px;
+	color: white;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+	background-color: rgba(0, 0, 0, 0.7);
+	display: none;
+}
+
+.uploaded:hover .cover {
+	display: block;
+}
+
+.upload-box img {
+	width: 100%;
+}
+
+.uploaded .plus {
+	display: none;
 }

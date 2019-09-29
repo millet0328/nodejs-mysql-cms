@@ -4,7 +4,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
 	<title></title>
 	<!-- Bootstrap -->
@@ -71,8 +72,8 @@
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab" id="heading2">
 						<h4 class="panel-title">
-							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse2"
-								aria-expanded="false" aria-controls="collapseTwo">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+								href="#collapse2" aria-expanded="false" aria-controls="collapseTwo">
 								<span class="glyphicon glyphicon-tasks"></span>
 								文章管理
 							</a>
@@ -98,8 +99,8 @@
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab" id="heading3">
 						<h4 class="panel-title">
-							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse3"
-								aria-expanded="false" aria-controls="collapseThree">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+								href="#collapse3" aria-expanded="false" aria-controls="collapseThree">
 								<span class="glyphicon glyphicon-equalizer"></span>
 								栏目管理
 							</a>
@@ -125,8 +126,8 @@
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab" id="heading4">
 						<h4 class="panel-title">
-							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse4"
-								aria-expanded="false" aria-controls="collapseThree">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+								href="#collapse4" aria-expanded="false" aria-controls="collapseThree">
 								<span class="glyphicon glyphicon-bullhorn"></span>
 								公告管理
 							</a>
@@ -152,8 +153,8 @@
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab" id="heading5">
 						<h4 class="panel-title">
-							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse5"
-								aria-expanded="false" aria-controls="collapseThree">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+								href="#collapse5" aria-expanded="false" aria-controls="collapseThree">
 								<span class="glyphicon glyphicon-comment"></span>
 								评论管理
 							</a>
@@ -173,14 +174,15 @@
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab" id="heading6">
 						<h4 class="panel-title">
-							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse6"
-								aria-expanded="false" aria-controls="collapseThree">
+							<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+								href="#collapse6" aria-expanded="false" aria-controls="collapseThree">
 								<span class="glyphicon glyphicon-user"></span>
 								用户管理
 							</a>
 						</h4>
 					</div>
-					<div id="collapse6" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+					<div id="collapse6" class="panel-collapse collapse in" role="tabpanel"
+						aria-labelledby="headingThree">
 						<ul class="list-group">
 							<li class="list-group-item">
 								<a href="#">
@@ -211,65 +213,35 @@
 								<th>#</th>
 								<th>用户名</th>
 								<th>姓名</th>
+								<th>性别</th>
 								<th>手机</th>
-								<th>角色</th>
+								<th>邮箱</th>
+								<th>头像</th>
 								<th>操作</th>
 							</tr>
 						</thead>
 						<tbody>
-							<!-- <tr>
+							<tr>
 								<td>1</td>
 								<td>moz</td>
 								<td>黄小米</td>
+								<td>女</td>
 								<td>15863008280</td>
-								<td>管理员</td>
+								<td>nn880328@126.com</td>
+								<td><img width="60" src="./img/0.jpg" alt=""></td>
 								<td>
-									<button type="button" class="btn btn-default btn-xs">
+									<a href="user-edit.html" class="btn btn-default btn-xs">
 										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
-									</button>
+									</a>
 									<button type="button" class="btn btn-default btn-xs">
 										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
 									</button>
 								</td>
-							</tr> -->
+							</tr>
 						</tbody>
 					</table>
 				</div>
 
-
-			</div>
-		</div>
-	</div>
-	<!-- 编辑Modal模态框 -->
-	<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">编辑用户</h4>
-				</div>
-				<div class="modal-body">
-					<form>
-						<div class="form-group">
-							<label for="username" class="control-label">用户名:</label>
-							<input type="text" class="form-control" id="username">
-						</div>
-						<div class="form-group">
-							<label for="fullname" class="control-label">姓名:</label>
-							<input type="text" class="form-control" id="fullname">
-						</div>
-						<div class="form-group">
-							<label for="tel" class="control-label">手机:</label>
-							<input type="text" class="form-control" id="tel">
-						</div>
-
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -283,10 +255,10 @@
 					<h4 class="modal-title">确认</h4>
 				</div>
 				<div class="modal-body">
-						<div class="alert alert-warning" role="alert">
-								<span class="glyphicon glyphicon-exclamation-sign"></span>
-								确定要删除该用户的数据吗？
-						</div>
+					<div class="alert alert-warning" role="alert">
+						<span class="glyphicon glyphicon-exclamation-sign"></span>
+						确定要删除该用户的数据吗？
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -301,102 +273,7 @@
 	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 	<script>
-		$(document).ready(function () {
-			// 获取用户列表
-			$.getJSON("/users/list", function (result) {
-				if (result.status) {
-					var html = '';
-					result.data.forEach(function (item) {
-						html += `
-						<tr>
-								<td>${item.user_id}</td>
-								<td>${item.username}</td>
-								<td>${item.fullname}</td>
-								<td>${item.tel}</td>
-								<td>管理员</td>
-								<td>
-									<button data-id="${item.user_id}" type="button" class="btn btn-default btn-xs edit">
-										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
-									</button>
-									<button data-id="${item.user_id}" type="button" class="btn btn-default btn-xs delete">
-										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
-									</button>
-								</td>
-							</tr>`
-					});
-					$("table tbody").append(html);
-				}
-			});
-			// 删除用户
-			$("tbody").on("click", ".delete", function () {
-				$("#deleteModal").modal("show");
-				// 获取要删除的id
-				var uid = $(this).data("id");
-				// 转存
-				$("#confirmBtn").data("id", uid);
-			});
-			// 确认删除
-			$("#confirmBtn").click(function () {
-				// 提取uid
-				var uid = $(this).data("id");
-				$.post("/users/delete", {
-					id: uid
-				}, function (result) {
-					if (result.status) {
-						$("#deleteModal").modal("hide");
-						// 刷新页面 location.reload()
-						$("tbody>tr").each(function () {
-							var $td = $(this).find("td").eq(0);
-							var id = $.trim($td.text());
-							if (id == uid) {
-								$(this).remove();
-							}
-						});
-					}
-				});
-			});
-			// 编辑用户
-			$("tbody").on("click", ".edit", function () {
-				// 获取id
-				var uid = $(this).data("id");
-				// 转存id
-				$("#saveBtn").data("id", uid);
-				// 将对应的数据填充至表单
-				$.getJSON("/users/info/", {
-					id: uid
-				}, function (res) {
-					$("#username").val(res.data.username);
-					$("#fullname").val(res.data.fullname);
-					$("#tel").val(res.data.tel);
-				});
-				// 显示Modal
-				$("#editModal").modal("show");
-			});
-			// 确认编辑
-			$("#saveBtn").click(function () {
-				// 提取uid
-				var uid = $(this).data("id");
-				$.post("/users/edit", {
-					id: uid,
-					username: $("#username").val(),
-					fullname: $("#fullname").val(),
-					tel: $("#tel").val(),
-				}, function (result) {
-					if (result.status) {
-						$("#editModal").modal("hide");
-						$("tbody>tr").each(function () {
-							var $td = $(this).find("td");
-							var id = $.trim($td.eq(0).text());
-							if (id == uid) {
-								$td.eq(1).text($("#username").val());
-								$td.eq(2).text($("#fullname").val());
-								$td.eq(3).text($("#tel").val());
-							}
-						});
-					}
-				});
-			});
-		});
+
 	</script>
 </body>
 

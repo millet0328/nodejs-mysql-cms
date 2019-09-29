@@ -10,14 +10,14 @@ var pool = require('../config/mysql').pool;
  *
  * @apiParam { String } username 用户名.
  * @apiParam { String } password 密码.
- * @apiParam { String } fullname 姓名.
+ * @apiParam { String } nickname 昵称.
  * @apiParam { String } sex 性别.
  * @apiParam { String } tel 手机号码.
  *
  * @apiSampleRequest /user/register
  */
 router.post('/register', function (req, res) {
-    let { username, password, fullname, sex, tel } = req.body;
+    let { username, password, nickname, sex, tel } = req.body;
     // 查询账户是否重名
     let sql = 'SELECT * FROM users WHERE username = ?';
     pool.query(sql, [username], function (error, results) {
@@ -31,8 +31,8 @@ router.post('/register', function (req, res) {
             return;
         }
         // 不存在重名
-        var sql = 'INSERT INTO users (username,password,fullname,sex,tel) VALUES (?,?,?,?,?)';
-        pool.query(sql, [username, password, fullname, sex, tel], function (error, results) {
+        var sql = 'INSERT INTO users (username,password,nickname,sex,tel) VALUES (?,?,?,?,?)';
+        pool.query(sql, [username, password, nickname, sex, tel], function (error, results) {
             if (error) throw error;
             if (results.affectedRows == 1) {
                 res.json({
@@ -85,7 +85,7 @@ router.post('/login', function (req, res) {
  */
 router.get('/info', function (req, res) {
     let { id } = req.query;
-    var sql = 'SELECT username,fullname,sex,tel FROM users WHERE id = ? ';
+    var sql = 'SELECT username,nickname,sex,tel FROM users WHERE id = ? ';
     pool.query(sql, [id], function (error, results) {
         if (error) throw error;
         if (results.length == 0) {
@@ -109,7 +109,7 @@ router.get('/info', function (req, res) {
  *
  * @apiParam { Number } id 用户id.
  * @apiParam { String } username 用户名.
- * @apiParam { String } fullname 姓名.
+ * @apiParam { String } nickname 昵称.
  * @apiParam { String } sex 性别.
  * @apiParam { String } tel 手机号码.
  *
@@ -117,9 +117,9 @@ router.get('/info', function (req, res) {
  */
 
 router.post('/info', function (req, res) {
-    let { id, username, fullname, sex, tel } = req.body;
-    let sql = 'UPDATE users SET username = ?,fullname = ?,sex = ?,tel = ? WHERE id = ?';
-    pool.query(sql, [username, fullname, sex, tel, id], function (error, results) {
+    let { id, username, nickname, sex, tel } = req.body;
+    let sql = 'UPDATE users SET username = ?,nickname = ?,sex = ?,tel = ? WHERE id = ?';
+    pool.query(sql, [username, nickname, sex, tel, id], function (error, results) {
         if (error) throw error;
         if (!results.affectedRows) {
             res.json({
@@ -165,7 +165,7 @@ router.post('/delete', function (req, res) {
  */
 
 router.get('/list', function (req, res) {
-    var sql = 'SELECT id,username,fullname,sex,tel FROM users';
+    var sql = 'SELECT id,username,nickname,sex,tel FROM users';
     pool.query(sql, [], function (error, results) {
         if (error) throw error;
         res.json({

@@ -5,6 +5,7 @@ var pool = require('../config/mysql').pool;
 
 /**
  * @api {post} /category/add 添加分类
+ * @apiDescription 注意：目前最多支持二级分类
  * @apiName AddCategory
  * @apiGroup Category
  *
@@ -27,7 +28,7 @@ router.post("/add", function (req, res) {
 });
 /**
  * @api {post} /category/delete 删除指定id分类
- * @apiDescription 注意：删除指定id分类,同时会删除其子分类
+ * @apiDescription 注意：删除指定id分类,如果其拥有子级分类不允许删除，必须清空子分类才可删除。
  * @apiName DeleteCategory
  * @apiGroup Category
  *
@@ -38,7 +39,7 @@ router.post("/add", function (req, res) {
 
 router.post("/delete", function (req, res) {
     let { id } = req.body;
-    var sql = 'DELETE FROM category  WHERE category_id = ? OR parent_id = ? '
+    var sql = 'DELETE FROM category  WHERE category_id = ?'
     pool.query(sql, [id, id], function (error, results) {
         if (error) throw error;
         res.json({
@@ -117,15 +118,18 @@ router.get('/list', function (req, res) {
     })
 });
 /**
- * @api {get} /category/first 获取一级分类
- * @apiName CategoryFirst
+ * @api {get} /category/sub 获取子级分类
+ * @apiName CategorySub
  * @apiGroup Category
- *
- * @apiSampleRequest /category/first
+ * 
+ * @apiParam { Number } id 父级id。一级分类的父类id=0;
+ * 
+ * @apiSampleRequest /category/sub
  */
-router.get("/first", function (req, res) {
-    var sql = 'SELECT * FROM category WHERE parent_id = 0';
-    pool.query(sql, function (error, results) {
+router.get("/sub", function (req, res) {
+    let { id } = req.query;
+    var sql = 'SELECT * FROM category WHERE parent_id = ?';
+    pool.query(sql, [id], function (error, results) {
         if (error) throw error;
         res.json({
             status: true,
