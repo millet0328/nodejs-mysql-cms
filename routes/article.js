@@ -1,14 +1,15 @@
 var express = require('express');
 var router = express.Router();
 // 数据库
-var pool = require('../config/mysql').pool;
+var db = require('../config/mysql');
 
 /**
  * @api {post} /article/add 添加新的文章
  * @apiName AddArticle
  * @apiGroup Article
  *
- * @apiParam { Number } category_id 分类id.
+ * @apiParam { Number } cate_1st 一级分类id.
+ * @apiParam { Number } cate_2nd 二级分类id.
  * @apiParam { String } title 文章标题.
  * @apiParam { String } description 文章摘要.
  * @apiParam { String } content 文章内容.
@@ -17,16 +18,15 @@ var pool = require('../config/mysql').pool;
  * @apiSampleRequest /article/add
  */
 
-router.post("/add/", function (req, res) {
-    let { category_id, title, description, content, main_photo } = req.body;
-    var sql = 'INSERT INTO article (category_id , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ? , CURRENT_TIMESTAMP() , ?)';
-    pool.query(sql, [category_id, title, description, content, main_photo], function (error, results) {
-        if (error) throw error;
-        res.json({
-            status: true,
-            msg: "添加成功"
-        });
-    });
+router.post("/add/", async (req, res) => {
+	let { cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
+	var sql =
+		'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ? , CURRENT_TIMESTAMP() , ?)';
+	let results = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
+	res.json({
+		status: true,
+		msg: "添加成功"
+	});
 });
 
 /**
@@ -39,16 +39,14 @@ router.post("/add/", function (req, res) {
  * @apiSampleRequest /article/delete
  */
 
-router.post('/delete', function name(req, res) {
-    let { id } = req.body;
-    var sql = 'DELETE FROM article WHERE article_id = ?';
-    pool.query(sql, [id], function (error, results) {
-        if (error) throw error;
-        res.json({
-            status: true,
-            msg: "删除成功"
-        });
-    });
+router.post('/delete', async (req, res) => {
+	let { id } = req.body;
+	var sql = 'DELETE FROM article WHERE article_id = ?';
+	let results = await db.query(sql, [id]);
+	res.json({
+		status: true,
+		msg: "删除成功"
+	});
 });
 
 /**
@@ -60,17 +58,15 @@ router.post('/delete', function name(req, res) {
  *
  * @apiSampleRequest /article/detail
  */
-router.get('/detail', function (req, res) {
-    let { id } = req.query;
-    var sql = 'SELECT * FROM article WHERE article_id = ?';
-    pool.query(sql, [id], function (error, results) {
-        if (error) throw error;
-        res.json({
-            status: true,
-            msg: "获取成功",
-            data: results[0]
-        });
-    });
+router.get('/detail', async (req, res) => {
+	let { id } = req.query;
+	var sql = 'SELECT * FROM article WHERE article_id = ?';
+	let results = await db.query(sql, [id]);
+	res.json({
+		status: true,
+		msg: "获取成功",
+		data: results[0]
+	});
 });
 
 /**
@@ -79,7 +75,8 @@ router.get('/detail', function (req, res) {
  * @apiGroup Article
  *
  * @apiParam { Number } id 文章id.
- * @apiParam { Number } category_id 分类id.
+ * @apiParam { Number } cate_1st 一级分类id.
+ * @apiParam { Number } cate_2nd 二级分类id.
  * @apiParam { String } title 文章标题.
  * @apiParam { String } description 文章摘要.
  * @apiParam { String } content 文章内容.
@@ -87,23 +84,22 @@ router.get('/detail', function (req, res) {
  *
  * @apiSampleRequest /article/edit
  */
-router.post('/edit', function (req, res) {
-    let { id, category_id, title, description, content, main_photo } = req.body;
-    var sql = 'UPDATE article SET category_id = ? , title = ? , description = ? , content = ? , main_photo = ? WHERE article_id = ?';
-    pool.query(sql, [category_id, title, description, content, main_photo, id], function (error, results) {
-        if (error) throw error;
-        if (!results.affectedRows) {
-            res.json({
-                status: false,
-                msg: "修改失败！"
-            });
-            return;
-        }
-        res.json({
-            status: true,
-            msg: "修改成功！"
-        })
-    });
+router.post('/edit', async (req, res) => {
+	let { id, cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
+	var sql =
+		'UPDATE article SET cate_1st = ? , cate_2nd = ? , title = ? , description = ? , content = ? , main_photo = ? WHERE article_id = ?';
+	let { affectedRows } = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo, id]);
+	if (!affectedRows) {
+		res.json({
+			status: false,
+			msg: "修改失败！"
+		});
+		return;
+	}
+	res.json({
+		status: true,
+		msg: "修改成功！"
+	});
 });
 // 获取所有文章列表,默认按照日期降序排序，分页 pagesize(一页数量) pageindex(第几页)
 /**
@@ -125,19 +121,18 @@ router.post('/edit', function (req, res) {
  *
  * @apiSampleRequest /article/list
  */
-router.get("/list", function (req, res) {
-    let { pagesize, pageindex } = req.query;
-    pagesize = parseInt(pagesize);
-    var offset = pagesize * (pageindex - 1);
-    var sql = 'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.category_id = c.category_id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?';
-    pool.query(sql, [pagesize, offset], function (error, results) {
-        if (error) throw error;
-        res.json({
-            status: true,
-            msg: "获取成功",
-            data: results
-        });
-    });
+router.get("/list", async (req, res) => {
+	let { pagesize, pageindex } = req.query;
+	pagesize = parseInt(pagesize);
+	var offset = pagesize * (pageindex - 1);
+	var sql =
+		'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.cate_2nd = c.category_id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?';
+	let results = await db.query(sql, [pagesize, offset]);
+	res.json({
+		status: true,
+		msg: "获取成功",
+		data: results
+	});
 });
 
 /**
@@ -153,21 +148,19 @@ router.get("/list", function (req, res) {
  * @apiSampleRequest /article/list
  */
 
-router.get("/category", function (req, res) {
-    let { pagesize, pageindex, id } = req.query;
-    pagesize = parseInt(pagesize);
-    let offset = pagesize * (pageindex - 1);
-    var sql = 'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.category_id = c.category_id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? WHERE category_id = ?';
-    pool.query(sql, [pagesize, offset, id], function (error, results) {
-        if (error) throw error;
-        res.json({
-            status: true,
-            msg: "获取成功",
-            data: results
-        });
-    });
+router.get("/category", async (req, res) => {
+	let { pagesize, pageindex, id } = req.query;
+	pagesize = parseInt(pagesize);
+	let offset = pagesize * (pageindex - 1);
+	var sql =
+		'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.cate_2nd = c.category_id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? WHERE category_id = ?';
+	let results = await db.query(sql, [pagesize, offset, id]);
+	res.json({
+		status: true,
+		msg: "获取成功",
+		data: results
+	});
 });
-
 
 
 module.exports = router;

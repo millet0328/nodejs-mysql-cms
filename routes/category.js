@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 // 数据库
-var pool = require('../config/mysql').pool;
+let db = require('../config/mysql');
 
 /**
  * @api {post} /category/add 添加分类
@@ -15,18 +15,16 @@ var pool = require('../config/mysql').pool;
  * @apiSampleRequest /category/add
  */
 
-router.post("/add", function(req, res) {
+router.post("/add", async (req, res) => {
 	let { name, parent_id } = req.body;
 	var sql = 'INSERT INTO category (`name`,parent_id) VALUES (?,?);'
-	pool.query(sql, [name, parent_id], function(error, results) {
-		if (error) throw error;
-		res.json({
-			status: true,
-			msg: "添加成功！",
-			data: {
-				id: results.insertId
-			}
-		});
+	let { insertId } = await db.query(sql, [name, parent_id]);
+	res.json({
+		status: true,
+		msg: "添加成功！",
+		data: {
+			id: insertId
+		}
 	});
 });
 /**
@@ -40,17 +38,14 @@ router.post("/add", function(req, res) {
  * @apiSampleRequest /category/delete
  */
 
-router.post("/delete", function(req, res) {
+router.post("/delete", async (req, res) => {
 	let { id } = req.body;
 	var sql = 'DELETE FROM category  WHERE category_id = ?'
-	pool.query(sql, [id, id], function(error, results) {
-		if (error) throw error;
-		res.json({
-			status: true,
-			msg: "删除成功"
-		});
+	let results = await db.query(sql, [id, id]);
+	res.json({
+		status: true,
+		msg: "删除成功"
 	});
-
 });
 /**
  * @api {get} /category/detail 获取指定id的分类详情
@@ -61,15 +56,13 @@ router.post("/delete", function(req, res) {
  *
  * @apiSampleRequest /category/detail
  */
-router.get("/detail", function(req, res) {
+router.get("/detail", async (req, res) => {
 	let { id } = req.query;
 	var sql = 'SELECT * FROM category WHERE category_id = ?';
-	pool.query(sql, [id], function(error, results) {
-		if (error) throw error;
-		res.json({
-			status: true,
-			data: results[0]
-		});
+	let results = await db.query(sql, [id]);
+	res.json({
+		status: true,
+		data: results[0]
 	});
 });
 //
@@ -84,24 +77,21 @@ router.get("/detail", function(req, res) {
  *
  * @apiSampleRequest /category/edit
  */
-router.post('/edit', function(req, res) {
+router.post('/edit', async (req, res) => {
 	var sql = 'UPDATE category SET name = ?,parent_id = ? WHERE category_id = ?';
 	let { id, name, parent_id } = req.body;
-	pool.query(sql, [name, parent_id, id], function(error, results) {
-		if (error) throw error;
-		if (!results.affectedRows) {
-			res.json({
-				status: false,
-				msg: "修改失败！"
-			});
-			return;
-		}
+	let { affectedRows } = await db.query(sql, [name, parent_id, id]);
+	if (!affectedRows) {
 		res.json({
-			status: true,
-			msg: "修改成功！"
-		})
-	})
-
+			status: false,
+			msg: "修改失败！"
+		});
+		return;
+	}
+	res.json({
+		status: true,
+		msg: "修改成功！"
+	});
 });
 /**
  * @api {get} /category/list 获取所有分类
@@ -110,16 +100,14 @@ router.post('/edit', function(req, res) {
  *
  * @apiSampleRequest /category/list
  */
-router.get('/list', function(req, res) {
+router.get('/list', async (req, res) => {
 	var sql =
 		'SELECT c1.*,c2.`name` AS parent_name FROM `category` c1 left JOIN category c2 ON c1.parent_id = c2.category_id';
-	pool.query(sql, function(error, results) {
-		if (error) throw error;
-		res.json({
-			status: true,
-			data: results
-		});
-	})
+	let results = await db.query(sql);
+	res.json({
+		status: true,
+		data: results
+	});
 });
 /**
  * @api {get} /category/sub 获取子级分类
@@ -130,15 +118,13 @@ router.get('/list', function(req, res) {
  * 
  * @apiSampleRequest /category/sub
  */
-router.get("/sub", function(req, res) {
+router.get("/sub", async (req, res) => {
 	let { id } = req.query;
 	var sql = 'SELECT * FROM category WHERE parent_id = ?';
-	pool.query(sql, [id], function(error, results) {
-		if (error) throw error;
-		res.json({
-			status: true,
-			data: results
-		});
+	let results = await db.query(sql, [id]);
+	res.json({
+		status: true,
+		data: results
 	});
 });
 
