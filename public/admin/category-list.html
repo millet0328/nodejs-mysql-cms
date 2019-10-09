@@ -218,11 +218,11 @@
 							</tr>
 						</thead>
 						<tbody>
-							<!-- <tr>
+							<tr>
 								<td>1</td>
 								<td>科技</td>
-								<td>1</td>
-								<td>科技</td>
+								<td>0</td>
+								<td>无</td>
 								<td>
 									<button type="button" class="btn btn-default btn-xs">
 										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
@@ -231,7 +231,7 @@
 										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
 									</button>
 								</td>
-							</tr> -->
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -265,56 +265,7 @@
 	<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
 	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
-	<script>
-		$(document).ready(function () {
-			// 获取列表数据
-			loadList();
-			function loadList() {
-				$.getJSON('/category/list', function (res) {
-					let { status, data } = res;
-					let html = '';
-					if (status) {
-						data.forEach(function (item, index) {
-							html += `<tr>
-								<td>${item.category_id}</td>
-								<td>${item.name}</td>
-								<td>${item.parent_id}</td>
-								<td>${item.parent_name || '无'}</td>
-								<td>
-									<a href="category-edit.html?id=${item.category_id}" class="edit btn btn-default btn-xs">
-										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
-									</a>
-									<button type="button" data-id="${item.category_id}" class="delete btn btn-default btn-xs">
-										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
-									</button>
-								</td>
-							</tr>`
-						});
-						$('.table tbody').html(html);
-					}
-				});
-			}
-			// 显示删除模态框
-			$('.table').on('click', '.delete', function () {
-				// 转存id
-				$("#confirmBtn").data('id', $(this).data('id'));
-				$('#deleteModal').modal();
-			});
-			// 确认删除分类
-			$('#confirmBtn').click(function () {
-				// 提取id
-				var id = $(this).data('id');
-				$.post('/category/delete', { id }, function ({ status }) {
-					if (status) {
-						// 关闭模态框
-						$('#deleteModal').modal('hide');
-						// 重新获取列表
-						loadList();
-					}
-				});
-			});
-		});
-	</script>
+
 </body>
 
 </html>

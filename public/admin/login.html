@@ -46,21 +46,6 @@
 	<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
 	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
-	<script>
-		$('#login').click(function () {
-			// 提取value
-			var username = $('#InputUsername').val();
-			var password = $('#InputPassword').val();
-			// 发送ajax
-			$.post('/admin/login', { username, password }, function (res) {
-				if (res.status) {
-					location.href = "user-list.html";
-				} else {
-					alert(res.msg);
-				}
-			});
-		});
-	</script>
 </body>
 
 </html>

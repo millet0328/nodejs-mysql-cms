@@ -221,7 +221,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<!-- <tr>
+							<tr>
 								<td>1</td>
 								<td>moz</td>
 								<td>黄小米</td>
@@ -237,7 +237,7 @@
 										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
 									</button>
 								</td>
-							</tr> -->
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -273,57 +273,7 @@
 	<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
 	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
-	<script>
-		$(document).ready(function () {
-			// 获取管理员列表数据
-			loadList();
-			function loadList() {
-				$.getJSON('/admin/list', function (res) {
-					let html = '';
-					let { status, data } = res;
-					if (status) {
-						data.forEach(function (item, index) {
-							html += `<tr>
-								<td>${item.id}</td>
-								<td>${item.username}</td>
-								<td>${item.fullname}</td>
-								<td>${item.sex}</td>
-								<td>${item.tel}</td>
-								<td>${item.email || '无'}</td>
-								<td><img width="60" src="${item.avatar}" alt=""></td>
-								<td>
-									<a href="user-edit.html?id=${item.id}" data-id="${item.id}" class="btn btn-default edit btn-xs">
-										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
-									</a>
-									<button type="button" data-id="${item.id}" class="btn btn-default delete btn-xs">
-										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
-									</button>
-								</td>
-							</tr>`;
-						});
-						$('.table tbody').html(html);
-					}
-				});
-			}
-			// 显示删除模态框
-			$('.table tbody').on('click', '.delete', function () {
-				// 转存id
-				$("#confirmBtn").data('id', $(this).data('id'));
-				$('#deleteModal').modal();
-			});
-			// 确认删除
-			$('#confirmBtn').click(function () {
-				// 提取id
-				var id = $(this).data('id');
-				$.post('/admin/delete', { id }, function (res) {
-					if (res.status) {
-						location.reload();
-					}
-				});
-			});
 
-		});
-	</script>
 
 </body>
 

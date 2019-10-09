@@ -80,21 +80,7 @@
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 	<!-- validform -->
 	<script src="lib/Validform_v5.3.2/Validform_v5.3.2_min.js"></script>
-	<script type="text/javascript">
-		$(".form").Validform({
-			ajaxPost: true,
-			callback: function (data) {
-				if (data.status) {
-					setTimeout(function () {
-						$.Hidemsg(); //公用方法关闭信息提示框;显示方法是$.Showmsg("message goes here.");
-						location.href = "user-list.html";
-					}, 2000);
-				} else {
-					$.Showmsg(data.msg);
-				}
-			}
-		});
-	</script>
+
 </body>
 
 </html>

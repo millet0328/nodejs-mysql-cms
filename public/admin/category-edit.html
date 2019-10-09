@@ -243,51 +243,7 @@
     <script src="lib/jQuery/jquery-1.12.4.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
     <script src="lib/bootstrap/js/bootstrap.min.js"></script>
-    <script>
-        //获取地址栏的url参数
-        function GetRequest() {
-            var url = location.search; //获取url中"?"符后的字串
-            var theRequest = new Object();
-            if (url.indexOf("?") != -1) {
-                var str = url.substr(1);
-                strs = str.split("&");
-                for (var i = 0; i < strs.length; i++) {
-                    theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
-                }
-            }
-            return theRequest;
-        }
-        var id = GetRequest().id;
-        // 存储id至input
-        $('input[name=id]').val(id);
-        //获取所有分类
-        $.getJSON('/category/list', function (res) {
-            let { status, data } = res;
-            let html = '';
-            if (status) {
-                data.forEach(function (item, index) {
-                    html += `<option value="${item.category_id}">${item.name}</option>`;
-                });
-                $('#parent').append(html);
-                // 获取分类详情
-                $.getJSON('/category/detail', { id }, function ({ status, data }) {
-                    if (status) {
-                        $('input[name=name]').val(data.name);
-                        $('#parent').val(data.parent_id);
-                    }
-                });
-            }
-        });
-        // 编辑分类
-        $('#updateBtn').click(function () {
-            var data = $('form').serialize();
-            $.post('/category/edit', data, function ({ status }) {
-                if (status) {
-                    location.href = "category-list.html";
-                }
-            });
-        });
-    </script>
+
 
 </body>
 

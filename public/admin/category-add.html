@@ -242,29 +242,7 @@
     <script src="lib/jQuery/jquery-1.12.4.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
     <script src="lib/bootstrap/js/bootstrap.min.js"></script>
-    <script>
-        //获取所有分类
-        $.getJSON('/category/list', function (res) {
-            let { status, data } = res;
-            let html = '';
-            if (status) {
-                data.forEach(function (item, index) {
-                    html += `<option value="${item.category_id}">${item.name}</option>`;
-                });
-                $('#parent').append(html);
-            }
-        });
-        // 添加分类
-        $('#addBtn').click(function () {
-            // 序列化表单
-            var data = $('form').serialize();
-            $.post('/category/add', data, function ({ status, msg }) {
-                if (status) {
-                    alert(msg);
-                }
-            });
-        });
-    </script>
+
 </body>
 
 </html>

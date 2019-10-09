@@ -206,7 +206,49 @@
 				<div class="panel-heading">用户详情</div>
 				<div class="panel-body">
 					<form class="form">
-
+						<input name="id" type="hidden" value="${id}"/>
+						<div class="form-group">
+							<label class="control-label">用户名:</label>
+							<input type="text" name="username" class="form-control" readonly>
+						</div>
+						<div class="form-group">
+							<label class="control-label">姓名:</label>
+							<input type="text" name="fullname" class="form-control">
+						</div>
+						<div class="form-group">
+							<label class="control-label">性别:</label>
+							<div>
+								<label class="radio-inline">
+									<input type="radio" name="sex"  value="男"> 男
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="sex"  value="女"> 女
+								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label">手机:</label>
+							<input type="text" name="tel" class="form-control">
+						</div>
+						<div class="form-group">
+							<label class="control-label">邮箱:</label>
+							<input type="text" name="email" class="form-control">
+						</div>
+						<div class="form-group">
+							<label class="control-label">头像:</label>
+							<div class="upload-box uploaded text-center">
+								<div class="plus">
+									<span class="glyphicon glyphicon-plus"></span>
+									<input class="file" type="file">
+									<input name="avatar" type="hidden"/>
+								</div>
+								<img src="img/1.jpg" alt="">
+								<div class="cover">
+									<span class="glyphicon glyphicon-trash delete"></span>
+								</div>
+							</div>
+						</div>
+						<button type="button" id="saveBtn" class="btn btn-primary">保存修改</button>
 					</form>
 				</div>
 			</div>
@@ -236,116 +278,10 @@
 		$.getJSON('/admin/info', { id }, function ({ status, data }) {
 			if (status) {
 				var html = `
-						<input name="id" type="hidden" value="${id}"/>
-						<div class="form-group">
-							<label class="control-label">用户名:</label>
-							<input type="text" name="username" class="form-control" readonly value="${data.username}">
-						</div>
-						<div class="form-group">
-							<label class="control-label">姓名:</label>
-							<input type="text" name="fullname" class="form-control" value="${data.fullname || ''}">
-						</div>
-						<div class="form-group">
-							<label class="control-label">性别:</label>
-							<div>
-								<label class="radio-inline">
-									<input type="radio" name="sex" ${data.sex == '男' ? 'checked' : ''} value="男"> 男
-								</label>
-								<label class="radio-inline">
-									<input type="radio" name="sex" ${data.sex == '女' ? 'checked' : ''} value="女"> 女
-								</label>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label">手机:</label>
-							<input type="text" name="tel" class="form-control" value="${data.tel || ''}">
-						</div>
-						<div class="form-group">
-							<label class="control-label">邮箱:</label>
-							<input type="text" name="email" class="form-control" value="${data.email || ''}">
-						</div>
-						<div class="form-group">
-							<label class="control-label">头像:</label>
-							<div class="upload-box uploaded text-center">
-								<div class="plus">
-									<span class="glyphicon glyphicon-plus"></span>
-									<input class="file" type="file">
-									<input name="avatar" type="hidden" value="${data.avatar}"/>
-								</div>
-								<img src="${data.avatar}" alt="">
-								<div class="cover">
-									<span class="glyphicon glyphicon-trash delete"></span>
-								</div>
-							</div>
-						</div>
-						<button type="button" id="saveBtn" class="btn btn-primary">保存修改</button>
+
 						`;
 				$('.form').html(html);
 			}
-		});
-	</script>
-	<script>
-		$(document).ready(function () {
-			// 头像删除
-			$('.form').on('click', '.cover .delete', function () {
-				var $img = $(this).parent().siblings('img');
-				// 获取图片地址
-				var url = $img.attr('src');
-				// 默认头像，不能物理删除
-				if (url.indexOf('default.jpg') >= 0) {
-					$('.upload-box').removeClass('uploaded');
-					return;
-				}
-				// 物理删除
-				$.post('/upload/delete', { src: '.' + url }, function (res) {
-					if (res.status) {
-						$img.attr('src', '');
-						$('.upload-box').removeClass('uploaded');
-						// 修改默认头像地址
-						$('input[name=avatar]').val('../images/avatar/default.jpg');
-					}
-				});
-
-			});
-			// 上传头像
-			$('.form').on('change', '.file', function () {
-				// 获取文件对象
-				var file = this.files[0];
-				var $file = $(this);
-				// form对象化
-				var formData = new FormData();
-				formData.append("file", file);
-				formData.append("type", "avatar");
-				// $.ajax上传文件
-				$.ajax({
-					type: "POST",
-					url: '/upload/common',
-					data: formData,
-					processData: false,
-					contentType: false,
-					success: function (res) {
-						let { status, msg, data } = res;
-						$file.val('');
-						if (!status) {
-							alert(msg);
-							return;
-						}
-						$('.upload-box').addClass('uploaded').find('img').attr('src', data);
-						// 修改avatar表单
-						$('input[name=avatar]').val(data);
-					}
-				});
-			});
-			// 保存个人资料
-			$('.form').on('click', '#saveBtn', function () {
-				// 序列化表单
-				var data = $('.form').serialize();
-				$.post('/admin/info', data, function (res) {
-					if (res.status) {
-						location.href = "user-list.html";
-					}
-				});
-			});
 		});
 	</script>
 
