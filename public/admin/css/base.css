@@ -8,22 +8,16 @@
 }
 
 html, body {
-    min-height: 100%;
+    min-height: 100vh;
     position: relative;
 }
 
 .user-register, .user-login {
-    width: 400px;
+    width: 350px;
     position: absolute;
     right: 60px;
-}
-
-.user-register {
-    top: 100px;
-}
-
-.user-login {
-    top: 160px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .main {

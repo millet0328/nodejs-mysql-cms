@@ -11,6 +11,7 @@ var categoryRouter = require('./routes/category');
 var articleRouter = require('./routes/article');
 var uploadRouter = require('./routes/upload');
 var adminRouter = require('./routes/admin');
+var roleRouter = require('./routes/role');
 
 var app = express();
 
@@ -35,6 +36,7 @@ app.use('/category', categoryRouter);
 app.use('/article', articleRouter);
 app.use('/upload', uploadRouter);
 app.use('/admin', adminRouter);
+app.use('/role', roleRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

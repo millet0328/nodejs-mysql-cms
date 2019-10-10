@@ -40,7 +40,7 @@ router.post("/add", async (req, res) => {
 
 router.post("/delete", async (req, res) => {
 	let { id } = req.body;
-	var sql = 'DELETE FROM category  WHERE category_id = ?'
+	var sql = 'DELETE FROM category  WHERE id = ?'
 	let results = await db.query(sql, [id, id]);
 	res.json({
 		status: true,
@@ -58,7 +58,7 @@ router.post("/delete", async (req, res) => {
  */
 router.get("/detail", async (req, res) => {
 	let { id } = req.query;
-	var sql = 'SELECT * FROM category WHERE category_id = ?';
+	var sql = 'SELECT * FROM category WHERE id = ?';
 	let results = await db.query(sql, [id]);
 	res.json({
 		status: true,
@@ -78,7 +78,7 @@ router.get("/detail", async (req, res) => {
  * @apiSampleRequest /category/edit
  */
 router.post('/edit', async (req, res) => {
-	var sql = 'UPDATE category SET name = ?,parent_id = ? WHERE category_id = ?';
+	var sql = 'UPDATE category SET name = ?,parent_id = ? WHERE id = ?';
 	let { id, name, parent_id } = req.body;
 	let { affectedRows } = await db.query(sql, [name, parent_id, id]);
 	if (!affectedRows) {
@@ -102,7 +102,7 @@ router.post('/edit', async (req, res) => {
  */
 router.get('/list', async (req, res) => {
 	var sql =
-		'SELECT c1.*,c2.`name` AS parent_name FROM `category` c1 left JOIN category c2 ON c1.parent_id = c2.category_id';
+		'SELECT c1.*,c2.`name` AS parent_name FROM `category` c1 left JOIN category c2 ON c1.parent_id = c2.id';
 	let results = await db.query(sql);
 	res.json({
 		status: true,

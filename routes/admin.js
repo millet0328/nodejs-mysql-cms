@@ -165,7 +165,7 @@ router.post('/login', async (req, res) => {
  */
 router.get('/info', async (req, res) => {
 	let { id } = req.query;
-	var sql = 'SELECT username, fullname, sex, tel, email, avatar FROM admin WHERE id = ? ';
+	var sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id WHERE a.id = ?';
 	let results = await db.query(sql, [id]);
 	res.json({
 		status: true,
