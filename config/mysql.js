@@ -7,21 +7,26 @@ var pool = mysql.createPool({
 	// debug: true,
 });
 //常规SQL
-let query = function(sql, arr = [], callback) {
-	//建立链接
-	pool.getConnection(function(err, connection) {
-		if (err) throw err;
-		connection.query(sql, arr, function(error, results, fields) {
-			//将链接返回到连接池中，准备由其他人重复使用
-			connection.release();
-			if (error) throw error;
-			//执行回调函数，将数据返回
-			callback && callback(results, fields);
+let query = (sql, arr = []) => {
+	return new Promise((resolve, reject) => {
+		//建立链接
+		pool.getConnection((err, connection) => {
+			// 处理链接错误
+			if (err) throw err;
+
+			connection.query(sql, arr, (error, results, fields) => {
+				//将链接返回到连接池中，准备由其他链接重复使用
+				connection.release();
+				// 处理链接错误
+				if (error) throw error;
+				//执行回调函数，将数据返回
+				resolve(results);
+			});
 		});
 	});
 };
+
 module.exports = {
-	mysql,
 	pool,
 	query
 }

@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
  * @apiDefine SuccessResponse
  * @apiSuccess { Boolean } status 请求状态.
  * @apiSuccess { String } msg 请求结果信息.
- * @apiSuccess { Object } data 请求结果信息.
+ * @apiSuccess { Object } data 请求数据信息.
  * @apiSuccess { String } data.token 注册成功之后返回的token.
  * @apiSuccess { String } data.id 用户uid.
  * @apiSuccess { String } data.role 用户角色id.
@@ -38,72 +38,73 @@ const jwt = require("jsonwebtoken");
  * @apiParam { String } sex 性别.
  * @apiParam { String } tel 手机号码.
  * @apiParam { String } [email] 邮箱地址.
- *
+ * 
+ * @apiUse SuccessResponse
+ * 
  * @apiSampleRequest /admin/register
  */
-router.post('/register', function(req, res) {
+router.post('/register', async (req, res) => {
 	let { username, password, fullname, sex, tel, email } = req.body;
 	// 查询账户是否重名
 	let sql = 'SELECT * FROM admin WHERE username = ?';
-	pool.query(sql, [username], function(error, results) {
-		if (error) throw error;
-		// 查询账户是否存在
-		if (results.length) {
-			res.json({
-				msg: "账户已存在",
-				status: false,
-			});
-			return;
-		}
-		pool.getConnection(function(err, connection) {
-			if (err) throw err; // not connected!
-			connection.beginTransaction(function(err) {
-				if (err) throw err;
-				let sql = `INSERT INTO admin (username,password,fullname,sex,tel,email) VALUES (?,?,?,?,?,?)`;
-				connection.query(sql, [username, password, fullname, sex, tel, email], function(error, results, fields) {
-					let { insertId, affectedRows } = results;
-					if (error || affectedRows <= 0) {
+	let results = await db.query(sql, [username]);
+	// 查询账户是否存在
+	if (results.length) {
+		res.json({
+			msg: "账户已存在",
+			status: false,
+		});
+		return;
+	}
+	pool.getConnection(function(err, connection) {
+		if (err) throw err; // not connected!
+		connection.beginTransaction(function(err) {
+			if (err) throw err;
+			let sql = `INSERT INTO admin (username,password,fullname,sex,tel,email) VALUES (?,?,?,?,?,?)`;
+			connection.query(sql, [username, password, fullname, sex, tel, email], function(error, results, fields) {
+				let { insertId, affectedRows } = results;
+				if (error || affectedRows <= 0) {
+					return connection.rollback(function() {
+						throw error || `${affectedRows} rows changed!`;
+					});
+				}
+				let sql = `INSERT INTO admin_role (admin_id,role_id) VALUES (?,3)`;
+				connection.query(sql, [insertId], function(error, results, fields) {
+					if (error) {
 						return connection.rollback(function() {
-							throw error || `${affectedRows} rows changed!`;
+							throw error;
 						});
 					}
-					let sql = `INSERT INTO admin_role (admin_id,role_id) VALUES (?,3)`;
-					connection.query(sql, [insertId], function(error, results, fields) {
-						if (error) {
+					connection.commit(function(err) {
+						if (err) {
 							return connection.rollback(function() {
-								throw error;
+								throw err;
 							});
 						}
-						connection.commit(function(err) {
-							if (err) {
-								return connection.rollback(function() {
-									throw err;
-								});
-							}
-						});
-						let payload = {
-							id: insertId,
-							username,
-							role: 3,
-						};
-						// 生成token
-						let token = jwt.sign(payload, 'secret', { expiresIn: '4h' });
-						// 存储成功
-						res.json({
-							status: true,
-							msg: "注册成功！",
-							data: {
-								token,
-								id: insertId,
-								role: 3
-							}
-						});
 					});
-
+					let payload = {
+						id: insertId,
+						username,
+						role: 3,
+					};
+					// 生成token
+					let token = jwt.sign(payload, 'secret', { expiresIn: '4h' });
+					// 存储成功
+					res.json({
+						status: true,
+						msg: "注册成功！",
+						data: {
+							token,
+							id: insertId,
+							role: 3
+						}
+					});
 				});
+
 			});
 		});
 	});
+
 });
 
 /**
@@ -114,42 +115,43 @@ router.post('/register', function(req, res) {
  *
  * @apiParam { String } username 用户名.
  * @apiParam { String } password 密码.
- *
+ * 
+ * @apiUse SuccessResponse
+ * 
  * @apiSampleRequest /admin/login
  */
 
-router.post('/login', function(req, res) {
+router.post('/login', async (req, res) => {
 	let { username, password } = req.body;
 	let sql =
 		`SELECT a.*,r.id AS role FROM ADMIN a LEFT JOIN admin_role ar ON a.id = ar.admin_id LEFT JOIN role r ON r.id = ar.role_id  WHERE username = ? AND password = ?`;
-	pool.query(sql, [username, password], function(error, results) {
-		if (error) throw error;
-		if (results.length == 0) {
-			res.json({
-				msg: "账号或密码错误！",
-				status: false,
-			});
-			return;
-		}
-		let { id, role } = results[0];
-		// 登录成功
-		let payload = {
-			id,
-			username,
-			role,
-		};
-		// 生成token
-		let token = jwt.sign(payload, 'secret', { expiresIn: '4h' });
+	let results = await db.query(sql, [username, password]);
+	if (results.length == 0) {
 		res.json({
-			status: true,
-			msg: "登录成功！",
-			data: {
-				token,
-				id,
-				role,
-			}
+			msg: "账号或密码错误！",
+			status: false,
 		});
+		return;
+	}
+	let { id, role } = results[0];
+	// 登录成功
+	let payload = {
+		id,
+		username,
+		role,
+	};
+	// 生成token
+	let token = jwt.sign(payload, 'secret', { expiresIn: '4h' });
+	res.json({
+		status: true,
+		msg: "登录成功！",
+		data: {
+			token,
+			id,
+			role,
+		}
 	});
+
 
 });
 /**
@@ -161,23 +163,14 @@ router.post('/login', function(req, res) {
  *
  * @apiSampleRequest /admin/info
  */
-router.get('/info', function(req, res, next) {
+router.get('/info', async (req, res) => {
 	let { id } = req.query;
-	var sql = 'SELECT username, fullname, sex, tel, email, avatar FROM admin WHERE id = ? ';
-	pool.query(sql, [id], function(error, results) {
-		if (error) throw error;
-		if (results.length == 0) {
-			res.json({
-				status: false,
-				msg: "查无此人！"
-			});
-			return;
-		}
-		res.json({
-			status: true,
-			data: results[0]
-		});
-	})
+	var sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id WHERE a.id = ?';
+	let results = await db.query(sql, [id]);
+	res.json({
+		status: true,
+		data: results[0]
+	});
 });
 
 /**
@@ -196,22 +189,20 @@ router.get('/info', function(req, res, next) {
  * @apiSampleRequest /admin/info
  */
 
-router.post('/info', function(req, res) {
+router.post('/info', async (req, res) => {
 	let { id, username, fullname, sex, tel, email, avatar } = req.body;
 	let sql = 'UPDATE admin SET username = ?,fullname = ?,sex = ?,tel = ?,email = ?, avatar = ? WHERE id = ?';
-	pool.query(sql, [username, fullname, sex, tel, email, avatar, id], function(error, results) {
-		if (error) throw error;
-		if (!results.affectedRows) {
-			res.json({
-				status: false,
-				msg: "修改失败！"
-			});
-			return;
-		}
+	let { affectedRows } = await db.query(sql, [username, fullname, sex, tel, email, avatar, id]);
+	if (!affectedRows) {
 		res.json({
-			status: true,
-			msg: "修改成功！"
-		})
+			status: false,
+			msg: "修改失败！"
+		});
+		return;
+	}
+	res.json({
+		status: true,
+		msg: "修改成功！"
 	});
 });
 
@@ -224,16 +215,21 @@ router.post('/info', function(req, res) {
  *
  * @apiSampleRequest /admin/delete
  */
-router.post('/delete', function(req, res) {
+router.post('/delete', async (req, res) => {
 	let { id } = req.body;
 	let sql = 'DELETE FROM admin WHERE id = ?';
-	pool.query(sql, [id], function(error, results) {
-		if (error) throw error;
+	let { affectedRows } = await db.query(sql, [id]);
+	if (!affectedRows) {
 		res.json({
-			status: true,
-			msg: "删除成功"
+			status: false,
+			msg: "删除失败！"
 		});
-	})
+		return;
+	}
+	res.json({
+		status: true,
+		msg: "删除成功"
+	});
 });
 
 /**
@@ -244,15 +240,13 @@ router.post('/delete', function(req, res) {
  * @apiSampleRequest /admin/list
  */
 
-router.get('/list', function(req, res) {
+router.get('/list', async (req, res) => {
 	var sql = 'SELECT id, username, fullname, sex, tel, email, avatar FROM admin';
-	pool.query(sql, [], function(error, results) {
-		if (error) throw error;
-		res.json({
-			status: true,
-			data: results
-		});
-	})
+	let results = await db.query(sql);
+	res.json({
+		status: true,
+		data: results
+	});
 });
 
 module.exports = router;
