@@ -41,7 +41,7 @@ router.post("/add/", async (req, res) => {
 
 router.post('/delete', async (req, res) => {
 	let { id } = req.body;
-	var sql = 'DELETE FROM article WHERE article_id = ?';
+	var sql = 'DELETE FROM article WHERE id = ?';
 	let results = await db.query(sql, [id]);
 	res.json({
 		status: true,
@@ -60,7 +60,7 @@ router.post('/delete', async (req, res) => {
  */
 router.get('/detail', async (req, res) => {
 	let { id } = req.query;
-	var sql = 'SELECT * FROM article WHERE article_id = ?';
+	var sql = 'SELECT * FROM article WHERE id = ?';
 	let results = await db.query(sql, [id]);
 	res.json({
 		status: true,
@@ -87,7 +87,7 @@ router.get('/detail', async (req, res) => {
 router.post('/edit', async (req, res) => {
 	let { id, cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
 	var sql =
-		'UPDATE article SET cate_1st = ? , cate_2nd = ? , title = ? , description = ? , content = ? , main_photo = ? WHERE article_id = ?';
+		'UPDATE article SET cate_1st = ? , cate_2nd = ? , title = ? , description = ? , content = ? , main_photo = ? WHERE id = ?';
 	let { affectedRows } = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo, id]);
 	if (!affectedRows) {
 		res.json({
@@ -126,7 +126,7 @@ router.get("/list", async (req, res) => {
 	pagesize = parseInt(pagesize);
 	var offset = pagesize * (pageindex - 1);
 	var sql =
-		'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.cate_2nd = c.category_id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?';
+		'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.cate_2nd = c.id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?';
 	let results = await db.query(sql, [pagesize, offset]);
 	res.json({
 		status: true,
@@ -153,7 +153,7 @@ router.get("/category", async (req, res) => {
 	pagesize = parseInt(pagesize);
 	let offset = pagesize * (pageindex - 1);
 	var sql =
-		'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.cate_2nd = c.category_id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? WHERE category_id = ?';
+		'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.cate_2nd = c.id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? WHERE category_id = ?';
 	let results = await db.query(sql, [pagesize, offset, id]);
 	res.json({
 		status: true,

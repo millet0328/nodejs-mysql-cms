@@ -13,7 +13,7 @@ var db = require('../config/mysql');
  * @apiParam { String } nickname 昵称.
  * @apiParam { String } sex 性别.
  * @apiParam { String } tel 手机号码.
- *
+ * 
  * @apiSampleRequest /user/register
  */
 router.post('/register', async (req, res) => {
@@ -67,15 +67,15 @@ router.post('/login', async (req, res) => {
 	});
 });
 /**
- * @api {get} /user/info 获取用户个人资料
+ * @api {get} /user 获取用户个人资料
  * @apiName UserInfo
  * @apiGroup User
  *
  * @apiParam { Number } id 用户id.
  *
- * @apiSampleRequest /user/info
+ * @apiSampleRequest /user
  */
-router.get('/info', async (req, res) => {
+router.get('/', async (req, res) => {
 	let { id } = req.query;
 	var sql = 'SELECT username,nickname,sex,tel FROM users WHERE id = ? ';
 	let results = await db.query(sql, [id]);
@@ -93,7 +93,7 @@ router.get('/info', async (req, res) => {
 });
 
 /**
- * @api {post} /user/info 编辑个人资料
+ * @api {put} /user 编辑个人资料
  * @apiName UserUpdate
  * @apiGroup User
  *
@@ -103,10 +103,10 @@ router.get('/info', async (req, res) => {
  * @apiParam { String } sex 性别.
  * @apiParam { String } tel 手机号码.
  *
- * @apiSampleRequest /user/info
+ * @apiSampleRequest /user
  */
 
-router.post('/info', async (req, res) => {
+router.put('/', async (req, res) => {
 	let { id, username, nickname, sex, tel } = req.body;
 	let sql = 'UPDATE users SET username = ?,nickname = ?,sex = ?,tel = ? WHERE id = ?';
 	let { affectedRows } = await db.query(sql, [username, nickname, sex, tel, id]);
@@ -123,17 +123,17 @@ router.post('/info', async (req, res) => {
 	})
 });
 /**
- * @api {post} /user/delete 删除账户
+ * @api {delete} /user 删除账户
  * @apiName UserDelete
  * @apiGroup User
  *
  * @apiParam { Number } id 用户id.
  *
- * @apiSampleRequest /user/delete
+ * @apiSampleRequest /user
  */
 
-router.post('/delete', async (req, res) => {
-	let { id } = req.body;
+router.delete('/', async (req, res) => {
+	let { id } = req.query;
 	let sql = 'DELETE FROM users WHERE id = ?';
 	let results = await db.query(sql, [id]);
 	res.json({
