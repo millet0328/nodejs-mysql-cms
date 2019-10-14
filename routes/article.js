@@ -21,7 +21,7 @@ var db = require('../config/mysql');
 router.post("/add/", async (req, res) => {
 	let { cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
 	var sql =
-		'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ? , CURRENT_TIMESTAMP() , ?)';
+		'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ?, ?, CURRENT_TIMESTAMP() , ?)';
 	let results = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
 	res.json({
 		status: true,
