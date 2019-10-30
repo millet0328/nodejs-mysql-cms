@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const expressJwt = require('express-jwt');
+var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -29,6 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressJwt({ secret: 'secret' }).unless({
 	path: ['/', '/admin/register', '/admin/login'] //除了这些地址，其他的URL都需要验证
 }));
+// 设置跨域资源分享CORS
+app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
