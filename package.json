@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"start": "set SERVER=localhost:3000 & node ./bin/www",
+		"start": "set SERVER=http://localhost:3000& node ./bin/www",
 		"api": "apidoc -i routes/ -o public/api/"
 	},
 	"dependencies": {
