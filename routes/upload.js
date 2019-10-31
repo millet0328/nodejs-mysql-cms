@@ -23,45 +23,45 @@ var uuidv1 = require('uuid/v1');
  * 
  * @apiSuccess {String[]} data 返回图片地址.
  */
-router.post("/editor", upload.single('file'), function (req, res) {
-    //文件类型
-    let { mimetype, size, originalname } = req.file;
-    //判断是否为图片
-    var reg = /^image\/\w+$/;
-    var flag = reg.test(mimetype);
-    if (!flag) {
-        res.json({
-            errno: 1,
-            msg: "格式错误，请选择一张图片!"
-        });
-        return;
-    }
-    //判断图片体积是否小于2M
-    if (size >= 2 * 1024 * 1024) {
-        res.json({
-            errno: 1,
-            msg: "图片体积太大，请压缩图片!"
-        });
-        return;
-    }
-    //处理原文件名
-    var formate = originalname.split(".");
-    //扩展名
-    var extName = "." + formate[formate.length - 1];
-    var filename = uuidv1();
-    //储存文件夹
-    var fileFolder = `/images/details/`;
-    //处理图片
-    images(req.file.buffer)
-        .save("public" + fileFolder + filename + extName, {
-            quality: 70 //保存图片到文件,图片质量为70
-        });
-    //返回储存结果
-    res.json({
-        errno: 0,
-        msg: "图片上传处理成功!",
-        data: [fileFolder + filename + extName]
-    });
+router.post("/editor", upload.single('file'), function(req, res) {
+	//文件类型
+	let { mimetype, size, originalname } = req.file;
+	//判断是否为图片
+	var reg = /^image\/\w+$/;
+	var flag = reg.test(mimetype);
+	if (!flag) {
+		res.json({
+			errno: 1,
+			msg: "格式错误，请选择一张图片!"
+		});
+		return;
+	}
+	//判断图片体积是否小于2M
+	if (size >= 2 * 1024 * 1024) {
+		res.json({
+			errno: 1,
+			msg: "图片体积太大，请压缩图片!"
+		});
+		return;
+	}
+	//处理原文件名
+	var formate = originalname.split(".");
+	//扩展名
+	var extName = "." + formate[formate.length - 1];
+	var filename = uuidv1();
+	//储存文件夹
+	var fileFolder = `/images/details/`;
+	//处理图片
+	images(req.file.buffer)
+		.save("public" + fileFolder + filename + extName, {
+			quality: 70 //保存图片到文件,图片质量为70
+		});
+	//返回储存结果
+	res.json({
+		errno: 0,
+		msg: "图片上传处理成功!",
+		data: [process.env.server + fileFolder + filename + extName]
+	});
 });
 
 /**
@@ -77,47 +77,47 @@ router.post("/editor", upload.single('file'), function (req, res) {
  * 
  * @apiSuccess {String} data 返回图片地址.
  */
-router.post("/common", upload.single('file'), function (req, res) {
-    //上传类型
-    let { type } = req.body;
-    //文件类型
-    let { mimetype, size, originalname } = req.file;
-    //判断是否为图片
-    var reg = /^image\/\w+$/;
-    var flag = reg.test(mimetype);
-    if (!flag) {
-        res.json({
-            status: false,
-            msg: "格式错误，请选择一张图片!"
-        });
-        return;
-    }
-    //判断图片体积是否小于2M
-    if (size >= 2 * 1024 * 1024) {
-        res.json({
-            status: false,
-            msg: "图片体积太大，请压缩图片!"
-        });
-        return;
-    }
-    //处理原文件名
-    var formate = originalname.split(".");
-    //扩展名
-    var extName = "." + formate[formate.length - 1];
-    var filename = uuidv1();
-    //储存文件夹
-    var fileFolder = `/images/${type}/`;
-    //处理图片
-    images(req.file.buffer)
-        .save("public" + fileFolder + filename + extName, {
-            quality: 70 //保存图片到文件,图片质量为70
-        });
-    //返回储存结果
-    res.json({
-        status: true,
-        msg: "图片上传处理成功!",
-        data: fileFolder + filename + extName
-    });
+router.post("/common", upload.single('file'), function(req, res) {
+	//上传类型
+	let { type } = req.body;
+	//文件类型
+	let { mimetype, size, originalname } = req.file;
+	//判断是否为图片
+	var reg = /^image\/\w+$/;
+	var flag = reg.test(mimetype);
+	if (!flag) {
+		res.json({
+			status: false,
+			msg: "格式错误，请选择一张图片!"
+		});
+		return;
+	}
+	//判断图片体积是否小于2M
+	if (size >= 2 * 1024 * 1024) {
+		res.json({
+			status: false,
+			msg: "图片体积太大，请压缩图片!"
+		});
+		return;
+	}
+	//处理原文件名
+	var formate = originalname.split(".");
+	//扩展名
+	var extName = "." + formate[formate.length - 1];
+	var filename = uuidv1();
+	//储存文件夹
+	var fileFolder = `/images/${type}/`;
+	//处理图片
+	images(req.file.buffer)
+		.save("public" + fileFolder + filename + extName, {
+			quality: 70 //保存图片到文件,图片质量为70
+		});
+	//返回储存结果
+	res.json({
+		status: true,
+		msg: "图片上传处理成功!",
+		data: process.env.server + fileFolder + filename + extName
+	});
 });
 
 /**
@@ -131,15 +131,16 @@ router.post("/common", upload.single('file'), function (req, res) {
  * @apiSampleRequest /upload/delete
  */
 
-router.post('/delete', function (req, res) {
-    let realPath = path.resolve(__dirname, '../public/', req.body.src);
-    fs.unlink(realPath, function (err) {
-        if (err) throw err;
-        res.json({
-            status: true,
-            msg: "success!"
-        });
-    })
+router.post('/delete', function(req, res) {
+	let realPath = path.resolve(__dirname, '../public/', req.body.src);
+	fs.unlink(realPath, function(err) {
+		if (err) throw err;
+		res.json({
+			status: true,
+			msg: "success!"
+		});
+	})
+
 });
 
 module.exports = router;
