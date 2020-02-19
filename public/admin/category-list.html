@@ -238,8 +238,50 @@
 			</div>
 		</div>
 	</div>
+	<!-- 编辑Modal模态框 -->
+	<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+							aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">编辑分类</h4>
+				</div>
+				<div class="modal-body">
+					<!-- 表单 -->
+					<form class="form-horizontal">
+						<div class="form-group">
+							<input type="hidden" name="id">
+							<label for="" class="col-sm-2 control-label">
+								分类名称
+								<span class="text-danger">*</span>
+							</label>
+							<div class="col-sm-10">
+								<input type="text" name="name" class="form-control" placeholder="请输入分类名称">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label">
+								父级分类
+								<span class="text-danger">*</span>
+							</label>
+							<div class="col-sm-10">
+								<select id="parent" name="parent_id" class="form-control">
+									<option value="0">无</option>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="updateBtn" class="btn btn-primary">保存修改</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 	<!-- 删除Modal模态框 -->
-	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+	<div class="modal fade" id="deleteModal" tabindex="-2" role="dialog">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -269,22 +311,37 @@
 		$(document).ready(function () {
 			// 获取列表数据
 			loadList();
+			//获取所有分类
+			$.getJSON('/category/list', function (res) {
+				let { status, data } = res;
+				let html = '';
+				if (status) {
+					data.forEach(function (item, index) {
+						html += `<option value="${item.id}">${item.name}</option>`;
+					});
+					$('#parent').append(html);
+
+				}
+			});
 			function loadList() {
 				$.getJSON('/category/list', function (res) {
-					let { status, data } = res;
+					let {
+						status,
+						data
+					} = res;
 					let html = '';
 					if (status) {
 						data.forEach(function (item, index) {
 							html += `<tr>
-								<td>${item.category_id}</td>
+								<td>${item.id}</td>
 								<td>${item.name}</td>
 								<td>${item.parent_id}</td>
 								<td>${item.parent_name || '无'}</td>
 								<td>
-									<a href="category-edit.html?id=${item.category_id}" class="edit btn btn-default btn-xs">
+									<button type="button" data-id="${item.id}" class="edit btn btn-default btn-xs">
 										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
-									</a>
-									<button type="button" data-id="${item.category_id}" class="delete btn btn-default btn-xs">
+									</button>
+									<button type="button" data-id="${item.id}" class="delete btn btn-default btn-xs">
 										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
 									</button>
 								</td>
@@ -294,6 +351,20 @@
 					}
 				});
 			}
+			// 显示编辑模态框
+			$('.table').on('click', '.edit', function () {
+				var id = $(this).data('id');
+				// 转存id
+				$("#updateBtn").data('id', id);
+				// 获取分类详情
+				$.getJSON('/category/detail', { id }, function ({ status, data }) {
+					if (status) {
+						$('input[name=name]').val(data.name);
+						$('#parent').val(data.parent_id);
+					}
+				});
+				$('#editModal').modal();
+			});
 			// 显示删除模态框
 			$('.table').on('click', '.delete', function () {
 				// 转存id
@@ -304,7 +375,7 @@
 			$('#confirmBtn').click(function () {
 				// 提取id
 				var id = $(this).data('id');
-				$.post('/category/delete', { id }, function ({ status }) {
+				$.post('/category/delete', { id }, ({ status }) => {
 					if (status) {
 						// 关闭模态框
 						$('#deleteModal').modal('hide');
