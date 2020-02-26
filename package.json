@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "set SERVER=http://localhost:3000&node ./bin/www",
+    "start": "set SERVER=http://localhost:3001&node ./bin/www",
     "api": "apidoc -i routes/ -o public/api/"
   },
   "dependencies": {
@@ -13,7 +13,6 @@
     "express": "~4.16.0",
     "express-jwt": "^5.3.1",
     "http-errors": "~1.6.2",
-    "images": "^3.0.2",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.0",

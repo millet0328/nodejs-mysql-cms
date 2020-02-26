@@ -7,7 +7,6 @@ const path = require('path');
 var multer = require('multer');
 var upload = multer();
 //图片处理
-var images = require("images");
 const sharp = require('sharp');
 //uuid
 var uuidv1 = require('uuid/v1');
