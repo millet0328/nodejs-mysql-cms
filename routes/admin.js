@@ -109,7 +109,7 @@ router.post('/register', async (req, res) => {
 
 /**
  * @api {post} /admin/login 登录管理员账户
- * @apiDescription 登录成功， 返回token, 请在头部headers中设置Authorization: `Bearer ${token}`, 所有请求都必须携带token;
+ * @apiDescription 登录成功， 返回token,有效期4小时，请在头部headers中设置Authorization: `Bearer ${token}`, 所有请求都必须携带token;
  * @apiName AdminLogin
  * @apiGroup Admin
  *
