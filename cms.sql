@@ -11,7 +11,11 @@
  Target Server Version : 50553
  File Encoding         : 65001
 
+<<<<<<< HEAD
  Date: 10/10/2019 19:12:45
+=======
+ Date: 10/10/2019 19:15:09
+>>>>>>> 7264d170087d294cb9bb86dfdaa67484c9d0bfc1
 */
 
 SET NAMES utf8mb4;
