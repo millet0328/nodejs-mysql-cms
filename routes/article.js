@@ -21,11 +21,7 @@ var db = require('../config/mysql');
 router.post("/add/", async (req, res) => {
 	let { cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
 	var sql =
-<<<<<<< HEAD
 		'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ?, ?, CURRENT_TIMESTAMP() , ?)';
-=======
-		'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ? , CURRENT_TIMESTAMP() , ?)';
->>>>>>> 7264d170087d294cb9bb86dfdaa67484c9d0bfc1
 	let results = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
 	res.json({
 		status: true,
