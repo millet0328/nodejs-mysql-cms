@@ -19,7 +19,7 @@ var db = require('../config/mysql');
 router.post('/register', async (req, res) => {
 	let { username, password, nickname, sex, tel } = req.body;
 	// 查询账户是否重名
-	var sql = 'SELECT * FROM users WHERE username = ?';
+	var sql = 'SELECT * FROM user WHERE username = ?';
 	let results = await db.query(sql, [username]);
 	// 重名
 	if (results.length) {
@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
 		return;
 	}
 	// 无重名
-	var sql = 'INSERT INTO users (username,password,nickname,sex,tel) VALUES (?,?,?,?,?)';
+	var sql = 'INSERT INTO user (username,password,nickname,sex,tel) VALUES (?,?,?,?,?)';
 	let { insertId, affectedRows } = await db.query(sql, [username, password, nickname, sex, tel]);
 	if (affectedRows) {
 		res.json({
@@ -52,7 +52,7 @@ router.post('/register', async (req, res) => {
  */
 router.post('/login', async (req, res) => {
 	let { username, password } = req.body;
-	let sql = 'SELECT * FROM users WHERE username = ? AND `password` = ?';
+	let sql = 'SELECT * FROM user WHERE username = ? AND `password` = ?';
 	let results = await db.query(sql, [username, password]);
 	if (results.length == 0) {
 		res.json({
@@ -77,7 +77,7 @@ router.post('/login', async (req, res) => {
  */
 router.get('/', async (req, res) => {
 	let { id } = req.query;
-	var sql = 'SELECT username,nickname,sex,tel FROM users WHERE id = ? ';
+	var sql = 'SELECT username,nickname,sex,tel FROM user WHERE id = ? ';
 	let results = await db.query(sql, [id]);
 	if (results.length == 0) {
 		res.json({
@@ -108,7 +108,7 @@ router.get('/', async (req, res) => {
 
 router.put('/', async (req, res) => {
 	let { id, username, nickname, sex, tel } = req.body;
-	let sql = 'UPDATE users SET username = ?,nickname = ?,sex = ?,tel = ? WHERE id = ?';
+	let sql = 'UPDATE user SET username = ?,nickname = ?,sex = ?,tel = ? WHERE id = ?';
 	let { affectedRows } = await db.query(sql, [username, nickname, sex, tel, id]);
 	if (!affectedRows) {
 		res.json({
@@ -134,7 +134,7 @@ router.put('/', async (req, res) => {
 
 router.delete('/', async (req, res) => {
 	let { id } = req.query;
-	let sql = 'DELETE FROM users WHERE id = ?';
+	let sql = 'DELETE FROM user WHERE id = ?';
 	let results = await db.query(sql, [id]);
 	res.json({
 		status: true,
@@ -151,7 +151,7 @@ router.delete('/', async (req, res) => {
  */
 
 router.get('/list', async (req, res) => {
-	var sql = 'SELECT id,username,nickname,sex,tel FROM users';
+	var sql = 'SELECT id,username,nickname,sex,tel FROM user';
 	let results = await db.query(sql);
 	res.json({
 		status: true,

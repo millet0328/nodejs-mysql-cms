@@ -7,9 +7,11 @@ const expressJwt = require('express-jwt');
 var cors = require('cors');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+
+var userRouter = require('./routes/user');
 var categoryRouter = require('./routes/category');
 var articleRouter = require('./routes/article');
+var tagRouter = require('./routes/tag');
 var uploadRouter = require('./routes/upload');
 var adminRouter = require('./routes/admin');
 var roleRouter = require('./routes/role');
@@ -34,9 +36,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 app.use('/', indexRouter);
-app.use('/user', usersRouter);
+app.use('/user', userRouter);
 app.use('/category', categoryRouter);
 app.use('/article', articleRouter);
+app.use('/tag', tagRouter);
 app.use('/upload', uploadRouter);
 app.use('/admin', adminRouter);
 app.use('/role', roleRouter);
