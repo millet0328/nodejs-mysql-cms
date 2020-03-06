@@ -1,119 +1,147 @@
+a:hover,
+a:focus {
+	text-decoration: none;
+}
+
 .navbar {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 .bg {
-    background: url(../img/login-bg.jpg) #337ab7;
-    background-size: cover;
+	background: url(../img/login-bg.jpg) #337ab7;
+	background-size: cover;
 }
 
-html, body {
-    min-height: 100vh;
-    position: relative;
-}
-
-.user-register, .user-login {
-    width: 350px;
-    position: absolute;
-    right: 60px;
-    top: 50%;
-    transform: translateY(-50%);
+.user-register,
+.user-login {
+	width: 350px;
+	position: absolute;
+	right: 60px;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .main {
-    position: relative;
-    height: 100%;
-    box-sizing: border-box;
-    padding-top: 52px;
+	display: flex;
+	height: 100vh;
+	box-sizing: border-box;
+	padding-top: 52px;
 }
 
 .left-side {
-    position: absolute;
-    top: 52px;
-    left: 0;
-    bottom: 0;
-    width: 240px;
-    padding-right: 15px;
+	width: 240px;
+	padding-right: 15px;
+	min-height: 100%;
 }
 
 .right-content {
-    margin-left: 240px;
-    min-height: 400px;
-    padding-right: 15px;
-    padding-top: 4px;
+	flex: 1;
+	padding-top: 4px;
+	padding-right: 15px;
+	box-sizing: border-box;
 }
 
 .breadcrumb {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 .right-content .title {
-    font-size: 28px;
+	font-size: 28px;
 }
 
 .right-content .alert-info h3 {
-    margin-top: 0;
+	margin-top: 0;
 }
 
 .modal-body .alert {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 /* 表格垂直居中 */
 
-.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-    vertical-align: middle;
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
+	vertical-align: middle;
 }
 
 /* upload组件 */
 
 .upload-box {
-    width: 150px;
-    height: 150px;
-    line-height: 150px;
-    border: 1px solid #eeeeee;
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
+	width: 150px;
+	height: 150px;
+	line-height: 150px;
+	border: 1px solid #eeeeee;
+	border-radius: 4px;
+	overflow: hidden;
+	position: relative;
 }
 
 .upload-box .glyphicon-plus {
-    font-size: 24px;
+	font-size: 24px;
 }
 
 .upload-box .file {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    opacity: 0;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	opacity: 0;
 }
 
 .upload-box .cover {
-    content: "";
-    display: block;
-    font-size: 14px;
-    color: white;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: none;
+	content: "";
+	display: block;
+	font-size: 14px;
+	color: white;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+	background-color: rgba(0, 0, 0, 0.7);
+	display: none;
 }
 
 .uploaded:hover .cover {
-    display: block;
+	display: block;
 }
 
 .upload-box img {
-    width: 100%;
+	width: 100%;
 }
 
 .uploaded .plus {
-    display: none;
+	display: none;
+}
+
+.tag-list {
+	font-size: 18px;
+}
+
+.tag-list span,
+.tag-input span {
+	display: inline-block;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.tag-list span {
+	padding-top: 5px;
+}
+
+.tag-input span {
+	padding-top: 3px;
+}
+
+.tag-input {
+	font-size: 16px;
+	padding: 3px 5px;
+	border: 1px solid #CCCCCC;
 }

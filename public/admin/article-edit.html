@@ -1,98 +1,129 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-		<title></title>
-		<!-- Bootstrap -->
-		<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="css/base.css" />
-		<!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
-		<!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
-		<!--[if lt IE 9]>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>编辑文章</title>
+    <!-- Bootstrap -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
       <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
     <![endif]-->
-	</head>
+</head>
 
-	<body>
-		<!-- header -->
-		<header></header>
-		<div class="main">
-			<div class="left-side"></div>
-			<div class="right-content">
-				<!-- 表格 -->
-				<div class="panel panel-primary">
-					<div class="panel-heading">编辑文章</div>
-					<div class="panel-body">
-						<!-- 表单 -->
-						<form class="form-horizontal">
-							<div class="form-group">
-								<label for="" class="col-sm-2 control-label">
-									标题
-									<span class="text-danger">*</span>
-								</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control" id="" placeholder="请输入文章标题">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="" class="col-sm-2 control-label">
-									描述
-									<span class="text-danger">*</span>
-								</label>
-								<div class="col-sm-10">
-									<textarea name="" class="form-control" placeholder="博客内容的简单摘要" rows="3"></textarea>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="" class="col-sm-2 control-label">
-									版块
-									<span class="text-danger">*</span>
-								</label>
-								<div class="col-sm-10">
-									<select class="form-control">
-										<option>1</option>
-										<option>2</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="" class="col-sm-2 control-label">
-									主图
-									<span class="text-danger">*</span>
-								</label>
-								<div class="col-sm-10">
-									<input type="file">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="" class="col-sm-2 control-label">
-									内容
-									<span class="text-danger">*</span>
-								</label>
-								<div class="col-sm-10">
-									<img src="img/editor.png" class="img-responsive" alt="">
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-sm-offset-2 col-sm-10">
-									<button type="button" class="btn btn-primary">保存修改</button>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
-		<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
-		<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
-		<script src="lib/bootstrap/js/bootstrap.min.js"></script>
-		<script src="js/load.js"></script>
-	</body>
+<body>
+    <!-- header -->
+    <header></header>
+    <div class="main">
+        <div class="left-side"></div>
+        <div class="right-content">
+            <!-- 表格 -->
+            <div class="panel panel-primary">
+                <div class="panel-heading">编辑文章</div>
+                <div class="panel-body">
+                    <!-- 表单 -->
+                    <form action="/article/add" method="POST" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">
+                                标题
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="text" datatype="s" class="form-control" nullmsg="请填写文章标题！" name="title"
+                                    placeholder="请输入文章标题">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">
+                                描述
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea name="description" datatype="s" class="form-control" nullmsg="请填写博客内容的简单摘要！"
+                                    placeholder="博客内容的简单摘要" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">
+                                版块
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-10">
+                                <select name="category_id" id="parent" datatype="*" nullmsg="请选择版块！"
+                                    class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">
+                                主图
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-10">
+                                <div class="upload-box text-center">
+                                    <div class="plus">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        <input class="file" type="file">
+                                    </div>
+                                    <img src="" alt="">
+                                    <div class="cover">
+                                        <span class="glyphicon glyphicon-trash delete"></span>
+                                    </div>
+                                </div>
+                                <input name="main_photo" datatype="*" nullmsg="请上传主图！" type="hidden" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">
+                                内容
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-10">
+                                <!-- 编辑器 -->
+                                <div id="editor"></div>
+                                <!-- 隐藏数据 -->
+                                <input name="content" id="content" datatype="*" nullmsg="请填写文章内容！" type="hidden">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary">发布文章</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="lib/jQuery/jquery-1.12.4.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="lib/wangEditor/wangEditor.min.js"></script>
+    <script src="lib/Validform_v5.3.2/Validform_v5.3.2_min.js"></script>
+    <script src="js/load.js"></script>
+    <script>
+        var E = window.wangEditor
+        var editor = new E('#editor');
+        editor.customConfig.zIndex = 600;
+        // 配置服务器端API地址
+        editor.customConfig.uploadImgServer = '/upload/editor';
+        editor.customConfig.uploadFileName = 'file';
+        // 监控变化，同步更新到 hidden
+        editor.customConfig.onchange = function (html) {
+            $("#content").val(html)
+        }
+        editor.create();
+    </script>
+</body>
 
 </html>
