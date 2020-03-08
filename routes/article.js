@@ -14,22 +14,22 @@ var db = require('../config/mysql');
  * @apiParam { String } description 文章摘要.
  * @apiParam { String } main_photo 文章主图.
  * @apiParam { String } content 文章内容.
- * @apiParam { Number[] } tags 标签的id数组,如[1,2,3].
  *
  * @apiSampleRequest /article/add
  */
 
 router.post("/add/", async (req, res) => {
-	let { cate_1st, cate_2nd, title, description, content, main_photo, tags } = req.body;
-	tags = JSON.parse(tags);
-	var articleSQL =
+	let { cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
+	var sql =
 		'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ?, ?, CURRENT_TIMESTAMP() , ?)';
-	let { insertId } = await db.query(articleSQL, [cate_1st, cate_2nd, title, description, content, main_photo]);
-	// 依次插入文章_标签中间表
-	let tagSQL = `INSERT INTO article_tag (article_id, tag_id) VALUES (?, ?)`;
-	tags.forEach(async (item) => {
-		await db.query(tagSQL, [insertId, item]);
-	});
+	let { insertId, affectedRows } = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
+	if (!affectedRows) {
+		res.json({
+			status: false,
+			msg: "添加失败！"
+		});
+		return;
+	}
 	res.json({
 		status: true,
 		msg: "添加成功"
