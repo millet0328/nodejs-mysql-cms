@@ -12,17 +12,17 @@ var db = require('../config/mysql');
  * @apiParam { Number } cate_2nd 二级分类id.
  * @apiParam { String } title 文章标题.
  * @apiParam { String } description 文章摘要.
- * @apiParam { String } content 文章内容.
  * @apiParam { String } main_photo 文章主图.
+ * @apiParam { String } content 文章内容.
  *
  * @apiSampleRequest /article/add
  */
 
 router.post("/add/", async (req, res) => {
 	let { cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
-	var sql =
+	var articleSQL =
 		'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ?, ?, CURRENT_TIMESTAMP() , ?)';
-	let results = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
+	let { insertId } = await db.query(articleSQL, [cate_1st, cate_2nd, title, description, content, main_photo]);
 	res.json({
 		status: true,
 		msg: "添加成功"

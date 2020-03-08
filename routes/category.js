@@ -40,12 +40,23 @@ router.post("/add", async (req, res) => {
 
 router.post("/delete", async (req, res) => {
 	let { id } = req.body;
-	var sql = 'DELETE FROM category  WHERE id = ?'
-	let results = await db.query(sql, [id, id]);
-	res.json({
-		status: true,
-		msg: "删除成功"
-	});
+	let checkSQL = 'SELECT * FROM category WHERE parent_id = ?';
+	let results = await db.query(checkSQL, [id]);
+	if (results.length > 0) {
+		res.json({
+			status: false,
+			msg: "拥有子级分类，不允许删除！"
+		});
+		return;
+	}
+	let deleteSQL = 'DELETE FROM category WHERE id = ?'
+	let { affectedRows } = await db.query(deleteSQL, [id]);
+	if (affectedRows) {
+		res.json({
+			status: true,
+			msg: "删除成功"
+		});
+	}
 });
 /**
  * @api {get} /category/detail 获取指定id的分类详情
