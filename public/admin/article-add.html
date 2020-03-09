@@ -6,7 +6,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-		<title></title>
+		<title>发布文章</title>
 		<!-- Bootstrap -->
 		<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="lib/Validform_v5.3.2/css/style.css">
@@ -31,14 +31,14 @@
 					<div class="panel-heading">发布文章</div>
 					<div class="panel-body">
 						<!-- 表单 -->
-						<form action="/article/add" method="POST" class="form-horizontal">
+						<form id="article-form" action="/article/add" method="POST" class="form-horizontal">
 							<div class="form-group">
 								<label for="" class="col-sm-2 control-label">
 									标题
 									<span class="text-danger">*</span>
 								</label>
 								<div class="col-sm-10">
-									<input type="text" datatype="s" class="form-control" nullmsg="请填写文章标题！" name="title" placeholder="请输入文章标题">
+									<input type="text" datatype="*6-40" class="form-control" nullmsg="请填写文章标题！" name="title" placeholder="请输入文章标题">
 								</div>
 							</div>
 							<div class="form-group">
@@ -47,7 +47,7 @@
 									<span class="text-danger">*</span>
 								</label>
 								<div class="col-sm-10">
-									<textarea name="description" datatype="s" class="form-control" nullmsg="请填写博客内容的简单摘要！" placeholder="博客内容的简单摘要"
+									<textarea name="description" datatype="*" class="form-control" nullmsg="请填写博客内容的简单摘要！" placeholder="博客内容的简单摘要"
 									 rows="3"></textarea>
 								</div>
 							</div>
@@ -56,8 +56,12 @@
 									版块
 									<span class="text-danger">*</span>
 								</label>
-								<div class="col-sm-10">
-									<select name="category_id" id="parent" datatype="*" nullmsg="请选择版块！" class="form-control">
+								<div class="col-sm-5">
+									<select name="cate_1st" id="cate_1st" datatype="*" nullmsg="请选择一级版块！" class="form-control">
+									</select>
+								</div>
+								<div class="col-sm-5">
+									<select name="cate_2nd" id="cate_2nd" datatype="*" nullmsg="请选择二级版块！" class="form-control">
 									</select>
 								</div>
 							</div>
@@ -98,15 +102,12 @@
 									<span class="text-danger">*</span>
 								</label>
 								<div class="col-sm-8">
-									<div class="tag-input">
-										<span class="label label-success">
-											PHP
-											<i class="glyphicon glyphicon-remove"></i>
-										</span>
-									</div>
+									<div class="tag-input"></div>
+									<!-- 隐藏数据 -->
+									<input name="tags" id="tag-input" datatype="*" nullmsg="请选择文章关联的标签！" type="hidden">
 								</div>
 								<div class="col-sm-2">
-									<button id="openTagModal" type="button" class="btn btn-primary btn-sm">
+									<button data-toggle="modal" data-target="#TagModal" type="button" class="btn btn-primary">
 										<span class="glyphicon glyphicon-plus"></span>
 										添加标签
 									</button>
@@ -123,7 +124,7 @@
 			</div>
 		</div>
 		<!-- 选择标签Modal模态框 -->
-		<div class="modal fade" id="tagModal" tabindex="-1" role="dialog">
+		<div class="modal fade" id="TagModal" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -135,33 +136,34 @@
 							您可以添加多个标签
 							<span class="pull-right">
 								找不到标签?
-								<b id="createTag" class="text-primary">创建</b>
+								<b id="createTag" data-toggle="modal" data-target="#CreateModal" class="text-primary create-tag">创建</b>
 							</span>
 						</p>
 						<div class="tag-list">
-							<span class="label label-success">摄影</span>
-							<span class="label label-success label-info">Success</span>
-							<span class="label label-success">编程</span>
+
 						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-						<button type="button" id="" class="btn btn-primary">确定</button>
+						<button type="button" id="confirmBtn" class="btn btn-primary">确定</button>
 					</div>
-				</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 		<!-- 添加标签Modal模态框 -->
-		<div class="modal fade" id="createTagModal" tabindex="-1" role="dialog">
+		<div class="modal fade" id="CreateModal" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<h4 class="modal-title">创建标签</h4>
 					</div>
-					<div class="modal-body">
-						<!-- 表单 -->
-						<form class="form-horizontal">
+					<form id="create-form" action="/tag/add" class="form-horizontal">
+						<div class="modal-body">
+							<!-- 表单 -->
 							<div class="form-group">
 								<input type="hidden" name="id">
 								<label for="" class="col-sm-2 control-label">
@@ -169,18 +171,21 @@
 									<span class="text-danger">*</span>
 								</label>
 								<div class="col-sm-10">
-									<input type="text" name="name" class="form-control" placeholder="请输入标签名称">
+									<input type="text" name="name" datatype="*" nullmsg="请填写标签名称！" class="form-control" placeholder="请输入标签名称">
 								</div>
 							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-						<button type="button" id="createBtn" class="btn btn-primary">创建</button>
-					</div>
-				</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							<button type="submit" class="btn btn-primary">创建</button>
+						</div>
+					</form>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 		<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
 		<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
 		<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
@@ -203,17 +208,38 @@
 		</script>
 
 		<script>
-			//获取所有分类
-			$.getJSON('/category/list', function(res) {
-				let { status, data } = res;
-				let html = '';
-				if (status) {
-					data.forEach(function(item, index) {
-						html += `<option value="${item.category_id}">${item.name}</option>`;
-					});
-					$('#parent').html(html);
-				}
+			//获取所有一级分类
+			loadCate_1st();
+			// 二级分类绑定change事件
+			$('#cate_1st').change(function() {
+				var id = $(this).val();
+				loadCate_2nd(id);
 			});
+			// 根据id获取一级分类
+			function loadCate_1st() {
+				$.getJSON('/category/sub', { id: 0 }, function({ status, data }) {
+					let html = '';
+					if (status) {
+						data.forEach(function(item, index) {
+							html += `<option value="${item.id}">${item.name}</option>`;
+						});
+						$('#cate_1st').html(html);
+						loadCate_2nd(data[0].id)
+					}
+				});
+			}
+			// 根据id获取二级分类
+			function loadCate_2nd(id) {
+				$.getJSON('/category/sub', { id }, function({ status, data }) {
+					let html = '';
+					if (status) {
+						data.forEach(function(item, index) {
+							html += `<option value="${item.id}">${item.name}</option>`;
+						});
+						$('#cate_2nd').html(html);
+					}
+				});
+			}
 			// 上传图片
 			$('.upload-box .file').on('change', function() {
 				// 获取文件对象
@@ -249,7 +275,9 @@
 				// 获取图片地址
 				var url = $img.attr('src');
 				// 物理删除
-				$.post('/upload/delete', { src: '.' + url }, function(res) {
+				$.post('/upload/delete', {
+					src: '.' + url
+				}, function(res) {
 					if (res.status) {
 						$img.attr('src', '');
 						$('.upload-box').removeClass('uploaded');
@@ -258,18 +286,94 @@
 					}
 				});
 			});
-			// 选择标签
-			$('#openTagModal').click(function() {
-				$('#tagModal').modal();
+			// 取消选中的标签
+			$('.tag-input').on('click', 'i', function() {
+				var $tag = $(this).parent();
+				// 获取已选中的标签数据
+				var tags = JSON.parse($('#tag-input').val());
+				// 获取id
+				var id = $tag.data('id');
+				// 删除这个id
+				var i = tags.findIndex((item) => item == id);
+				tags.splice(i, 1);
+				$('#tag-input').val(JSON.stringify(tags));
+				// 移除元素
+				$tag.remove();
 			});
-			// 创建标签
+			// 每次打开TagModal，请求所有标签
+			$('#TagModal').on('show.bs.modal', function() {
+				// 如果想修改已选择的标签，还原列表的选中状态
+				var tags = $('#tag-input').val() || [];
+				tags = tags.length ? JSON.parse(tags) : [];
+				$.getJSON('/tag/list', function({ status, data }) {
+					var html = '';
+					if (status) {
+						data.forEach(function(item) {
+							var has = tags.includes(item.id);
+							if (has) {
+								html += `<span class="label label-primary label-success" data-id="${item.id}">${item.name}</span>`;
+							} else {
+								html += `<span class="label label-primary" data-id="${item.id}">${item.name}</span>`;
+							}
+						});
+						$('.tag-list').html(html);
+					}
+				});
+			});
+			// 标签列表，标签选择事件
+			$('.tag-list').on('click', '.label', function() {
+				$(this).toggleClass('label-success');
+			});
+			// 选择标签
+			$('#confirmBtn').click(function() {
+				var tags = [];
+				// 清空标签
+				$('.tag-input').html('');
+				$('.tag-list .label-success').each(function() {
+					var id = $(this).data('id');
+					var name = $(this).text().trim();
+					// 选中的标签id,储存至input中
+					tags.push(id);
+					$('#tag-input').val(JSON.stringify(tags));
+					var $tag = $(
+						`<span class="label label-success" data-id="${id}">${name} <i class="glyphicon glyphicon-remove"></i></span>`
+					);
+					$('.tag-input').append($tag);
+				});
+				$('#TagModal').modal('hide');
+			});
+			// 打开创建标签Modal
 			$('#createTag').click(function() {
-				$('#tagModal').modal('hide');
-				$('#createTagModal').modal();
+				$('#TagModal').modal('hide');
+			});
+			// 创建新标签
+			$('#create-form').Validform({
+				ajaxPost: true,
+				tiptype: function(msg, o, cssctl) {
+					var $form_group = o.obj.parents('.form-group');
+					// type 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态
+					switch (o.type) {
+						case 2:
+							$form_group.removeClass('has-success has-error').addClass('has-success');
+							break;
+						case 3:
+							$form_group.removeClass('has-success has-error').addClass('has-error');
+							break;
+						default:
+							$form_group.removeClass('has-success has-error')
+							break;
+					}
+				},
+				callback: function({ status, msg }) {
+					if (status) {
+						$('#CreateModal').modal('hide');
+						$('#TagModal').modal('show');
+					}
+				}
 			});
 		</script>
 		<script>
-			$("form").Validform({
+			$("#article-form").Validform({
 				ajaxPost: true,
 				tiptype: 4,
 				callback: function({ status, msg }) {

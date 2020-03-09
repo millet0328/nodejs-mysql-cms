@@ -15,6 +15,7 @@ var tagRouter = require('./routes/tag');
 var uploadRouter = require('./routes/upload');
 var adminRouter = require('./routes/admin');
 var roleRouter = require('./routes/role');
+var menuRouter = require('./routes/menu');
 
 var app = express();
 
@@ -43,7 +44,7 @@ app.use('/tag', tagRouter);
 app.use('/upload', uploadRouter);
 app.use('/admin', adminRouter);
 app.use('/role', roleRouter);
-
+app.use('/menu', menuRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
 	next(createError(404));

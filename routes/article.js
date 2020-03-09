@@ -12,17 +12,24 @@ var db = require('../config/mysql');
  * @apiParam { Number } cate_2nd 二级分类id.
  * @apiParam { String } title 文章标题.
  * @apiParam { String } description 文章摘要.
- * @apiParam { String } content 文章内容.
  * @apiParam { String } main_photo 文章主图.
+ * @apiParam { String } content 文章内容.
+ * @apiParam { Number[] } tags 标签的id数组,如[1,2,3].
  *
  * @apiSampleRequest /article/add
  */
 
 router.post("/add/", async (req, res) => {
-	let { cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
-	var sql =
+	let { cate_1st, cate_2nd, title, description, content, main_photo, tags } = req.body;
+	tags = JSON.parse(tags);
+	var articleSQL =
 		'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ?, ?, CURRENT_TIMESTAMP() , ?)';
-	let results = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
+	let { insertId } = await db.query(articleSQL, [cate_1st, cate_2nd, title, description, content, main_photo]);
+	// 依次插入文章_标签中间表
+	let tagSQL = `INSERT INTO article_tag (article_id, tag_id) VALUES (?, ?)`;
+	tags.forEach(async (item) => {
+		await db.query(tagSQL, [insertId, item]);
+	});
 	res.json({
 		status: true,
 		msg: "添加成功"
