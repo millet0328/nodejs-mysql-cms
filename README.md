@@ -11,7 +11,7 @@ npm i apidoc -g
 cd {项目目录}
 ```
 
-## 安装依赖包
+## 安装依赖包，必须cnpm
 ```
 $ cnpm i
 ```
