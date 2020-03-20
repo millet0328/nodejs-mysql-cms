@@ -20,9 +20,16 @@ var db = require('../config/mysql');
 
 router.post("/add/", async (req, res) => {
 	let { cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
-	var articleSQL =
+	var sql =
 		'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ?, ?, CURRENT_TIMESTAMP() , ?)';
-	let { insertId } = await db.query(articleSQL, [cate_1st, cate_2nd, title, description, content, main_photo]);
+	let { insertId, affectedRows } = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
+	if (!affectedRows) {
+		res.json({
+			status: false,
+			msg: "添加失败！"
+		});
+		return;
+	}
 	res.json({
 		status: true,
 		msg: "添加成功"
@@ -119,6 +126,9 @@ router.post('/edit', async (req, res) => {
  * @apiParam { Number } pagesize 每一页文章数量.
  * @apiParam { Number } pageindex 第几页.
  *
+ * @apiSuccess {Object[]} data 文章数组.
+ * @apiSuccess {Number} total 文章总数.
+ * 
  * @apiSampleRequest /article/list
  */
 router.get("/list", async (req, res) => {
@@ -126,12 +136,13 @@ router.get("/list", async (req, res) => {
 	pagesize = parseInt(pagesize);
 	var offset = pagesize * (pageindex - 1);
 	var sql =
-		'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.cate_2nd = c.id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?';
+		'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.cate_2nd = c.id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?;SELECT FOUND_ROWS() as total';
 	let results = await db.query(sql, [pagesize, offset]);
 	res.json({
 		status: true,
 		msg: "获取成功",
-		data: results
+		...results[1][0],
+		data: results[0],
 	});
 });
 
