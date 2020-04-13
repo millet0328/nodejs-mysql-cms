@@ -1,100 +1,125 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-	<title>注册</title>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>注册</title>
 
-	<!-- Bootstrap -->
-	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<!-- validform -->
-	<link rel="stylesheet" href="lib/Validform_v5.3.2/css/style.css">
-	<link rel="stylesheet" type="text/css" href="css/base.css" />
+		<!-- Bootstrap -->
+		<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="lib/bootstrap/css/bootstrap-theme.min.css">
+		<!-- validform -->
+		<link rel="stylesheet" href="lib/Validform_v5.3.2/css/style.css">
+		<link rel="stylesheet" type="text/css" href="css/base.css" />
 
-	<!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
-	<!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
-	<!--[if lt IE 9]>
+		<!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+		<!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+		<!--[if lt IE 9]>
       <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
     <![endif]-->
-</head>
+	</head>
 
-<body class="bg">
-	<div class="panel panel-info user-register">
-		<div class="panel-heading">注册</div>
-		<div class="panel-body">
-			<form class="form" method="POST" action="/admin/register">
-				<div class="form-group">
-					<label>账户</label>
-					<input type="text" datatype="*" class="form-control" name="username" placeholder="请输入登录用户名">
-				</div>
-				<div class="form-group">
-					<label>密码</label>
-					<input type="password" class="form-control" name="password" placeholder="请输入登录密码">
-				</div>
-				<div class="form-group">
-					<label>昵称</label>
-					<input type="text" class="form-control" name="nickname" placeholder="请输入昵称">
-				</div>
-				<div class="form-group">
-					<label class="control-label">性别:</label>
-					<div>
-						<label class="radio-inline">
-							<input type="radio" datatype="*" name="sex" value="男"> 男
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="sex" value="女"> 女
+	<body class="bg">
+		<div class="panel panel-info user-register">
+			<div class="panel-heading">注册</div>
+			<div class="panel-body">
+				<form class="form" method="POST" action="/admin/register">
+					<div class="form-group">
+						<label class="control-label">账户</label>
+						<input type="text" datatype="*3-30" errormsg="请输入3-30位字符的账户名" data-toggle="tooltip" data-placement="top" title="请输入3-30位字符的账户名"
+						 class="form-control" name="username" placeholder="请输入3-30位字符的账户名">
+					</div>
+					<div class="form-group">
+						<label class="control-label">密码</label>
+						<input type="password" datatype="n3-15" errormsg="请输入3-15位数字的密码" data-toggle="tooltip" data-placement="top" title="请输入3-15位数字的密码"
+						 class="form-control" name="password" placeholder="请输入3-15位数字的密码">
+					</div>
+					<div class="form-group">
+						<label class="control-label">姓名</label>
+						<input type="text" datatype="*2-15" errormsg="请输入正确的姓名" class="form-control" name="fullname" placeholder="请输入姓名">
+					</div>
+					<div class="form-group">
+						<label class="control-label">性别:</label>
+						<div>
+							<label class="radio-inline">
+								<input type="radio" checked name="sex" value="男"> 男
+							</label>
+							<label class="radio-inline">
+								<input type="radio" datatype="*" name="sex" value="女"> 女
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">手机</label>
+						<input type="number" datatype="m" class="form-control" name="tel" placeholder="请输入手机号码">
+					</div>
+					<div class="form-group">
+						<label class="control-label">邮箱</label>
+						<input type="text" datatype="e" class="form-control" name="email" placeholder="请输入邮箱地址">
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" checked="checked"> 同意本站用户协议
 						</label>
 					</div>
-				</div>
-				<div class="form-group">
-					<label>手机</label>
-					<input type="number" datatype="m" class="form-control" name="tel" placeholder="请输入手机号码">
-				</div>
-				<div class="form-group">
-					<label>邮箱</label>
-					<input type="text" datatype="e" class="form-control" name="email" placeholder="请输入邮箱地址">
-				</div>
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" checked="checked"> 同意本站用户协议
-					</label>
-				</div>
-				<div class="form-group">
-					<button type="submit" id="regBtn" class="btn btn-primary btn-lg btn-block">注册</button>
-				</div>
-				<div class="form-group clearfix">
-					<a href="login.html" class="pull-left">登录账户</a>
-					<a href="#" class="pull-right">忘记密码？</a>
-				</div>
-			</form>
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary btn-lg btn-block">注册</button>
+					</div>
+					<div class="form-group clearfix">
+						<a href="login.html" class="pull-left">登录账户</a>
+						<a href="#" class="pull-right">忘记密码？</a>
+					</div>
+				</form>
+			</div>
 		</div>
-	</div>
 
-	<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
-	<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
-	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
-	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
-	<!-- validform -->
-	<script src="lib/Validform_v5.3.2/Validform_v5.3.2_min.js"></script>
-	<script type="text/javascript">
-		$(".form").Validform({
-			ajaxPost: true,
-			callback: function (data) {
-				if (data.status) {
-					setTimeout(function () {
-						$.Hidemsg(); //公用方法关闭信息提示框;显示方法是$.Showmsg("message goes here.");
-						location.href = "user-list.html";
-					}, 2000);
-				} else {
-					$.Showmsg(data.msg);
+		<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+		<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
+		<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+		<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+		<!-- validform -->
+		<script src="lib/Validform_v5.3.2/Validform_v5.3.2_min.js"></script>
+		<script src="lib/layer/layer.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$('[data-toggle="tooltip"]').tooltip()
+			})
+		</script>
+		<script type="text/javascript">
+			$(".form").Validform({
+				ajaxPost: true,
+				tiptype: function(msg, o, cssctl) {
+					$formGroup = o.obj.parents('.form-group');
+					switch (o.type) {
+						case 2:
+							// 通过验证
+							$formGroup.removeClass('has-error has-success').addClass('has-success');
+							break;
+						case 3:
+							// 验证失败
+							$formGroup.removeClass('has-error has-success').addClass('has-error');
+							break;
+						default:
+							break;
+					}
+				},
+				callback: function(res) {
+					if (res.status) {
+						// 注册成功
+						// 自动登录？？？
+						// 跳转页面
+						location.href = './article-list.html';
+					} else {
+						// 注册失败
+						layer.msg(msg);
+					}
 				}
-			}
-		});
-	</script>
-</body>
+			});
+		</script>
+	</body>
 
 </html>

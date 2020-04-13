@@ -23,7 +23,7 @@
 <body>
 	<!-- header -->
 	<header></header>
-	
+
 	<div class="main">
 		<div class="left-side"></div>
 		<div class="right-content">
@@ -71,86 +71,67 @@
 		</div>
 	</div>
 
-	<!-- 删除Modal模态框 -->
-	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">确认</h4>
-				</div>
-				<div class="modal-body">
-					<div class="alert alert-warning" role="alert">
-						<span class="glyphicon glyphicon-exclamation-sign"></span>
-						确定要删除该用户的数据吗？
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" id="confirmBtn" class="btn btn-primary">确定</button>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-
 	<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
 	<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
 	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<!-- layer弹窗 -->
+	<script src="lib/layer/layer.js"></script>
+
 	<script src="js/load.js"></script>
 	<script>
 		$(document).ready(function () {
 			// 获取管理员列表数据
-			loadList();
-			function loadList() {
-				$.getJSON('/admin/list', function (res) {
-					let html = '';
-					let { status, data } = res;
-					if (status) {
-						data.forEach(function (item, index) {
-							html += `<tr>
-								<td>${item.id}</td>
-								<td>${item.username}</td>
-								<td>${item.fullname}</td>
-								<td>${item.sex}</td>
-								<td>${item.tel}</td>
-								<td>${item.email || '无'}</td>
-								<td><img width="60" src="${item.avatar}" alt=""></td>
-								<td>
-									<a href="user-edit.html?id=${item.id}" data-id="${item.id}" class="btn btn-default edit btn-xs">
-										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
-									</a>
-									<button type="button" data-id="${item.id}" class="btn btn-default delete btn-xs">
-										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
-									</button>
-								</td>
-							</tr>`;
-						});
-						$('.table tbody').html(html);
-					}
-				});
-			}
-			// 显示删除模态框
-			$('.table tbody').on('click', '.delete', function () {
-				// 转存id
-				$("#confirmBtn").data('id', $(this).data('id'));
-				$('#deleteModal').modal();
+			$.getJSON('/admin/list', function ({ status, data }) {
+				$('.table tbody').html('');
+				if (status) {
+					data.forEach(function (item, index) {
+						var $tr = $(
+							`<tr>
+									<td>${item.id}</td>
+									<td>${item.username}</td>
+									<td>${item.fullname}</td>
+									<td>${item.sex}</td>
+									<td>${item.tel}</td>
+									<td>${item.email || '无'}</td>
+									<td><img class="img-thumbnail" width="60" src="${item.avatar}" alt=""></td>
+									<td>
+										<a href="user-edit.html?id=${item.id}" data-id="${item.id}" class="edit btn btn-default btn-xs">
+											<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
+										</a>
+										<button type="button" data-id="${item.id}" class="remove btn btn-default btn-xs">
+											<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
+										</button>
+									</td>
+								</tr>`);
+						$('.table tbody').append($tr);
+					});
+				}
 			});
-			// 确认删除
-			$('#confirmBtn').click(function () {
-				// 提取id
-				var id = $(this).data('id');
-				$.post('/admin/delete', { id }, function (res) {
-					if (res.status) {
-						location.reload();
-					}
-				});
-			});
-
 		});
 	</script>
-
+	<script type="text/javascript">
+		// 删除按钮--事件委托
+		$('.table tbody').on('click', '.remove', function () {
+			// 提取点击的元素附着的分类id
+			var id = $(this).data('id');
+			var $tr = $(this).parents('tr');
+			layer.confirm('确定要删除此管理员吗？', function () {
+				// 发送请求 id
+				$.post('/category/delete', { id }, function (res) {
+					if (res.status) {
+						// 删除成功
+						layer.msg(res.msg);
+						// 更新DOM
+						$tr.remove();
+					} else {
+						// 删除失败
+						layer.msg(res.msg);
+					}
+				});
+			});
+		});
+	</script>
 </body>
 
 </html>

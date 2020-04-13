@@ -50,39 +50,60 @@ router.post('/', async (req, res) => {
 	});
 });
 /**
- * @api {delete} /role 删除角色
+ * @api {delete} /role/:id 删除角色
  * @apiName RoleDelete
  * @apiGroup Role
  * @apiPermission admin
  *
  * @apiParam {String} id 角色id.
+ * 
+ * @apiExample {js} 参数示例:
+ * /role/3
  *
  * @apiSampleRequest /role
  */
 router.delete('/', async (req, res) => {
-	let { id } = req.query;
+	let { id } = req.params;
 	let sql = `DELETE FROM role WHERE id = ?`;
-	let results = await db.query(sql, [id]);
+	let { affectedRows } = await db.query(sql, [id]);
+	if (!affectedRows) {
+		res.json({
+			status: false,
+			msg: "fail！"
+		});
+		return;
+	}
 	res.json({
 		status: true,
 		msg: "success!",
 	});
 });
 /**
- * @api {put} /role 更新角色
+ * @api {put} /role/:id 更新角色
  * @apiName RoleUpdate
  * @apiGroup Role
  * @apiPermission admin
  *
  * @apiParam {String} id 角色id.
  * @apiParam {String} name 角色名称.
- *
+ * 
+ * @apiExample {js} 参数示例:
+ * /role/3
+ * 
  * @apiSampleRequest /role
  */
 router.put('/', async (req, res) => {
-	let { id, name } = req.body;
+	let { id } = req.params;
+	let { name } = req.body;
 	let sql = `UPDATE role SET role_name = ? WHERE id = ?`;
-	let results = await db.query(sql, [name, id]);
+	let { affectedRows } = await db.query(sql, [name, id]);
+	if (!affectedRows) {
+		res.json({
+			status: false,
+			msg: "fail！"
+		});
+		return;
+	}
 	res.json({
 		status: true,
 		msg: "success!",

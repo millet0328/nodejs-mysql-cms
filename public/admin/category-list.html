@@ -10,7 +10,7 @@
 	<title>分类列表</title>
 	<!-- Bootstrap -->
 	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
+	<link rel="stylesheet" type="text/css" href="lib/Validform_v5.3.2/css/style.css" />
 	<link rel="stylesheet" type="text/css" href="css/base.css" />
 	<!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
 	<!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
@@ -24,9 +24,7 @@
 	<!-- header -->
 	<header></header>
 	<div class="main">
-		<div class="left-side">
-			
-		</div>
+		<div class="left-side"></div>
 		<div class="right-content">
 			<!-- 表格 -->
 			<div class="panel panel-primary">
@@ -73,9 +71,9 @@
 							aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">编辑分类</h4>
 				</div>
-				<div class="modal-body">
-					<!-- 表单 -->
-					<form class="form-horizontal">
+				<form id="edit-form" class="form-horizontal" action="/category/edit">
+					<div class="modal-body">
+						<!-- 表单 -->
 						<div class="form-group">
 							<input type="hidden" name="id">
 							<label for="" class="col-sm-2 control-label">
@@ -83,7 +81,7 @@
 								<span class="text-danger">*</span>
 							</label>
 							<div class="col-sm-10">
-								<input type="text" name="name" class="form-control" placeholder="请输入分类名称">
+								<input type="text" datatype="*" name="name" class="form-control" placeholder="请输入分类名称">
 							</div>
 						</div>
 						<div class="form-group">
@@ -92,122 +90,117 @@
 								<span class="text-danger">*</span>
 							</label>
 							<div class="col-sm-10">
-								<select id="parent" name="parent_id" class="form-control">
+								<select id="parent" datatype="*" name="parent_id" class="form-control">
 									<option value="0">无</option>
 								</select>
 							</div>
 						</div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" id="updateBtn" class="btn btn-primary">保存修改</button>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-	<!-- 删除Modal模态框 -->
-	<div class="modal fade" id="deleteModal" tabindex="-2" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">确认</h4>
-				</div>
-				<div class="modal-body">
-					<div class="alert alert-warning" role="alert">
-						<span class="glyphicon glyphicon-exclamation-sign"></span>
-						确定要删除这一分类及其子分类吗？
+
 					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" id="confirmBtn" class="btn btn-primary">确定</button>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="submit" class="btn btn-primary">保存修改</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
 
 	<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
 	<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
 	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="lib/Validform_v5.3.2/Validform_v5.3.2_min.js"></script>
+	<!-- layer弹窗 -->
+	<script src="lib/layer/layer.js"></script>
+
 	<script src="js/load.js"></script>
 	<script>
-		$(document).ready(function () {
-			// 获取列表数据
-			loadList();
-			//获取所有分类
-			$.getJSON('/category/list', function (res) {
-				let { status, data } = res;
-				let html = '';
-				if (status) {
-					data.forEach(function (item, index) {
-						html += `<option value="${item.id}">${item.name}</option>`;
-					});
-					$('#parent').append(html);
-
-				}
-			});
-			function loadList() {
-				$.getJSON('/category/list', function (res) {
-					let {
-						status,
-						data
-					} = res;
-					let html = '';
-					if (status) {
-						data.forEach(function (item, index) {
-							html += `<tr>
-								<td>${item.id}</td>
-								<td>${item.name}</td>
-								<td>${item.parent_id}</td>
-								<td>${item.parent_name || '无'}</td>
-								<td>
-									<button type="button" data-id="${item.id}" class="edit btn btn-default btn-xs">
-										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
-									</button>
-									<button type="button" data-id="${item.id}" class="delete btn btn-default btn-xs">
-										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
-									</button>
-								</td>
-							</tr>`
-						});
-						$('.table tbody').html(html);
-					}
+		// 获取列表数据
+		loadList();
+		// 获取一级分类
+		$.getJSON('/category/sub?id=0', function (res) {
+			if (res.status) {
+				res.data.forEach(function (item) {
+					$option = $(`<option value="${item.id}">${item.name}</option>`);
+					$('#parent').append($option);
 				});
 			}
-			// 显示编辑模态框
-			$('.table').on('click', '.edit', function () {
-				var id = $(this).data('id');
-				// 转存id
-				$("#updateBtn").data('id', id);
-				// 获取分类详情
-				$.getJSON('/category/detail', { id }, function ({ status, data }) {
-					if (status) {
-						$('input[name=name]').val(data.name);
-						$('#parent').val(data.parent_id);
-					}
-				});
-				$('#editModal').modal();
+		});
+
+		function loadList() {
+			$.getJSON('/category/list', function ({ status, data }) {
+				if (status) {
+					$('.table tbody').html('');
+					data.forEach(function (item, index) {
+						var $tr = $(
+							`<tr>
+									<td>${item.id}</td>
+									<td>${item.name}</td>
+									<td>${item.parent_id}</td>
+									<td>${item.parent_name || '无父级'}</td>
+									<td>
+										<button type="button" data-id="${item.id}" data-toggle="modal" data-target="#editModal" class="btn btn-default btn-xs">
+											<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
+										</button>
+										<button type="button" data-id="${item.id}" class="remove btn btn-default btn-xs">
+											<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
+										</button>
+									</td>
+								</tr>`
+						);
+						$('.table tbody').append($tr);
+					});
+				}
 			});
-			// 显示删除模态框
-			$('.table').on('click', '.delete', function () {
-				// 转存id
-				$("#confirmBtn").data('id', $(this).data('id'));
-				$('#deleteModal').modal();
-			});
-			// 确认删除分类
-			$('#confirmBtn').click(function () {
-				// 提取id
-				var id = $(this).data('id');
-				$.post('/category/delete', { id }, ({ status }) => {
-					if (status) {
-						// 关闭模态框
-						$('#deleteModal').modal('hide');
-						// 重新获取列表
-						loadList();
+		}
+	</script>
+	<script type="text/javascript">
+		$('#editModal').on('show.bs.modal', function (e) {
+			var $td = $(e.relatedTarget).parent().siblings();
+			// 获取这一行数据
+			var cid = $td.eq(0).text().trim();
+			var name = $td.eq(1).text().trim();
+			var parent_id = $td.eq(2).text().trim();
+			// 赋值模态框表单
+			$(this).find('input[name=id]').val(cid);
+			$(this).find('input[name=name]').val(name);
+			$(this).find('select[name=parent_id]').val(parent_id);
+		});
+		// 分类保存修改
+		$('#edit-form').Validform({
+			ajaxPost: true,
+			tiptype: 4,
+			callback: function (res) {
+				if (res.status) {
+					$('#editModal').modal('hide');
+					layer.msg(res.msg);
+					// 更新DOM,重新获取列表数据
+					loadList();
+				}
+			}
+		});
+	</script>
+	<script type="text/javascript">
+		// 删除按钮--事件委托
+		$('.table tbody').on('click', '.remove', function () {
+			// 提取点击的元素附着的分类id
+			var cid = $(this).data('id');
+			var $tr = $(this).parents('tr');
+			layer.confirm('确定要删除此分类吗？', function () {
+				// 发送请求 id
+				$.post('/category/delete', { id: cid }, function (res) {
+					if (res.status) {
+						// 删除成功
+						layer.msg(res.msg);
+						// 更新DOM
+						$tr.remove();
+					} else {
+						// 删除失败
+						layer.msg(res.msg);
 					}
 				});
 			});

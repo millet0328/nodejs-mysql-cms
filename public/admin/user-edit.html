@@ -1,73 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-		<title>用户详情</title>
-		<!-- Bootstrap -->
-		<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="css/base.css" />
-		<!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
-		<!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
-		<!--[if lt IE 9]>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+	<title>编辑用户</title>
+	<!-- Bootstrap -->
+	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="lib/bootstrap/css/bootstrap-theme.min.css">
+	<!-- 表单验证 -->
+	<link rel="stylesheet" type="text/css" href="lib/Validform_v5.3.2/css/style.css" />
+
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+	<!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+	<!--[if lt IE 9]>
       <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
     <![endif]-->
-	</head>
+</head>
 
-	<body>
-		<!-- header -->
-		<header></header>
-		<div class="main">
-			<div class="left-side"></div>
-			<div class="right-content">
-				<div class="panel panel-primary">
-					<div class="panel-heading">用户详情</div>
-					<div class="panel-body">
-						<form class="form form-horizontal">
-
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
-		<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
-		<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
-		<script src="lib/bootstrap/js/bootstrap.min.js"></script>
-		<script src="js/load.js"></script>
-		<script>
-			//获取地址栏的url参数
-			function GetRequest() {
-				var url = location.search; //获取url中"?"符后的字串
-				var theRequest = new Object();
-				if (url.indexOf("?") != -1) {
-					var str = url.substr(1);
-					strs = str.split("&");
-					for (var i = 0; i < strs.length; i++) {
-						theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
-					}
-				}
-				return theRequest;
-			}
-			var id = GetRequest().id;
-			// 获取个人资料
-			$.getJSON('/admin/info', { id }, function({ status, data }) {
-				if (status) {
-					var html =
-						`
-						<input name="id" type="hidden" value="${id}"/>
+<body>
+	<!-- header -->
+	<header></header>
+	<div class="main">
+		<div class="left-side"></div>
+		<div class="right-content">
+			<div class="panel panel-primary">
+				<div class="panel-heading">用户详情</div>
+				<div class="panel-body">
+					<form action="/admin/info" class="form form-horizontal">
+						<input name="id" type="hidden" />
 						<div class="form-group">
 							<label class="col-sm-2 control-label">
 								用户名:
 								<span class="text-danger">*</span>
 							</label>
 							<div class="col-sm-10">
-								<input type="text" name="username" class="form-control" readonly value="${data.username}">
+								<input type="text" name="username" class="form-control" readonly>
 							</div>
 						</div>
 						<div class="form-group">
@@ -76,7 +49,7 @@
 								<span class="text-danger">*</span>
 							</label>
 							<div class="col-sm-10">
-								<input type="text" name="fullname" class="form-control" value="${data.fullname || ''}">
+								<input type="text" datatype="*2-15" name="fullname" class="form-control">
 							</div>
 						</div>
 						<div class="form-group">
@@ -86,10 +59,10 @@
 							</label>
 							<div class="col-sm-10">
 								<label class="radio-inline">
-									<input type="radio" name="sex" ${data.sex == '男' ? 'checked' : ''} value="男"> 男
+									<input type="radio" name="sex" value="男"> 男
 								</label>
 								<label class="radio-inline">
-									<input type="radio" name="sex" ${data.sex == '女' ? 'checked' : ''} value="女"> 女
+									<input type="radio" datatype="*" name="sex" value="女"> 女
 								</label>
 							</div>
 						</div>
@@ -99,7 +72,7 @@
 								<span class="text-danger">*</span>
 							</label>
 							<div class="col-sm-10">
-								<input type="text" name="tel" class="form-control" value="${data.tel || ''}">
+								<input type="text" name="tel" datatype="m" class="form-control">
 							</div>
 						</div>
 						<div class="form-group">
@@ -108,7 +81,7 @@
 								<span class="text-danger">*</span>
 							</label>
 							<div class="col-sm-10">
-								<input type="text" name="email" class="form-control" value="${data.email || ''}">
+								<input type="text" name="email" datatype="e" class="form-control">
 							</div>
 						</div>
 						<div class="form-group">
@@ -121,90 +94,141 @@
 									<div class="plus">
 										<span class="glyphicon glyphicon-plus"></span>
 										<input class="file" type="file">
-										<input name="avatar" type="hidden" value="${data.avatar}"/>
 									</div>
-									<img src="${data.avatar}" alt="">
+									<img src="img/1.jpg" alt="">
 									<div class="cover">
 										<span class="glyphicon glyphicon-trash delete"></span>
 									</div>
 								</div>
-							</div>	
+								<input name="avatar" datatype="*" type="hidden" />
+							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-2 col-sm-10">
-								<button type="button" id="saveBtn" class="btn btn-primary">保存修改</button>
+								<button type="submit" class="btn btn-primary">保存修改</button>
 							</div>
 						</div>
-						`;
-					$('.form').html(html);
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+	<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
+	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<!-- 表单验证 -->
+	<script src="lib/Validform_v5.3.2/Validform_v5.3.2_min.js"></script>
+	<!-- layer -->
+	<script src="lib/layer/layer.js"></script>
+
+	<script src="js/load.js"></script>
+	<script type="text/javascript">
+		// 获取url的参数
+		var uid = GetRequest().id;
+		// 根据id获取管理员的个人资料
+		$.getJSON('/admin/info', { id: uid }, function (res) {
+			if (res.status) {
+				var person = res.data;
+				// 赋值表单元素
+				$('input[name=username]').val(person.username);
+				$('input[name=fullname]').val(person.fullname);
+				$('input[name=sex]').each(function () {
+					// 获取value
+					var val = $(this).val();
+					if (person.sex == val) {
+						$(this).prop('checked', true);
+					}
+				});
+				$('input[name=tel]').val(person.tel);
+				$('input[name=email]').val(person.email);
+				$('.upload-box img').attr('src', person.avatar);
+				// 赋值隐藏表单
+				$('input[name=avatar]').val(person.avatar);
+				$('input[name=id]').val(uid);
+			}
+		});
+	</script>
+
+	<script type="text/javascript">
+		// 删除头像
+		$('.upload-box .delete').click(function () {
+			// 获取图片地址
+			var url = $(this).parent().siblings('img').attr('src');
+			// 判断是否默认头像
+			var isDefault = url.indexOf('default.jpg') >= 0 ? true : false;
+			// 默认头像，不允许物理删除
+			if (isDefault) {
+				$('.upload-box').removeClass('uploaded');
+				return;
+			}
+			// 自定义头像，物理删除
+			url = url.replace(/.*\/images/, './images');
+			// 同步表单数据
+			$('input[name=avatar]').val('');
+			// 发送删除ajax
+			$.post('/upload/delete', { src: url }, function (res) {
+				if (res.status) {
+					// 成功
+					layer.msg('删除成功！');
+					$('.upload-box').removeClass('uploaded');
+				} else {
+					// 失败
+					layer.msg('删除失败！');
 				}
 			});
-		</script>
-		<script>
-			$(document).ready(function() {
-				// 头像删除
-				$('.form').on('click', '.cover .delete', function() {
-					var $img = $(this).parent().siblings('img');
-					// 获取图片地址
-					var url = $img.attr('src');
-					// 默认头像，不能物理删除
-					if (url.indexOf('default.jpg') >= 0) {
-						$('.upload-box').removeClass('uploaded');
+		});
+		// 上传头像
+		$('.file').change(function () {
+			// 获取File对象
+			var file = this.files[0];
+			// formData相当于form
+			var formData = new FormData();
+			formData.append('file', file);
+			formData.append('type', 'avatar');
+			// 发送ajax
+			$.ajax({
+				type: "POST",
+				url: '/upload/common/',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function (res) {
+					// 失败
+					if (!res.status) {
+						layer.msg('失败：' + res.msg);
 						return;
 					}
-					// 物理删除
-					$.post('/upload/delete', { src: '.' + url }, function(res) {
-						if (res.status) {
-							$img.attr('src', '');
-							$('.upload-box').removeClass('uploaded');
-							// 修改默认头像地址
-							$('input[name=avatar]').val('../images/avatar/default.jpg');
-						}
-					});
-
-				});
-				// 上传头像
-				$('.form').on('change', '.file', function() {
-					// 获取文件对象
-					var file = this.files[0];
-					var $file = $(this);
-					// form对象化
-					var formData = new FormData();
-					formData.append("file", file);
-					formData.append("type", "avatar");
-					// $.ajax上传文件
-					$.ajax({
-						type: "POST",
-						url: '/upload/common',
-						data: formData,
-						processData: false,
-						contentType: false,
-						success: function(res) {
-							let { status, msg, data } = res;
-							$file.val('');
-							if (!status) {
-								alert(msg);
-								return;
-							}
-							$('.upload-box').addClass('uploaded').find('img').attr('src', data);
-							// 修改avatar表单
-							$('input[name=avatar]').val(data);
-						}
-					});
-				});
-				// 保存个人资料
-				$('.form').on('click', '#saveBtn', function() {
-					// 序列化表单
-					var data = $('.form').serialize();
-					$.post('/admin/info', data, function(res) {
-						if (res.status) {
-							location.href = "user-list.html";
-						}
-					});
-				});
-			});
-		</script>
-
-	</body>
+					// 成功
+					layer.msg(res.msg);
+					// 预览图片
+					$('.upload-box img').attr('src', res.data);
+					$('.upload-box').addClass('uploaded');
+					// 清空value,保证触发change事件
+					$('.file').val('');
+					// 同步表单数据
+					$('input[name=avatar]').val(res.data);
+				}
+			})
+		});
+	</script>
+	<script type="text/javascript">
+		// 修改详情
+		$('.form').Validform({
+			ajaxPost: true,
+			tiptype: 4,
+			callback: function (res) {
+				if (res.status) {
+					// 修改成功，跳转页面
+					layer.msg(res.msg);
+					location.href = 'user-list.html';
+				} else {
+					layer.msg(res.msg);
+				}
+			}
+		});
+	</script>
+</body>
 
 </html>

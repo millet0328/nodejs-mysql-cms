@@ -1,54 +1,56 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-		<title>文章列表</title>
-		<!-- Bootstrap -->
-		<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+	<title>文章列表</title>
+	<!-- Bootstrap -->
+	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-		<link rel="stylesheet" type="text/css" href="css/base.css" />
-		<!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
-		<!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
-		<!--[if lt IE 9]>
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+	<!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+	<!--[if lt IE 9]>
       <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
     <![endif]-->
-	</head>
+</head>
 
-	<body>
-		<!-- header -->
-		<header></header>
-		<div class="main">
-			<div class="left-side"></div>
-			<div class="right-content">
-				<!-- 警告框 -->
-				<div class="alert alert-info" role="alert">
-					<h3>注意</h3>
-					<div>暂时显示全部文章，不区分版块</div>
-				</div>
-				<!-- 表格 -->
-				<div class="panel panel-primary">
-					<div class="panel-heading">文章列表</div>
-					<div class="panel-body">
-						<!-- Table -->
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>版块</th>
-									<th>主图</th>
-									<th>标题</th>
-									<th>发布日期</th>
-									<th>更新日期</th>
-									<th>操作</th>
-								</tr>
-							</thead>
-							<tbody>
-								<!-- <tr>
+<body>
+	<!-- header -->
+	<header></header>
+	<div class="main">
+		<div class="left-side"></div>
+		<div class="right-content">
+			<!-- 警告框 -->
+			<div class="alert alert-info" role="alert">
+				<h3>注意</h3>
+				<div>暂时显示全部文章，不区分版块</div>
+			</div>
+			<!-- 表格 -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">文章列表</div>
+				<div class="panel-body">
+					<!-- Table -->
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>一级分类</th>
+								<th>二级分类</th>
+								<th>主图</th>
+								<th>标题</th>
+								<th>发布日期</th>
+								<th>更新日期</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- <tr>
 								<td>1</td>
 								<td>科技</td>
 								<td><img width="60" src="img/1.jpg" alt=""></td>
@@ -56,98 +58,76 @@
 								<td>2019-30-28 15:30:12</td>
 								<td>2019-30-28 15:30:12</td>
 								<td>
-									<button type="button" class="btn btn-default btn-xs">
+									<a href="article-edit.html" class="btn btn-default btn-xs">
 										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
-									</button>
+									</a>
 									<button type="button" class="btn btn-default btn-xs">
 										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
 									</button>
 								</td>
 							</tr> -->
-							</tbody>
-						</table>
-					</div>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
-		<!-- 删除Modal模态框 -->
-		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title">确认</h4>
-					</div>
-					<div class="modal-body">
-						<div class="alert alert-warning" role="alert">
-							<span class="glyphicon glyphicon-exclamation-sign"></span>
-							确定要删除这一篇文章吗？
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-						<button type="button" id="confirmBtn" class="btn btn-primary">确定</button>
-					</div>
-				</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->
+	</div>
 
-		<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
-		<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
-		<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
-		<script src="lib/bootstrap/js/bootstrap.min.js"></script>
-		<script src="js/load.js"></script>
-		<script>
-			// 获取文章列表
-			loadList();
-
-			function loadList() {
-				$.getJSON('/article/list', { pagesize: 100, pageindex: 1 }, function({ status, data }) {
-					if (status) {
-						let html = '';
-						data.forEach(function(item) {
-							html +=
-								`<tr>
+	<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+	<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
+	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="lib/layer/layer.js"></script>
+	<script src="js/load.js"></script>
+	<script>
+		// 获取文章列表
+		$.getJSON('/article/list', { pagesize: 100, pageindex: 1 }, function ({ status, data }) {
+			if (status) {
+				let html = '';
+				data.forEach(function (item) {
+					html +=
+						`<tr>
 								<td>${item.id}</td>
-								<td>${item.category_name}</td>
-								<td><img width="60" src="${item.main_photo}" alt=""></td>
+								<td>${item.cate_1st_name}</td>
+								<td>${item.cate_2nd_name}</td>
+								<td align="center"><img width="80" src="${item.main_photo}" alt=""></td>
 								<td>${item.title}</td>
 								<td>${item.create_time}</td>
-								<td>${item.update_time}</td>
+								<td>${item.update_time ||'无'}</td>
 								<td>
-									<a href="article-edit.html?id=${item.article_id}" class="btn btn-default btn-xs">
+									<a href="article-edit.html?id=${item.id}" class="btn btn-default btn-xs">
 										<span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
 									</a>
-									<button type="button" data-id="${item.article_id}" class="btn delete btn-default btn-xs">
+									<button type="button" data-id="${item.id}" class="btn delete btn-default btn-xs">
 										<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除
 									</button>
 								</td>
 							</tr>`;
-						});
-						$('.table tbody').html(html);
-					}
 				});
+				$('.table tbody').html(html);
 			}
-			// 显示删除模态框
-			$('.table').on('click', '.delete', function() {
-				// 转存id
-				$("#confirmBtn").data('id', $(this).data('id'));
-				$('#deleteModal').modal();
-			});
-			// 确认删除文章
-			$('#confirmBtn').click(function() {
-				// 提取id
-				var id = $(this).data('id');
-				$.post('/article/delete', { id }, function({ status }) {
-					if (status) {
-						// 关闭模态框
-						$('#deleteModal').modal('hide');
-						// 重新获取列表
-						loadList();
+		});
+		// 显示删除模态框
+		$('.table').on('click', '.delete', function () {
+			// 提取点击的元素附着的分类id
+			var id = $(this).data('id');
+			var $tr = $(this).parents('tr');
+			layer.confirm('确定要删除此文章吗？', function () {
+				// 发送请求 id
+				$.post('/article/delete', { id }, function (res) {
+					if (res.status) {
+						// 删除成功
+						layer.msg(res.msg);
+						// 更新DOM
+						$tr.remove();
+					} else {
+						// 删除失败
+						layer.msg(res.msg);
 					}
 				});
 			});
-		</script>
-	</body>
+		});
+	</script>
+</body>
 
 </html>
