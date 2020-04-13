@@ -1,4 +1,4 @@
-# cms-admin
+# nodejs-mysql-cms
 基于nodejs+express+mysql构建的CMS管理系统
 
 ## 安装api文档插件
