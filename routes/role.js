@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
  *
  * @apiSampleRequest /role
  */
-router.delete('/', async (req, res) => {
+router.delete('/:id', async (req, res) => {
 	let { id } = req.params;
 	let sql = `DELETE FROM role WHERE id = ?`;
 	let { affectedRows } = await db.query(sql, [id]);
@@ -92,7 +92,7 @@ router.delete('/', async (req, res) => {
  * 
  * @apiSampleRequest /role
  */
-router.put('/', async (req, res) => {
+router.put('/:id', async (req, res) => {
 	let { id } = req.params;
 	let { name } = req.body;
 	let sql = `UPDATE role SET role_name = ? WHERE id = ?`;

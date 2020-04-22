@@ -67,19 +67,16 @@ router.post('/login', async (req, res) => {
 	});
 });
 /**
- * @api {get} /user/:id 获取用户个人资料
+ * @api {get} /user/ 获取用户个人资料
  * @apiName UserInfo
  * @apiGroup User
  *
  * @apiParam { Number } id 用户id.
- *
- * @apiExample {js} 参数示例:
- * /user/3
  * 
  * @apiSampleRequest /user/
  */
 router.get('/', async (req, res) => {
-	let { id } = req.params;
+	let { id } = req.query;
 	var sql = 'SELECT username,nickname,sex,tel FROM user WHERE id = ? ';
 	let results = await db.query(sql, [id]);
 	if (results.length == 0) {
@@ -120,7 +117,7 @@ router.get('/', async (req, res) => {
  * @apiSampleRequest /user
  */
 
-router.put('/', async (req, res) => {
+router.put('/:id', async (req, res) => {
 	let { id } = req.params;
 	let { username, nickname, sex, tel } = req.body;
 	let sql = 'UPDATE user SET username = ?,nickname = ?,sex = ?,tel = ? WHERE id = ?';
@@ -150,7 +147,7 @@ router.put('/', async (req, res) => {
  * @apiSampleRequest /user
  */
 
-router.delete('/', async (req, res) => {
+router.delete('/:id', async (req, res) => {
 	let { id } = req.params;
 	let sql = 'DELETE FROM user WHERE id = ?';
 	let { affectedRows } = await db.query(sql, [id]);
