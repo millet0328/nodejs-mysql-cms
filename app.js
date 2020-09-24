@@ -30,9 +30,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //使用中间件验证token合法性
-// app.use(expressJwt({ secret: 'secret' }).unless({
-// 	path: ['/', '/admin/register', '/admin/login'] //除了这些地址，其他的URL都需要验证
-// }));
+//除了这些地址，其他的URL都需要验证
+app.use(expressJwt({ secret: 'secret' }).unless({
+	path: ['/', '/admin/register', '/admin/login']
+}));
 // 设置跨域资源分享CORS
 app.use(cors());
 
@@ -45,13 +46,24 @@ app.use('/upload', uploadRouter);
 app.use('/admin', adminRouter);
 app.use('/role', roleRouter);
 app.use('/menu', menuRouter);
+
+// 处理401错误
+app.use(function (err, req, res, next) {
+	if (err.name === 'UnauthorizedError') {
+		res.status(401).json({
+			status: false,
+			...err,
+		});
+	}
+});
+
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};
