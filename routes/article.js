@@ -136,7 +136,7 @@ router.get("/list", async (req, res) => {
 	pagesize = parseInt(pagesize);
 	var offset = pagesize * (pageindex - 1);
 	var sql =
-		'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.cate_2nd = c.id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?;SELECT FOUND_ROWS() as total';
+		'SELECT a.id, cate_1st, cate_2nd, title, description, main_photo, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c1.`name` AS cate_1st_name, c2.`name` AS cate_2nd_name FROM `article` a JOIN category c1 ON a.cate_1st = c1.id JOIN category c2 ON a.cate_2nd = c2.id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?;SELECT FOUND_ROWS() as total';
 	let results = await db.query(sql, [pagesize, offset]);
 	res.json({
 		status: true,
@@ -152,11 +152,11 @@ router.get("/list", async (req, res) => {
  * @apiName ArticleCategory
  * @apiGroup Article
  *
- * @apiParam { Number } id 分类id.
+ * @apiParam { Number } id 一级分类id.
  * @apiParam { Number } pagesize 每一页文章数量.
  * @apiParam { Number } pageindex 第几页.
  *
- * @apiSampleRequest /article/list
+ * @apiSampleRequest /article/category
  */
 
 router.get("/category", async (req, res) => {
@@ -164,12 +164,13 @@ router.get("/category", async (req, res) => {
 	pagesize = parseInt(pagesize);
 	let offset = pagesize * (pageindex - 1);
 	var sql =
-		'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c.`name` AS category_name FROM `article` a LEFT JOIN category c ON a.cate_2nd = c.id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? WHERE category_id = ?';
-	let results = await db.query(sql, [pagesize, offset, id]);
+		'SELECT a.id, cate_1st, cate_2nd, title, description, main_photo, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c1.`name` AS cate_1st_name, c2.`name` AS cate_2nd_name FROM `article` a JOIN category c1 ON a.cate_1st = c1.id JOIN category c2 ON a.cate_2nd = c2.id WHERE a.cate_1st = ? ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? ; SELECT FOUND_ROWS() as total';
+	let results = await db.query(sql, [id, pagesize, offset]);
 	res.json({
 		status: true,
 		msg: "获取成功",
-		data: results
+		...results[1][0],
+		data: results[0]
 	});
 });
 

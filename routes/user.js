@@ -67,13 +67,13 @@ router.post('/login', async (req, res) => {
 	});
 });
 /**
- * @api {get} /user 获取用户个人资料
+ * @api {get} /user/ 获取用户个人资料
  * @apiName UserInfo
  * @apiGroup User
  *
  * @apiParam { Number } id 用户id.
- *
- * @apiSampleRequest /user
+ * 
+ * @apiSampleRequest /user/
  */
 router.get('/', async (req, res) => {
 	let { id } = req.query;
@@ -93,7 +93,7 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * @api {put} /user 编辑个人资料
+ * @api {put} /user/:id 编辑个人资料
  * @apiName UserUpdate
  * @apiGroup User
  *
@@ -103,11 +103,23 @@ router.get('/', async (req, res) => {
  * @apiParam { String } sex 性别.
  * @apiParam { String } tel 手机号码.
  *
+ * @apiExample {js} 参数示例:
+ * /user/3
+ * 
+ * @apiParamExample {json} body参数:
+ *     {
+ *       "username": '黄小米',
+ *       "nickname":"hxm",
+ *       "sex":"女",
+ *       "tel":"15863008280"
+ *     }
+ * 
  * @apiSampleRequest /user
  */
 
-router.put('/', async (req, res) => {
-	let { id, username, nickname, sex, tel } = req.body;
+router.put('/:id', async (req, res) => {
+	let { id } = req.params;
+	let { username, nickname, sex, tel } = req.body;
 	let sql = 'UPDATE user SET username = ?,nickname = ?,sex = ?,tel = ? WHERE id = ?';
 	let { affectedRows } = await db.query(sql, [username, nickname, sex, tel, id]);
 	if (!affectedRows) {
@@ -123,22 +135,32 @@ router.put('/', async (req, res) => {
 	})
 });
 /**
- * @api {delete} /user 删除账户
+ * @api {delete} /user/:id 删除账户
  * @apiName UserDelete
  * @apiGroup User
  *
  * @apiParam { Number } id 用户id.
- *
+ * 
+ * @apiExample {js} 参数示例:
+ * /user/3
+ * 
  * @apiSampleRequest /user
  */
 
-router.delete('/', async (req, res) => {
-	let { id } = req.query;
+router.delete('/:id', async (req, res) => {
+	let { id } = req.params;
 	let sql = 'DELETE FROM user WHERE id = ?';
-	let results = await db.query(sql, [id]);
+	let { affectedRows } = await db.query(sql, [id]);
+	if (!affectedRows) {
+		res.json({
+			status: false,
+			msg: "fail！"
+		});
+		return;
+	}
 	res.json({
 		status: true,
-		msg: "删除成功"
+		msg: "success!",
 	});
 })
 

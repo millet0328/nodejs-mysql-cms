@@ -29,13 +29,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 设置跨域资源分享CORS
+// app.use(cors());
+
 //使用中间件验证token合法性
 //除了这些地址，其他的URL都需要验证
-app.use(expressJwt({ secret: 'secret' }).unless({
-	path: ['/', '/admin/register', '/admin/login']
-}));
-// 设置跨域资源分享CORS
-app.use(cors());
+// app.use(expressJwt({ secret: 'secret' }).unless({
+// 	path: ['/', '/admin/register', '/admin/login']
+// }));
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);

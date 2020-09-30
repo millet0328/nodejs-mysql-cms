@@ -1,4 +1,4 @@
-# cms-admin
+# nodejs-mysql-cms
 基于nodejs+express+mysql构建的CMS管理系统
 
 ## 安装api文档插件
@@ -19,6 +19,7 @@ $ cnpm i
 ## 还原数据库
 1. 在mysql中创建cms数据库
 2. 将cms.sql文件还原至cms数据库 
+3. 在config文件夹mysql.js文件，配置数据库、账户、密码；
 
 ## 重新生成API文档
 ```
