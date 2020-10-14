@@ -3,12 +3,14 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "start": "set SERVER=http://localhost:3001& node ./bin/www",
+        "start": "cross-env-shell SERVER=http://localhost:3001 npm run server",
+        "server": "node bin/www",
         "api": "apidoc -i routes/ -o public/api/"
     },
     "dependencies": {
         "cookie-parser": "~1.4.3",
         "cors": "^2.8.5",
+        "cross-env": "^7.0.2",
         "debug": "~2.6.9",
         "express": "~4.16.0",
         "express-jwt": "^5.3.1",
@@ -18,7 +20,7 @@
         "morgan": "~1.9.0",
         "multer": "^1.4.1",
         "mysql": "^2.17.1",
-        "sharp": "^0.24.1",
+        "sharp": "^0.25.4",
         "uuid": "^3.3.2"
     },
     "apidoc": {
