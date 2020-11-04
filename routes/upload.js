@@ -135,7 +135,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
 });
 
 /**
- * @api {delete} /api/upload 删除图片API
+ * @api {delete} /upload 删除图片API
  * @apiDescription 如果上传错误的图片，通过此API删除错误的图片
  * @apiName uploadDelete
  * @apiGroup Upload Image
@@ -143,7 +143,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
  * 
  * @apiParam {String} src 图片文件路径,注意图片路径必须是绝对路径，例：http://localhost:3003/images/path/to/photo.jpg
  *
- * @apiSampleRequest /api/upload
+ * @apiSampleRequest /upload
  */
 
 router.delete('/', function (req, res) {
