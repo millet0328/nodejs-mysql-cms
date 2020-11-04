@@ -136,7 +136,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
 
 /**
  * @api {delete} /upload 删除图片API
- * @apiDescription 如果上传错误的图片，通过此API删除错误的图片
+ * @apiDescription 传参方式等同GET传参，如果上传错误的图片，通过此API删除错误的图片
  * @apiName uploadDelete
  * @apiGroup Upload Image
  * @apiPermission user admin
@@ -149,7 +149,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
 router.delete('/', function (req, res) {
 	let { src } = req.query;
 	src = src.replace(/.+\/images/, "./images");
-	let realPath = path.resolve(__dirname, '../../public/', src);
+	let realPath = path.resolve(__dirname, '../public/', src);
 	fs.unlink(realPath, function (err) {
 		if (err) throw err;
 		res.json({
