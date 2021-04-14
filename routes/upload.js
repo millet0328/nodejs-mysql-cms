@@ -12,7 +12,7 @@ const sharp = require('sharp');
 var uuidv1 = require('uuid/v1');
 
 /**
- * @api {post} /upload/editor/ 富文本编辑器图片上传API
+ * @api {post} /upload/editor/ 富文本编辑器图片上传
  * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，不限制尺寸，存储至details文件夹
  * @apiName uploadEditor
  * @apiGroup Upload Image
@@ -68,8 +68,8 @@ router.post("/editor", upload.single('file'), async function (req, res) {
 });
 
 /**
- * @api {post} /upload/common/ 通用图片上传API
- * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，不限制尺寸，avatar存储至avatar文件夹,common存储至common文件夹
+ * @api {post} /upload/common/ 通用图片上传
+ * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，头像上传，图片必须是正方形，通用上传不限制尺寸，avatar存储至avatar文件夹,common存储至common文件夹
  * @apiName uploadCommon
  * @apiGroup Upload Image
  * 
@@ -135,19 +135,19 @@ router.post("/common", upload.single('file'), async function (req, res) {
 });
 
 /**
- * @api {delete} /upload 删除图片API
- * @apiDescription 传参方式等同GET传参，如果上传错误的图片，通过此API删除错误的图片
+ * @api {post} /upload/remove 删除图片
+ * @apiDescription 如果上传错误的图片，通过此API删除错误的图片
  * @apiName uploadDelete
  * @apiGroup Upload Image
  * @apiPermission user admin
  * 
  * @apiParam {String} src 图片文件路径,注意图片路径必须是绝对路径，例：http://localhost:3003/images/path/to/photo.jpg
  *
- * @apiSampleRequest /upload
+ * @apiSampleRequest /upload/remove
  */
 
-router.delete('/', function (req, res) {
-	let { src } = req.query;
+router.post('/remove', function (req, res) {
+	let { src } = req.body;
 	src = src.replace(/.+\/images/, "./images");
 	let realPath = path.resolve(__dirname, '../public/', src);
 	fs.unlink(realPath, function (err) {

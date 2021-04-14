@@ -3,15 +3,15 @@
 
  Source Server         : app
  Source Server Type    : MySQL
- Source Server Version : 80019
+ Source Server Version : 80023
  Source Host           : localhost:3306
  Source Schema         : cms
 
  Target Server Type    : MySQL
- Target Server Version : 80019
+ Target Server Version : 80023
  File Encoding         : 65001
 
- Date: 13/04/2020 21:52:01
+ Date: 13/04/2021 16:07:02
 */
 
 SET NAMES utf8mb4;
@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`  (
-  `id` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `fullname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
@@ -31,26 +31,25 @@ CREATE TABLE `admin`  (
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
   `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '../images/avatar/default.jpg' COMMENT '头像',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '管理员' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '管理员' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '123', '赵薇', '女', '15863008280', 'nn880328@126.com', '../images/avatar/default.jpg');
-INSERT INTO `admin` VALUES (2, 'tom', '123456', '黄小米', '女', '13475829262', 'nn880328@126.com', '../images/avatar/default.jpg');
-INSERT INTO `admin` VALUES (3, 'moz', '123', '罗志祥', '男', '15863008280', 'nn880328@126.com', '../images/avatar/default.jpg');
-INSERT INTO `admin` VALUES (4, 'silky', '123', '鹿晗', '男', '15863008280', 'nn880328@126.com', '../images/avatar/default.jpg');
+INSERT INTO `admin` VALUES (1, 'admin', '123', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg');
+INSERT INTO `admin` VALUES (3, 'moz', '123', '孙红雷', '男', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg');
+INSERT INTO `admin` VALUES (4, 'silky', '123', '鹿晗', '男', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg');
 
 -- ----------------------------
 -- Table structure for admin_role
 -- ----------------------------
 DROP TABLE IF EXISTS `admin_role`;
 CREATE TABLE `admin_role`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `admin_id` int(0) NULL DEFAULT NULL COMMENT '用户id',
-  `role_id` int(0) NULL DEFAULT NULL COMMENT '角色id',
+  `id` int NOT NULL AUTO_INCREMENT,
+  `admin_id` int NULL DEFAULT NULL COMMENT '用户id',
+  `role_id` int NULL DEFAULT NULL COMMENT '角色id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = FIXED;
 
 -- ----------------------------
 -- Records of admin_role
@@ -59,23 +58,24 @@ INSERT INTO `admin_role` VALUES (2, 2, 2);
 INSERT INTO `admin_role` VALUES (1, 1, 1);
 INSERT INTO `admin_role` VALUES (4, 6, 3);
 INSERT INTO `admin_role` VALUES (5, 4, 3);
+INSERT INTO `admin_role` VALUES (6, 5, 3);
 
 -- ----------------------------
 -- Table structure for article
 -- ----------------------------
 DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `cate_1st` int(0) NOT NULL COMMENT '一级分类id',
-  `cate_2nd` int(0) NOT NULL COMMENT '二级分类id',
+  `id` int NOT NULL AUTO_INCREMENT,
+  `cate_1st` int NOT NULL COMMENT '一级分类id',
+  `cate_2nd` int NOT NULL COMMENT '二级分类id',
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题',
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '摘要',
   `content` varchar(8000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '正文',
-  `create_date` timestamp(0) NULL DEFAULT NULL COMMENT '发表日期',
-  `update_date` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新日期',
+  `create_date` timestamp NULL DEFAULT NULL COMMENT '发表日期',
+  `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日期',
   `main_photo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '主图',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of article
@@ -92,11 +92,11 @@ INSERT INTO `article` VALUES (12, 1, 5, '超大的字号、艳俗的色彩，他
 -- ----------------------------
 DROP TABLE IF EXISTS `article_tag`;
 CREATE TABLE `article_tag`  (
-  `id` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `article_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '博客ID',
-  `tag_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '标签ID',
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `article_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '博客ID',
+  `tag_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '标签ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客to标签中间表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客to标签中间表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of article_tag
@@ -110,11 +110,11 @@ INSERT INTO `article_tag` VALUES (9, 3, 6);
 -- ----------------------------
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '分类id',
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '分类id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '分类名称',
-  `parent_id` int(0) NOT NULL COMMENT '父级id',
+  `parent_id` int NOT NULL COMMENT '父级id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of category
@@ -136,14 +136,14 @@ INSERT INTO `category` VALUES (11, 'IT新闻', 2);
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '菜单id',
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '菜单id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单名称',
-  `pId` int(0) NULL DEFAULT NULL COMMENT '父级id',
+  `pId` int NULL DEFAULT NULL COMMENT '父级id',
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '链接url',
   `menu_order` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '显示顺序',
   `icon_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图标id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of menu
@@ -168,10 +168,10 @@ INSERT INTO `menu` VALUES (14, '权限角色', 7, '/auth/role', '7001', NULL);
 -- ----------------------------
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '角色id',
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `role_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of role
@@ -186,11 +186,11 @@ INSERT INTO `role` VALUES (4, '设计');
 -- ----------------------------
 DROP TABLE IF EXISTS `role_menu`;
 CREATE TABLE `role_menu`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `role_id` int(0) NULL DEFAULT NULL COMMENT '角色id',
-  `menu_id` int(0) NULL DEFAULT NULL COMMENT '权限id',
+  `id` int NOT NULL AUTO_INCREMENT,
+  `role_id` int NULL DEFAULT NULL COMMENT '角色id',
+  `menu_id` int NULL DEFAULT NULL COMMENT '权限id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = FIXED;
 
 -- ----------------------------
 -- Records of role_menu
@@ -223,10 +223,10 @@ INSERT INTO `role_menu` VALUES (22, 2, 12);
 -- ----------------------------
 DROP TABLE IF EXISTS `tag`;
 CREATE TABLE `tag`  (
-  `id` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '账户' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '账户' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tag
@@ -243,14 +243,14 @@ INSERT INTO `tag` VALUES (6, '网页设计');
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `password` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
   `nickname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `sex` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '男' COMMENT '性别',
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号码',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of user
