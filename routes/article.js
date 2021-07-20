@@ -4,8 +4,8 @@ var router = express.Router();
 var db = require('../config/mysql');
 
 /**
- * @api {post} /article/add 添加新的文章
- * @apiName AddArticle
+ * @api {post} /article/release 添加新的文章
+ * @apiName ReleaseArticle
  * @apiGroup Article
  *
  * @apiParam { Number } cate_1st 一级分类id.
@@ -14,22 +14,24 @@ var db = require('../config/mysql');
  * @apiParam { String } description 文章摘要.
  * @apiParam { String } main_photo 文章主图.
  * @apiParam { String } content 文章内容.
+ * @apiParam { Number[] } tags 标签的id数组,如[1,2,3].
  *
- * @apiSampleRequest /article/add
+ * @apiSampleRequest /article/release
  */
 
-router.post("/add/", async (req, res) => {
-	let { cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
-	var sql =
+router.post("/release/", async (req, res) => {
+	let { cate_1st, cate_2nd, title, description, content, main_photo, tags } = req.body;
+	tags = JSON.parse(tags);
+	var articleSQL =
 		'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ?, ?, CURRENT_TIMESTAMP() , ?)';
-	let { insertId, affectedRows } = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
-	if (!affectedRows) {
-		res.json({
-			status: false,
-			msg: "添加失败！"
-		});
-		return;
-	}
+	let { insertId } = await db.query(articleSQL, [cate_1st, cate_2nd, title, description, content, main_photo]);
+	// 依次插入文章_标签中间表
+	let arr = [];
+	tags.forEach(async (item) => {
+		arr.push(`(${insertId},${item})`);
+	});
+	let tagSQL = `INSERT INTO article_tag (article_id, tag_id) VALUES ${arr.toString()}`;
+	let result = await db.query(tagSQL);
 	res.json({
 		status: true,
 		msg: "添加成功"
@@ -37,19 +39,19 @@ router.post("/add/", async (req, res) => {
 });
 
 /**
- * @api {post} /article/delete 删除指定id的文章
- * @apiName DeleteArticle
+ * @api {post} /article/remove 删除指定id的文章
+ * @apiName RemoveArticle
  * @apiGroup Article
  *
  * @apiParam { Number } id 文章id
  *
- * @apiSampleRequest /article/delete
+ * @apiSampleRequest /article/remove
  */
 
-router.post('/delete', async (req, res) => {
+router.post('/remove', async (req, res) => {
 	let { id } = req.body;
-	var sql = 'DELETE FROM article WHERE id = ?';
-	let results = await db.query(sql, [id]);
+	var sql = 'DELETE FROM article WHERE id = ?;DELETE FROM article_tag WHERE article_id = ?';
+	let results = await db.query(sql, [id, id]);
 	res.json({
 		status: true,
 		msg: "删除成功"
@@ -67,12 +69,17 @@ router.post('/delete', async (req, res) => {
  */
 router.get('/detail', async (req, res) => {
 	let { id } = req.query;
-	var sql = 'SELECT * FROM article WHERE id = ?';
-	let results = await db.query(sql, [id]);
+	// 查询文章对应标签
+	var tagSQL = 'SELECT t.* FROM article_tag at JOIN tag t ON at.tag_id = t.id WHERE at.article_id = ?';
+	let tags = await db.query(tagSQL, [id]);
+	// 查询文章详情
+	var articleSQL = 'SELECT a.*,DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c1.name AS cate_1st_name,c2.name AS cate_2nd_name FROM article a JOIN category c1 ON a.cate_1st = c1.id JOIN category c2 ON a.cate_2nd = c2.id WHERE a.id = ?';
+	let detail = await db.query(articleSQL, [id]);
+	detail[0].tags = tags;
 	res.json({
 		status: true,
 		msg: "获取成功",
-		data: results[0]
+		data: detail[0]
 	});
 });
 
@@ -88,14 +95,16 @@ router.get('/detail', async (req, res) => {
  * @apiParam { String } description 文章摘要.
  * @apiParam { String } content 文章内容.
  * @apiParam { String } main_photo 文章主图.
+ * @apiParam { Number[] } tags 标签的id数组,如[1,2,3].
  *
  * @apiSampleRequest /article/edit
  */
 router.post('/edit', async (req, res) => {
-	let { id, cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
-	var sql =
+	let { id, cate_1st, cate_2nd, title, description, content, main_photo, tags } = req.body;
+	tags = JSON.parse(tags);
+	var updateSQL =
 		'UPDATE article SET cate_1st = ? , cate_2nd = ? , title = ? , description = ? , content = ? , main_photo = ? WHERE id = ?';
-	let { affectedRows } = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo, id]);
+	let { affectedRows } = await db.query(updateSQL, [cate_1st, cate_2nd, title, description, content, main_photo, id]);
 	if (!affectedRows) {
 		res.json({
 			status: false,
@@ -103,6 +112,13 @@ router.post('/edit', async (req, res) => {
 		});
 		return;
 	}
+	// 考虑到标签的复杂性，先删除原有标签关系，再插入新的标签关系
+	let arr = [];
+	tags.forEach(async (item) => {
+		arr.push(`(${id},${item})`);
+	});
+	let tagSQL = `DELETE FROM article_tag WHERE article_id = ?;INSERT INTO article_tag (article_id, tag_id) VALUES ${arr.toString()}`;
+	let result = await db.query(tagSQL, id);
 	res.json({
 		status: true,
 		msg: "修改成功！"

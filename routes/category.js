@@ -28,17 +28,17 @@ router.post("/add", async (req, res) => {
 	});
 });
 /**
- * @api {post} /category/delete 删除指定id分类
+ * @api {post} /category/remove 删除指定id分类
  * @apiDescription 注意：删除指定id分类,如果其拥有子级分类不允许删除，必须清空子分类才可删除。
- * @apiName DeleteCategory
+ * @apiName RemoveCategory
  * @apiGroup Category
  *
  * @apiParam { Number } id 分类id
  *
- * @apiSampleRequest /category/delete
+ * @apiSampleRequest /category/remove
  */
 
-router.post("/delete", async (req, res) => {
+router.post("/remove", async (req, res) => {
 	let { id } = req.body;
 	let checkSQL = 'SELECT * FROM category WHERE parent_id = ?';
 	let results = await db.query(checkSQL, [id]);
