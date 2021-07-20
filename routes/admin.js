@@ -60,8 +60,10 @@ router.post('/register', async (req, res) => {
 		if (err) throw err; // not connected!
 		connection.beginTransaction(function(err) {
 			if (err) throw err;
-			let sql = `INSERT INTO admin (username,password,fullname,sex,tel,email) VALUES (?,?,?,?,?,?)`;
-			connection.query(sql, [username, password, fullname, sex, tel, email], function(error, results, fields) {
+			let sql =
+				`INSERT INTO admin (username,password,fullname,sex,tel,email) VALUES (?,?,?,?,?,?)`;
+			connection.query(sql, [username, password, fullname, sex, tel, email], function(
+				error, results, fields) {
 				let { insertId, affectedRows } = results;
 				if (error || affectedRows <= 0) {
 					return connection.rollback(function() {
@@ -88,7 +90,8 @@ router.post('/register', async (req, res) => {
 						role: 3,
 					};
 					// 生成token
-					let token = jwt.sign(payload, 'secret', { expiresIn: '4h' });
+					let token = jwt.sign(payload,
+						'secret', { expiresIn: '4h' });
 					// 存储成功
 					res.json({
 						status: true,
@@ -182,6 +185,7 @@ router.get('/info', async (req, res) => {
  * @apiParam { Number } id 管理员id.
  * @apiParam { String } username 用户名.
  * @apiParam { String } fullname 姓名.
+ * @apiParam { String } role 角色id.
  * @apiParam { String } sex 性别.
  * @apiParam { String } tel 手机号码.
  * @apiParam { String } email 邮箱地址.
@@ -191,9 +195,11 @@ router.get('/info', async (req, res) => {
  */
 
 router.post('/info', async (req, res) => {
-	let { id, username, fullname, sex, tel, email, avatar } = req.body;
-	let sql = 'UPDATE admin SET username = ?,fullname = ?,sex = ?,tel = ?,email = ?, avatar = ? WHERE id = ?';
-	let { affectedRows } = await db.query(sql, [username, fullname, sex, tel, email, avatar, id]);
+	let { id, username, fullname, role, sex, tel, email, avatar } = req.body;
+	let sql = `UPDATE admin SET username = ?,fullname = ?,sex = ?,tel = ?,email = ?, avatar = ? WHERE id = ?;
+	UPDATE admin_role SET role_id = ? WHERE admin_id = ?`;
+	let [{ affectedRows }] = await db.query(sql,
+		[username, fullname, sex, tel, email, avatar, id, role, id]);
 	if (!affectedRows) {
 		res.json({
 			status: false,
@@ -208,18 +214,18 @@ router.post('/info', async (req, res) => {
 });
 
 /**
- * @api {post} /admin/delete 删除账户
- * @apiName AdminDelete
+ * @api {post} /admin/remove 删除账户
+ * @apiName AdminRemove
  * @apiGroup Admin
  *
  * @apiParam { Number } id 管理员id.
  *
- * @apiSampleRequest /admin/delete
+ * @apiSampleRequest /admin/remove
  */
-router.post('/delete', async (req, res) => {
+router.post('/remove', async (req, res) => {
 	let { id } = req.body;
-	let sql = 'DELETE FROM admin WHERE id = ?';
-	let { affectedRows } = await db.query(sql, [id]);
+	let sql = 'DELETE FROM admin WHERE id = ?;DELETE FROM admin_role WHERE admin_id = ?';
+	let [{ affectedRows }] = await db.query(sql, [id, id]);
 	if (!affectedRows) {
 		res.json({
 			status: false,
@@ -242,7 +248,8 @@ router.post('/delete', async (req, res) => {
  */
 
 router.get('/list', async (req, res) => {
-	var sql = 'SELECT id, username, fullname, sex, tel, email, avatar FROM admin';
+	var sql =
+		'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id;'
 	let results = await db.query(sql);
 	res.json({
 		status: true,

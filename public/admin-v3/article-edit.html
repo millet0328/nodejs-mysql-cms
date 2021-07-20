@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+	<title>编辑文章</title>
+	<!-- Bootstrap -->
+	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="lib/Validform_v5.3.2/css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+	<!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+	<!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+	<!-- header -->
+	<header></header>
+	<div class="main">
+		<div class="left-side"></div>
+		<div class="right-content">
+			<!-- 表格 -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">编辑文章</div>
+				<div class="panel-body">
+					<!-- 表单 -->
+					<form id="article-form" action="/article/edit" method="POST" class="form-horizontal">
+						<input type="hidden" name="id">
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label">
+								标题
+								<span class="text-danger">*</span>
+							</label>
+							<div class="col-sm-10">
+								<input type="text" datatype="*6-60" class="form-control" nullmsg="请填写文章标题！" name="title"
+									placeholder="请输入文章标题">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label">
+								描述
+								<span class="text-danger">*</span>
+							</label>
+							<div class="col-sm-10">
+								<textarea name="description" datatype="*" class="form-control" nullmsg="请填写博客内容的简单摘要！"
+									placeholder="博客内容的简单摘要" rows="3"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label">
+								版块
+								<span class="text-danger">*</span>
+							</label>
+							<div class="col-sm-5">
+								<select name="cate_1st" id="cate_1st" datatype="*" nullmsg="请选择一级版块！"
+									class="form-control">
+								</select>
+							</div>
+							<div class="col-sm-5">
+								<select name="cate_2nd" id="cate_2nd" datatype="*" nullmsg="请选择二级版块！"
+									class="form-control">
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label">
+								主图
+								<span class="text-danger">*</span>
+							</label>
+							<div class="col-sm-10">
+								<div class="upload-box text-center">
+									<div class="plus">
+										<span class="glyphicon glyphicon-plus"></span>
+										<input class="file" type="file">
+									</div>
+									<img src="" alt="">
+									<div class="cover">
+										<span class="glyphicon glyphicon-trash remove"></span>
+									</div>
+								</div>
+								<input name="main_photo" datatype="*" nullmsg="请上传主图！" type="hidden" value="" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label">
+								内容
+								<span class="text-danger">*</span>
+							</label>
+							<div class="col-sm-10">
+								<!-- 编辑器 -->
+								<div id="editor"></div>
+								<!-- 隐藏数据 -->
+								<input name="content" id="content" datatype="*" nullmsg="请填写文章内容！" type="hidden">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-2 control-label">
+								标签
+								<span class="text-danger">*</span>
+							</label>
+							<div class="col-sm-8">
+								<div class="tag-input"></div>
+								<!-- 隐藏数据 -->
+								<input name="tags" id="tag-input" datatype="*" nullmsg="请选择文章关联的标签！" type="hidden">
+							</div>
+							<div class="col-sm-2">
+								<button data-toggle="modal" data-target="#tagModal" type="button"
+									class="btn btn-primary">
+									<span class="glyphicon glyphicon-plus"></span>
+									添加标签
+								</button>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<button type="submit" class="btn btn-primary">发布文章</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 选择标签Modal模态框 -->
+	<div class="modal fade" id="tagModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+							aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">所有标签</h4>
+				</div>
+				<div class="modal-body">
+					<p class="clearfix">
+						您可以添加多个标签
+						<span class="pull-right">
+							找不到标签?
+							<b id="createTag" data-toggle="modal" data-target="#createModal"
+								class="text-primary create-tag">创建</b>
+						</span>
+					</p>
+					<div class="tag-list">
+
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="confirmBtn" class="btn btn-primary">确定</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	<!-- 添加标签Modal模态框 -->
+	<div class="modal fade" id="createModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+							aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">创建标签</h4>
+				</div>
+				<form id="create-form" action="/tag/add" class="form-horizontal">
+					<div class="modal-body">
+						<!-- 表单 -->
+						<div class="form-group">
+							<input type="hidden" name="id">
+							<label for="" class="col-sm-2 control-label">
+								标签名称
+								<span class="text-danger">*</span>
+							</label>
+							<div class="col-sm-10">
+								<input type="text" name="name" datatype="*" nullmsg="请填写标签名称！" class="form-control"
+									placeholder="请输入标签名称">
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						<button type="submit" class="btn btn-primary">创建</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+	<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
+	<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="lib/wangEditor/wangEditor.min.js"></script>
+	<script src="lib/Validform_v5.3.2/Validform_v5.3.2_min.js"></script>
+	<script src="lib/layer/layer.js"></script>
+	<script src="js/load.js"></script>
+	<script>
+		var E = window.wangEditor
+		var editor = new E('#editor');
+		editor.customConfig.zIndex = 600;
+		// 配置服务器端API地址
+		editor.customConfig.uploadImgServer = '/upload/editor';
+		editor.customConfig.uploadFileName = 'file';
+		// 监控变化，同步更新到 hidden
+		editor.customConfig.onchange = function (html) {
+			$("#content").val(html)
+		}
+		editor.create();
+	</script>
+	<script>
+		// 根据id获取一级分类
+		function loadCate_1st(selected) {
+			$.getJSON('/category/sub', { id: 0 }, function (res) {
+				let html = '';
+				if (res.status) {
+					res.data.forEach(function (item) {
+						html += `<option value="${item.id}">${item.name}</option>`;
+					});
+					$('#cate_1st').html(html);
+				}
+				// 选中特定的option
+				if (selected) {
+					$('#cate_1st').val(selected);
+				}
+			});
+		}
+		// 根据id获取二级分类
+		function loadCate_2nd(id, selected) {
+			$.getJSON('/category/sub', { id }, function (res) {
+				$('#cate_2nd').html('');
+				if (res.status) {
+					res.data.forEach(function (item, index) {
+						var $option = `<option value="${item.id}">${item.name}</option>`;
+						$('#cate_2nd').append($option);
+					});
+					// 选中特定的option
+					if (selected) {
+						$('#cate_2nd').val(selected);
+					}
+				}
+			});
+		}
+		// 二级分类绑定change事件
+		$('#cate_1st').change(function () {
+			var id = $(this).val();
+			loadCate_2nd(id);
+		});
+	</script>
+	<script>
+		// 获取url参数
+		var id = GetRequest().id;
+		// 设置隐藏表单
+		$('input[name=id]').val(id);
+		// 获取文章详情
+		$.getJSON('/article/detail', { id }, function ({ status, data }) {
+			if (status) {
+				let { title, description, cate_1st, cate_2nd, main_photo, content, tags } = data;
+				// 赋值表单value
+				$('input[name=title]').val(title);
+				$('textarea[name=description]').val(description);
+				// 栏目分类
+				loadCate_1st(cate_1st);
+				loadCate_2nd(cate_1st, cate_2nd);
+				// 主图
+				$('.upload-box').addClass('uploaded').find('img').attr('src', main_photo);
+				$('input[name=main_photo]').val(main_photo);
+				// 富文本编辑器
+				editor.txt.html(content);
+				$('input[name=content]').val(content);
+				// 标签
+				tags.forEach(function (item) {
+					var $tag = $(`<span class="label label-success" data-id="${item.id}">${item.name} <i class="glyphicon glyphicon-remove"></i></span>`)
+					$('.tag-input').append($tag);
+				});
+				let checkedTag = tags.map((item) => item.id);
+				$('#tag-input').val(JSON.stringify(checkedTag));
+			}
+		});
+
+	</script>
+	<script>
+		// 上传图片
+		$('.upload-box .file').on('change', function () {
+			// 获取文件对象
+			var file = this.files[0];
+			var $file = $(this);
+			// form对象化
+			var formData = new FormData();
+			formData.append("file", file);
+			formData.append("type", "common");
+			// $.ajax上传文件
+			$.ajax({
+				type: "POST",
+				url: '/upload/common',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function ({ status, msg, data }) {
+					$file.val('');
+					if (!status) {
+						layer.msg(msg);
+						return;
+					}
+					$file.parents('.upload-box').addClass('uploaded').find('img').attr('src', data);
+					// 修改隐藏表单
+					$('input[name=main_photo]').val(data);
+				}
+			});
+		});
+		// 图片删除
+		$('.upload-box .remove').on('click', function () {
+			// 获取图片地址
+			var $img = $(this).parent().siblings('img');
+			var url = $img.attr('src').replace(/.*\/images/, './images');
+			// 物理删除
+			$.post('/upload/remove', { src: url }, function ({ status }) {
+				if (status) {
+					$img.attr('src', '');
+					$('.upload-box').removeClass('uploaded');
+					// 修改隐藏表单
+					$('input[name=main_photo]').val('');
+				}
+			});
+		});
+	</script>
+	<script>
+		// 取消选中的标签
+		$('.tag-input').on('click', 'i', function () {
+			var $tag = $(this).parent();
+			// 获取已选中的标签数据
+			var tags = JSON.parse($('#tag-input').val());
+			// 获取id
+			var id = $tag.data('id');
+			// 删除这个id
+			var i = tags.findIndex((item) => item == id);
+			tags.splice(i, 1);
+			// 判断是否空数组，重新赋值
+			if (tags.length) {
+				$('#tag-input').val(JSON.stringify(tags));
+			} else {
+				$('#tag-input').val('');
+			}
+			// 移除元素
+			$tag.remove();
+		});
+		// 每次打开tagModal，请求所有标签
+		$('#tagModal').on('show.bs.modal', function () {
+			// 如果想修改已选择的标签，还原列表的选中状态
+			var tags = $('#tag-input').val() || [];
+			tags = tags.length ? JSON.parse(tags) : [];
+			$.getJSON('/tag/list', function ({ status, data }) {
+				var html = '';
+				if (status) {
+					data.forEach(function (item) {
+						var has = tags.includes(item.id);
+						if (has) {
+							html += `<span class="label label-primary label-success" data-id="${item.id}">${item.name}</span>`;
+						} else {
+							html += `<span class="label label-primary" data-id="${item.id}">${item.name}</span>`;
+						}
+					});
+					$('.tag-list').html(html);
+				}
+			});
+		});
+		// 标签列表，标签选择事件
+		$('.tag-list').on('click', '.label', function () {
+			$(this).toggleClass('label-success');
+		});
+		// 选择标签
+		$('#confirmBtn').click(function () {
+			var tags = [];
+			// 清空标签
+			$('.tag-input').html('');
+			$('.tag-list .label-success').each(function () {
+				var id = $(this).data('id');
+				var name = $(this).text().trim();
+				// 选中的标签id,储存至input中
+				tags.push(id);
+				$('#tag-input').val(JSON.stringify(tags));
+				var $tag = $(`<span class="label label-success" data-id="${id}">${name} <i class="glyphicon glyphicon-remove"></i></span>`);
+				$('.tag-input').append($tag);
+			});
+			$('#tagModal').modal('hide');
+		});
+		// 打开创建标签Modal
+		$('#createTag').click(function () {
+			$('#tagModal').modal('hide');
+		});
+		// 创建新标签
+		$('#create-form').Validform({
+			ajaxPost: true,
+			tiptype: function (msg, o, cssctl) {
+				var $form_group = o.obj.parents('.form-group');
+				// type 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态
+				switch (o.type) {
+					case 2:
+						$form_group.removeClass('has-success has-error').addClass('has-success');
+						break;
+					case 3:
+						$form_group.removeClass('has-success has-error').addClass('has-error');
+						break;
+					default:
+						$form_group.removeClass('has-success has-error')
+						break;
+				}
+			},
+			callback: function ({ status, msg }) {
+				if (status) {
+					$('#createModal').modal('hide');
+					$('#tagModal').modal('show');
+				}
+			}
+		});
+	</script>
+	<script>
+		// 修改文章
+		$("#article-form").Validform({
+			ajaxPost: true,
+			tiptype: 4,
+			callback: function ({ status, msg }) {
+				if (status) {
+					layer.msg(msg);
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>

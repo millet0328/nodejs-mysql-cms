@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : app
+ Source Server         : mysql
  Source Server Type    : MySQL
- Source Server Version : 80019
+ Source Server Version : 80025
  Source Host           : localhost:3306
  Source Schema         : cms
 
  Target Server Type    : MySQL
- Target Server Version : 80019
+ Target Server Version : 80025
  File Encoding         : 65001
 
- Date: 09/06/2020 15:52:00
+ Date: 20/07/2021 10:07:29
 */
 
 SET NAMES utf8mb4;
@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`  (
-  `id` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `fullname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
@@ -31,52 +31,49 @@ CREATE TABLE `admin`  (
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
   `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '../images/avatar/default.jpg' COMMENT '头像',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '管理员' ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '管理员' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '123', '赵薇', '女', '15863008280', 'nn880328@126.com', '../images/avatar/default.jpg');
-INSERT INTO `admin` VALUES (2, 'tom', '123456', '黄小米', '女', '13475829262', 'nn880328@126.com', '../images/avatar/default.jpg');
-INSERT INTO `admin` VALUES (3, 'moz', '123', '罗志祥', '男', '15863008280', 'nn880328@126.com', '../images/avatar/default.jpg');
-INSERT INTO `admin` VALUES (4, 'silky', '123', '鹿晗', '男', '15863008280', 'nn880328@126.com', '../images/avatar/default.jpg');
+INSERT INTO `admin` VALUES (1, 'admin', '123', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg');
+INSERT INTO `admin` VALUES (2, 'moz', '123', '孙红雷', '男', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg');
+INSERT INTO `admin` VALUES (3, 'silky', '123', '鹿晗', '男', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg');
 
 -- ----------------------------
 -- Table structure for admin_role
 -- ----------------------------
 DROP TABLE IF EXISTS `admin_role`;
 CREATE TABLE `admin_role`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `admin_id` int(0) NULL DEFAULT NULL COMMENT '用户id',
-  `role_id` int(0) NULL DEFAULT NULL COMMENT '角色id',
+  `id` int NOT NULL AUTO_INCREMENT,
+  `admin_id` int NULL DEFAULT NULL COMMENT '用户id',
+  `role_id` int NULL DEFAULT NULL COMMENT '角色id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = FIXED;
 
 -- ----------------------------
 -- Records of admin_role
 -- ----------------------------
 INSERT INTO `admin_role` VALUES (2, 2, 2);
 INSERT INTO `admin_role` VALUES (1, 1, 1);
-INSERT INTO `admin_role` VALUES (4, 6, 3);
-INSERT INTO `admin_role` VALUES (5, 4, 3);
-INSERT INTO `admin_role` VALUES (6, 5, 3);
+INSERT INTO `admin_role` VALUES (3, 3, 2);
 
 -- ----------------------------
 -- Table structure for article
 -- ----------------------------
 DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `cate_1st` int(0) NOT NULL COMMENT '一级分类id',
-  `cate_2nd` int(0) NOT NULL COMMENT '二级分类id',
+  `id` int NOT NULL AUTO_INCREMENT,
+  `cate_1st` int NOT NULL COMMENT '一级分类id',
+  `cate_2nd` int NOT NULL COMMENT '二级分类id',
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题',
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '摘要',
   `content` varchar(8000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '正文',
-  `create_date` timestamp(0) NULL DEFAULT NULL COMMENT '发表日期',
-  `update_date` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新日期',
+  `create_date` timestamp NULL DEFAULT NULL COMMENT '发表日期',
+  `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日期',
   `main_photo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '主图',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of article
@@ -87,17 +84,19 @@ INSERT INTO `article` VALUES (3, 2, 11, '疫情以来，中关村创业大街吸
 INSERT INTO `article` VALUES (8, 2, 4, '《寄生虫》背后的韩国寄生史', '看完《寄生虫》，和朋友们聊了聊，大家一致认同这部电影隐喻气息浓烈，达成共识后就丢下了它，没想到这几天翻了翻影评，发现很多人都认为这是在讲述阶级的隐喻，又和朋友们聊了聊，才发现我们一开始就有一点不同的看法。', '<p>开篇我先<strong>吐槽</strong>一下微信开发者的文档，<strong>千年不更新</strong>。</p><p><em>写文时间：2020年3月14日</em>，先敲个时间，别那边偷偷改了有人吐槽我。</p><p>文档中写的<strong>拒绝</strong>和<strong>允许</strong>都会触发回调，然后我测试<strong>拒绝的时候就不会触发回调</strong>。</p><h2 id=\"item-1\">微信授权逻辑</h2><p><img referrerpolicy=\"no-referrer\" src=\"https://segmentfault.com/img/bVbExhl\" alt=\"image.png\" title=\"image.png\"></p><ol><li>进入页面，获取授权状态，（getUserid）一般是看cookie里面有用户信息吗。</li><li>有用户信息，pass。</li><li><p>无用户信息。这里只是打个标记，并不在一进入页面就强制授权。而是在用户操作的时候提示用户授权，因为这样体验比较好。<br>体验上是可以告诉用户你浏览我们是不需要你的信息的，而你在我们平台互动是需要注册登录的。</p><ol><li>用户拒绝授权，这里页面是无感知的，所以不做任何处理。但是页面可以知道用户是非首次互动，这时候可以先弹出一个框告知用户，用户需要允许授权。</li><li>用户允许授权，这个时候会触发刷新页面。这里建议页面给自己加个标记，就是用户触发授权的事件，刷新之后重新调用一下。</li></ol></li></ol><h3 id=\"item-1-1\">需求一:&nbsp;<strong>拒绝授权的时候弹窗</strong></h3><p><em>嘿嘿你猜我在做的是什么</em>。</p><p>我看之前代码是有拒绝回调逻辑的，而且我也在文档中确认过了。<br>但是我在测试的时候发现，拒绝不会触发回调，成功的时候逻辑是对的。</p><p>那么在这个场景下，我们怎么显示呢？</p><ol><li>我们做一个小页面藏在授权弹框后面，因为拒绝的时候页面无变化，用户就可以看到后面的小页面。</li><li>基于方案1我们发现，网慢的情况下，同意授权的用户也会看到弹窗，这对于我们要求体验的前端er来说是不好的。我们这里可以尝试<strong>给一个稍微大一点的setTimeout显示小页面</strong>。</li><li>基于方案2，因为微信授权弹窗不会阻塞主进程，所以我们并不能稳定控制小页面的显示与隐藏。极端情况下用户的体验仍是不好的。那么我们应该怎么办呢？<strong>捶产品，砍需求</strong>，哈哈当然是不做这个弹框，把这部分的功能<strong>换另一种交互方式咯</strong>。</li></ol><h3 id=\"item-1-2\">需求二: 非微信绑定的域名做微信授权</h3><p>因为现在微信管得太严了，怕被微信拉黑，所以考虑使用其他域名做分享外链。</p><p>但是我们又希望可以<strong>在微信授权登录一下</strong>，这样这个需求就来了。</p><p>微信中绑定的安全域名和回调域名为&nbsp;<code>a.com</code>，<br>我们分享到微信打开的域名为&nbsp;<code>b.com</code>。</p><h4>方案一：跨域方案</h4><p>首先我们要明确几个要点。</p><ol><li><strong>我方服务端判断登录是判断&nbsp;<code>cookie</code>&nbsp;</strong>。</li><li>对于前端来讲&nbsp;<code>a.com</code>&nbsp;和&nbsp;<code>b.com</code>&nbsp;是<strong>跨域</strong>的。</li><li><code>a.com</code>&nbsp;是无法把&nbsp;<code>cookie</code>&nbsp;写到&nbsp;<code>b.com</code>&nbsp;下的。</li><li>同样&nbsp;<code>b.com</code>&nbsp;也无法读取&nbsp;<code>a.com</code>&nbsp;的&nbsp;<code>cookie</code>。</li></ol><p>好了基于上面的要点。我们开始实现功能。</p><ol><li><code>a.com/wxauth</code>&nbsp;会触发微信授权，我们默认用户同意授权</li><li>微信会将页面重定向到 callback 页面。（这里是在公众号配置好的）</li><li>callback 页面写&nbsp;<code>cookie</code>。这个时候我们就能拿到用户登录信息。</li><li>但是基于上面我们跨域的cookie是无法共享的。那么我们可以开<code>CORS</code>来使用，<code>a.com</code>&nbsp;的接口允许&nbsp;<code>b.com</code>的页面发出请求。</li><li>但是跨域的情况下默认是不携带&nbsp;<code>cookie</code>&nbsp;的。这个时候我们可以配置&nbsp;<code>withCredentials</code>&nbsp;来达到携带cookie的目的。</li></ol><p>基于上面的跨域方案，我们&nbsp;<code>b.com</code>&nbsp;下面没有任何&nbsp;<code>cookie</code>，只有页面。<br>我们所有的请求和&nbsp;<code>cookie</code>&nbsp;都放在&nbsp;<code>a.com</code>。</p><h4>方案二：共享，我觉得叫授权验证也可以</h4><p>上个方案是所有请求都走&nbsp;<code>a.com</code>。</p><p>这个方案是所有请求都走当前域名。我网上看了几个别人做好的，也都是这种方案。</p><p>这种方案其实可以把&nbsp;<code>a.com</code>&nbsp;理解成第三方平台。</p><p><img referrerpolicy=\"no-referrer\" src=\"https://segmentfault.com/img/bVbExwp\" alt=\"image.png\" title=\"image.png\"></p>', '2020-03-18 09:44:26', '2020-03-18 22:35:12', 'http://localhost:3001/images/common/9bde6050-6925-11ea-a704-ab781b5ae732.jpeg');
 INSERT INTO `article` VALUES (10, 2, 4, '《只有芸知道》：哭湿纸巾的爱情 原来没那么简单', '新西兰Clyde小镇见证了隋东风和罗芸最重要的十五年。', '<p>开篇我先<strong>吐槽</strong>一下微信开发者的文档，<strong>千年不更新</strong>。</p><p><em>写文时间：2020年3月14日</em>，先敲个时间，别那边偷偷改了有人吐槽我。</p><p>文档中写的<strong>拒绝</strong>和<strong>允许</strong>都会触发回调，然后我测试<strong>拒绝的时候就不会触发回调</strong>。</p><h2 id=\"item-1\">微信授权逻辑</h2><p><img referrerpolicy=\"no-referrer\" src=\"https://segmentfault.com/img/bVbExhl\" alt=\"image.png\" title=\"image.png\"></p><ol><li>进入页面，获取授权状态，（getUserid）一般是看cookie里面有用户信息吗。</li><li>有用户信息，pass。</li><li><p>无用户信息。这里只是打个标记，并不在一进入页面就强制授权。而是在用户操作的时候提示用户授权，因为这样体验比较好。<br>体验上是可以告诉用户你浏览我们是不需要你的信息的，而你在我们平台互动是需要注册登录的。</p><ol><li>用户拒绝授权，这里页面是无感知的，所以不做任何处理。但是页面可以知道用户是非首次互动，这时候可以先弹出一个框告知用户，用户需要允许授权。</li><li>用户允许授权，这个时候会触发刷新页面。这里建议页面给自己加个标记，就是用户触发授权的事件，刷新之后重新调用一下。</li></ol></li></ol><h3 id=\"item-1-1\">需求一:&nbsp;<strong>拒绝授权的时候弹窗</strong></h3><p><em>嘿嘿你猜我在做的是什么</em>。</p><p>我看之前代码是有拒绝回调逻辑的，而且我也在文档中确认过了。<br>但是我在测试的时候发现，拒绝不会触发回调，成功的时候逻辑是对的。</p><p>那么在这个场景下，我们怎么显示呢？</p><ol><li>我们做一个小页面藏在授权弹框后面，因为拒绝的时候页面无变化，用户就可以看到后面的小页面。</li><li>基于方案1我们发现，网慢的情况下，同意授权的用户也会看到弹窗，这对于我们要求体验的前端er来说是不好的。我们这里可以尝试<strong>给一个稍微大一点的setTimeout显示小页面</strong>。</li><li>基于方案2，因为微信授权弹窗不会阻塞主进程，所以我们并不能稳定控制小页面的显示与隐藏。极端情况下用户的体验仍是不好的。那么我们应该怎么办呢？<strong>捶产品，砍需求</strong>，哈哈当然是不做这个弹框，把这部分的功能<strong>换另一种交互方式咯</strong>。</li></ol><h3 id=\"item-1-2\">需求二: 非微信绑定的域名做微信授权</h3><p>因为现在微信管得太严了，怕被微信拉黑，所以考虑使用其他域名做分享外链。</p><p>但是我们又希望可以<strong>在微信授权登录一下</strong>，这样这个需求就来了。</p><p>微信中绑定的安全域名和回调域名为&nbsp;<code>a.com</code>，<br>我们分享到微信打开的域名为&nbsp;<code>b.com</code>。</p><h4>方案一：跨域方案</h4><p>首先我们要明确几个要点。</p><ol><li><strong>我方服务端判断登录是判断&nbsp;<code>cookie</code>&nbsp;</strong>。</li><li>对于前端来讲&nbsp;<code>a.com</code>&nbsp;和&nbsp;<code>b.com</code>&nbsp;是<strong>跨域</strong>的。</li><li><code>a.com</code>&nbsp;是无法把&nbsp;<code>cookie</code>&nbsp;写到&nbsp;<code>b.com</code>&nbsp;下的。</li><li>同样&nbsp;<code>b.com</code>&nbsp;也无法读取&nbsp;<code>a.com</code>&nbsp;的&nbsp;<code>cookie</code>。</li></ol><p>好了基于上面的要点。我们开始实现功能。</p><ol><li><code>a.com/wxauth</code>&nbsp;会触发微信授权，我们默认用户同意授权</li><li>微信会将页面重定向到 callback 页面。（这里是在公众号配置好的）</li><li>callback 页面写&nbsp;<code>cookie</code>。这个时候我们就能拿到用户登录信息。</li><li>但是基于上面我们跨域的cookie是无法共享的。那么我们可以开<code>CORS</code>来使用，<code>a.com</code>&nbsp;的接口允许&nbsp;<code>b.com</code>的页面发出请求。</li><li>但是跨域的情况下默认是不携带&nbsp;<code>cookie</code>&nbsp;的。这个时候我们可以配置&nbsp;<code>withCredentials</code>&nbsp;来达到携带cookie的目的。</li></ol><p>基于上面的跨域方案，我们&nbsp;<code>b.com</code>&nbsp;下面没有任何&nbsp;<code>cookie</code>，只有页面。<br>我们所有的请求和&nbsp;<code>cookie</code>&nbsp;都放在&nbsp;<code>a.com</code>。</p><h4>方案二：共享，我觉得叫授权验证也可以</h4><p>上个方案是所有请求都走&nbsp;<code>a.com</code>。</p><p>这个方案是所有请求都走当前域名。我网上看了几个别人做好的，也都是这种方案。</p><p>这种方案其实可以把&nbsp;<code>a.com</code>&nbsp;理解成第三方平台。</p><p><img referrerpolicy=\"no-referrer\" src=\"https://segmentfault.com/img/bVbExwp\" alt=\"image.png\" title=\"image.png\"></p>', '2020-03-18 09:54:23', '2020-03-18 22:28:52', 'http://localhost:3001/images/common/c9273330-6924-11ea-a704-ab781b5ae732.jpeg');
 INSERT INTO `article` VALUES (12, 1, 5, '超大的字号、艳俗的色彩，他的设计风格怎么这么秀', '头顶板寸，脑后长辫，他身着大开三扣的花衬衫，脖子上的刺青会随着走路的摆动而忽隐忽现，我不说他是设计师的话，大家肯定会误以为是那条道上混的兄弟。这位张扬又粗犷的男子以他独特的「台味美学」混迹设计圈，他就是廖小子（本名廖俊裕），下面我们就一起来认识认识这个，痞气十足的设计师吧。', '<p>	 	 	 	 	 	 	    	  	 	 	 <!--[if lte IE 9]>\r\n	\r\n	<![endif]-->	 <!--[if lt IE 9]>\r\n  \r\n    window.onload=function(){\r\n    location.href=\"https://www.uisdc.com/ie8/?re=https%3A%2F%2Fwww.uisdc.com%2Fliaojunyu\";\r\n    }\r\n  </script>\r\n	<![endif]-->			 \r\n\r\n\r\n<script>\r\n		var _hmt = _hmt || [];\r\n		(function() {\r\n			var hm = document.createElement(\"script\");\r\n			hm.src = \"//hm.baidu.com/hm.js?7aeefdb15fe9aede961eee611c7e48a5\";\r\n			var s = document.getElementsByTagName(\"script\")[0];\r\n			s.parentNode.insertBefore(hm, s);\r\n		})();\r\n	</script>\r\n	 \r\n<script>\r\n		window.ga_tid = \"UA-154264393-2\";\r\n		window.ga_api = \"https://uiiiuiiicom.disquscdn.workers.dev/\";\r\n	</script>\r\n	 \r\n\r\n	 </p><div><div><div><div><p>头顶板寸，脑后长辫，他身着大开三扣的花衬衫，脖子上的刺青会随着走路的摆动而忽隐忽现，我不说他是设计师的话，大家肯定会误以为是那条道上混的兄弟。这位张扬又粗犷的男子以他独特的「台味美学」混迹设计圈，他就是廖小子（本名廖俊裕），下面我们就一起来认识认识这个，痞气十足的设计师吧。</p><p><img width=\"400\" height=\"577\" alt=\"\" src=\"https://image.uisdc.com/wp-content/uploads/2020/03/uisdc-yx-20200316-47.jpeg\"></p><h4><span id=\"menu_0\">设计师简介</span></h4><p>在台湾嘉义长大的廖俊裕，他的父亲是当地建筑工地的一个小型工程承包商，所以家中常有工人走动，那时廖俊裕的父亲对他说，要称这些人为「师傅」。打小起养成对手艺人的敬意，这让廖俊裕对劳动阶级多了一份深厚情感，这份难以割舍的感情，也成为他从台湾草根文化汲取创作养份的源头。</p><p><img width=\"600\" height=\"337\" alt=\"\" src=\"https://image.uisdc.com/wp-content/uploads/2020/03/uisdc-yx-20200316-2.jpeg\"></p><p>廖俊裕深受父亲的影响。现在袒露胸膛只扣一半花衬衫的打扮，也是耳濡目染了父亲的习惯。</p><p><img width=\"246\" height=\"303\" alt=\"\" src=\"https://image.uisdc.com/wp-content/uploads/2020/03/uisdc-yx-20200316-1.jpeg\"></p><p>从小他喜欢看功夫电影「好小子」，因此父亲开始叫他「小子」。就这样叫着叫着「廖俊裕」变成了「廖小子」。</p><p><img width=\"600\" height=\"242\" alt=\"\" src=\"https://image.uisdc.com/wp-content/uploads/2020/03/uisdc-yx-20200316-48.jpg\"></p><p>高三时的一个领悟，使得廖小子背弃了父亲对他成为一名律师的期望。这可不得了，因为他们家族里有从事法律的亲戚，廖小子成绩也不错，做父亲的当然希望儿子能跟着去走法律的康庄大道。</p><p>然而廖小子执意要选美术系，因为这件事父子俩吵得非常凶，还在家里大打出手。两人拿着大型立式电扇互砸，最后「黑带三段」的儿子打赢了老子。无奈劝说没有，渐渐的廖小子的父亲就默许了这件事情。</p><p><img width=\"600\" height=\"450\" alt=\"\" src=\"https://image.uisdc.com/wp-content/uploads/2020/03/uisdc-yx-20200316-3.jpeg\"></p><p>有一次，廖小子的父亲喝醉了说：自己曾经也热爱绘画，但是没能坚持自己的理想，被你的祖父给劝退了，如果你真要转念美术系的话就要学好，要有决心在这条路上闯出一片天，也圆父亲的一个梦。自此廖小子就开始了他的设计之路。</p><p><img width=\"700\" height=\"466\" alt=\"\" src=\"https://image.uisdc.com/wp-content/uploads/2020/03/uisdc-yx-20200316-4.jpeg\"></p><p>高中毕业后，廖小子顺利的考上了高雄师范大学美术系，但因家庭条件不好，连买画材的钱都没有，为了自力更生廖小子大学时就开始接活。跟大部分新手设计师一样，一开始接的都是些街头小广告，DM 单之类的设计项目。那时的廖小子也喜欢日系、大气简单的设计，但是能发出这种委托的客户，想要什么东西大家心里都有数。</p><p>完成项目后，客户一直要求改稿，希望字可以再放得大一些、颜色要鲜艳的、图要修得很沙龙、再整个玫瑰顺带一个外框与阴影。</p></div></div></div></div>', '2020-03-18 22:49:38', '2020-03-21 13:41:23', 'http://localhost:3001/images/common/78adf990-6927-11ea-a704-ab781b5ae732.jpeg');
+INSERT INTO `article` VALUES (13, 2, 11, '标题', '测试', '', '2021-07-14 14:00:16', NULL, '');
+INSERT INTO `article` VALUES (14, 2, 11, '国产大飞机C919今年交付，国产化率达60%，有望5年内用国产发动机', 'C919的出现，可以说我国已经结束了没有自主研发商用大飞机的历史，2008年立项，2017年首飞成功。而且据资料对比，c919的性能已经不亚于波音737和空客A320，就如东航公司规划发展部的副总经理在接受采访时所讲的一样：“C919飞机的质量相比于波音737和空客A320一点都不差，甚至还要好。”今年3月份的时候，c919迎来了第一笔订单，中国商飞与中国东方航空正式签署C919购机合同，5架C919客机，预计今年年底中国商飞将交付首架客机，目前c919的总订单数已经超过1000架，客户达28家。', '<p>C919的出现，可以说我国已经结束了没有自主研发商用大飞机的历史，2008年立项，2017年首飞成功。而且据资料对比，c919的性能已经不亚于波音737和空客A320，就如东航公司规划发展部的副总经理在接受采访时所讲的一样：“C919飞机的质量相比于波音737和空客A320一点都不差，甚至还要好。”今年3月份的时候，c919迎来了第一笔订单，中国商飞与中国东方航空正式签署C919购机合同，5架C919客机，预计今年年底中国商飞将交付首架客机，目前c919的总订单数已经超过1000架，客户达28家。</p><p>欧洲空客和美国波音公司已经霸占这个市场多年，我国在大飞机领域的发展较晚，本来还没什么事情，这两大巨头一看，中国的飞机发展的这么快，一下子就坐不住了，感受到威胁之后，美国就发布了一份限制实体采购美国商品及技术的条令，其中就包括航空发动机。大家也都知道，我国在发动机方面一直处在一个追赶阶段，c919就用的是CFM国际提供的LEAP1C发动机，不过我们也不是没有发展，我国在研制C919的时候也在努力的研发发动机，一边按计划引进外国的发动机，另一方面研发着CJ1000双轴大涵道比直驱涡扇发动机。</p><p>根据媒体报道，我国计划在五年内加大对国产发动机的研发，明确表示要推动国产大涵道涡扇发动机CJ1000的发展，为国产C919提供动力，宽体客机发动机CJ2000的技术突破也被列为计划重点。得到支持之后，在我国研发人员的努力之下，现在CJ1000已经进入了研发尾声，据称已经开始装到验证机上测试了。继2017年12月CJ1000首台样机完成装配后，2018年5月17日首次进行点火，到今年的1月份钛铝合金低压涡轮叶片首次通过振动疲劳考核，这都是我国航天大飞机历史上最重要的时刻。</p><p>所以说面对着美国的制裁，我国专家都纷纷表示到无伤大雅，工程院院士刘大响表示：“中国商用发动机公司早就突破多项关键技术，研发出了可替代的飞机发动机CJ1000A。”中科院的研究员杨瑞所讲，就算长江-1000A的进度慢一点也无伤大雅，因为现在还有涡扇20发动机也可作为“备用”。可以看出我国在这方面的布局还是很深的，所以制裁了没多久，美国就急了，赶紧大力的向我们销售LEAP1C发动机，心里的那点小九九谁不知道似的，要是现在不卖，等到我们的CJ1000研制出来，想买我们都不买。</p><p>不过有一说一，虽然C919的国产化比例差不多已经达到了60%，但这对我们来说是远远不够的，不光是发动机，还有许多零部件，设备，材料等都是来源于国外，被人“卡脖子”的感觉不好受，按现在的速度来看，五年之内就可以对CJ1000实现量产，可以说CJ1000只是国产化的一个开始，到了最后一定可以实现完全百分百中国制造。就像欧洲空客公司CEO说的一样，等到了2025年左右，中国商飞研制的C919一定会是全球的标杆之一，未来一定会使欧洲空客、美国波音和中国商飞共架齐驱的局面。再告诉大家一个好消息就是，据中国商飞副总经理吴光辉透露，今年开始C929便可开始制造，预计到了2025年便可迎来首飞。</p>', '2021-07-14 14:05:33', '2021-07-15 10:43:16', 'http://localhost:3001/images/common/671bd2d0-e516-11eb-b281-a1e419beedb8.jpeg');
 
 -- ----------------------------
 -- Table structure for article_tag
 -- ----------------------------
 DROP TABLE IF EXISTS `article_tag`;
 CREATE TABLE `article_tag`  (
-  `id` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `article_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '博客ID',
-  `tag_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '标签ID',
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `article_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '博客ID',
+  `tag_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '标签ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客to标签中间表' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客to标签中间表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of article_tag
@@ -111,11 +110,11 @@ INSERT INTO `article_tag` VALUES (9, 3, 6);
 -- ----------------------------
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '分类id',
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '分类id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '分类名称',
-  `parent_id` int(0) NOT NULL COMMENT '父级id',
+  `parent_id` int NOT NULL COMMENT '父级id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of category
@@ -137,14 +136,14 @@ INSERT INTO `category` VALUES (11, 'IT新闻', 2);
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '菜单id',
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '菜单id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单名称',
-  `pId` int(0) NULL DEFAULT NULL COMMENT '父级id',
+  `pId` int NULL DEFAULT NULL COMMENT '父级id',
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '链接url',
   `menu_order` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '显示顺序',
   `icon_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图标id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of menu
@@ -169,10 +168,10 @@ INSERT INTO `menu` VALUES (14, '权限角色', 7, '/auth/role', '7001', NULL);
 -- ----------------------------
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '角色id',
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `role_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of role
@@ -187,11 +186,11 @@ INSERT INTO `role` VALUES (4, '设计');
 -- ----------------------------
 DROP TABLE IF EXISTS `role_menu`;
 CREATE TABLE `role_menu`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `role_id` int(0) NULL DEFAULT NULL COMMENT '角色id',
-  `menu_id` int(0) NULL DEFAULT NULL COMMENT '权限id',
+  `id` int NOT NULL AUTO_INCREMENT,
+  `role_id` int NULL DEFAULT NULL COMMENT '角色id',
+  `menu_id` int NULL DEFAULT NULL COMMENT '权限id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
+) ENGINE = MyISAM AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = FIXED;
 
 -- ----------------------------
 -- Records of role_menu
@@ -224,10 +223,10 @@ INSERT INTO `role_menu` VALUES (22, 2, 12);
 -- ----------------------------
 DROP TABLE IF EXISTS `tag`;
 CREATE TABLE `tag`  (
-  `id` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '账户' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '账户' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of tag
@@ -244,19 +243,20 @@ INSERT INTO `tag` VALUES (6, '网页设计');
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `username` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `password` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
   `nickname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `sex` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '男' COMMENT '性别',
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号码',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'moz', '1', '张艺兴', '男', '15863008280');
-INSERT INTO `user` VALUES (2, 'mrz', '1', '赵薇', '女', '15863008280');
+INSERT INTO `user` VALUES (1, 'moz', '123', '张艺兴', '男', '15863008280');
+INSERT INTO `user` VALUES (2, 'orz', '123', '黄小米', '女', '13475829262');
+INSERT INTO `user` VALUES (3, 'xxx', '123', '黄渤', '男', '13485956526');
 
 SET FOREIGN_KEY_CHECKS = 1;

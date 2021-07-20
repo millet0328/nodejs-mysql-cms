@@ -4,8 +4,8 @@ var router = express.Router();
 var db = require('../config/mysql');
 
 /**
- * @api {post} /article/add 添加新的文章
- * @apiName AddArticle
+ * @api {post} /article/release 添加新的文章
+ * @apiName ReleaseArticle
  * @apiGroup Article
  *
  * @apiParam { Number } cate_1st 一级分类id.
@@ -16,10 +16,10 @@ var db = require('../config/mysql');
  * @apiParam { String } content 文章内容.
  * @apiParam { Number[] } tags 标签的id数组,如[1,2,3].
  *
- * @apiSampleRequest /article/add
+ * @apiSampleRequest /article/release
  */
 
-router.post("/add/", async (req, res) => {
+router.post("/release/", async (req, res) => {
 	let { cate_1st, cate_2nd, title, description, content, main_photo, tags } = req.body;
 	tags = JSON.parse(tags);
 	var articleSQL =
@@ -39,16 +39,16 @@ router.post("/add/", async (req, res) => {
 });
 
 /**
- * @api {post} /article/delete 删除指定id的文章
- * @apiName DeleteArticle
+ * @api {post} /article/remove 删除指定id的文章
+ * @apiName RemoveArticle
  * @apiGroup Article
  *
  * @apiParam { Number } id 文章id
  *
- * @apiSampleRequest /article/delete
+ * @apiSampleRequest /article/remove
  */
 
-router.post('/delete', async (req, res) => {
+router.post('/remove', async (req, res) => {
 	let { id } = req.body;
 	var sql = 'DELETE FROM article WHERE id = ?;DELETE FROM article_tag WHERE article_id = ?';
 	let results = await db.query(sql, [id, id]);

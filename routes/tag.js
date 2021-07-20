@@ -71,17 +71,17 @@ router.post('/edit', async (req, res) => {
 });
 
 /**
- * @api {post} /tag/delete 删除标签
+ * @api {post} /tag/remove 删除标签
  * @apiDescription 有文章与标签关联，不允许删除标签；将关联文章删除，标签没有关联，可以删除标签；
- * @apiName DeleteTag
+ * @apiName RemoveTag
  * @apiGroup Tag
  * @apiPermission user
  * 
  * @apiParam { Number } id 标签id.
  *
- * @apiSampleRequest /tag/delete
+ * @apiSampleRequest /tag/remove
  */
-router.post('/delete', async (req, res) => {
+router.post('/remove', async (req, res) => {
 	let { id } = req.body;
 	// 判断是否有标签关联文章
 	let check_sql = 'SELECT * FROM article_tag WHERE tag_id = ?';
