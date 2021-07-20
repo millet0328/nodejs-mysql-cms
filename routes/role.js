@@ -89,7 +89,11 @@ router.delete('/:id', async (req, res) => {
  * 
  * @apiExample {js} 参数示例:
  * /role/3
- * 
+ *
+ * @apiParamExample {json} body参数:
+ *     {
+ *       "name": '库管',
+ *     }
  * @apiSampleRequest /role
  */
 router.put('/:id', async (req, res) => {
