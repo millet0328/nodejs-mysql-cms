@@ -1,78 +1,81 @@
 <!doctype html>
 <html lang="en">
 
-<head>
-	<!-- Required meta tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" type="text/css" href="./assets/lib/bootstrap-4.5.0/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
-	<title>分类列表</title>
-</head>
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" type="text/css" href="./assets/lib/bootstrap-4.6.0/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
+		<title>分类列表</title>
+	</head>
 
-<body>
-	<!-- 导航 -->
-	<header></header>
-	<div class="container-fluid pt-3">
-		<div class="row">
-			<!-- 侧边栏 -->
-			<div id="left-menu" class="col-2 p-0"></div>
-			<!-- 内容 -->
-			<div class="col-10">
-				<div class="card shadow-sm">
-					<div class="card-header">
-						分类列表
+	<body>
+		<!-- 导航 -->
+		<header></header>
+		<div class="container-fluid pt-3">
+			<div class="row">
+				<!-- 侧边栏 -->
+				<div id="left-menu" class="col-2 p-0"></div>
+				<!-- 内容 -->
+				<div class="col-10">
+					<div class="card shadow-sm">
+						<div class="card-header d-flex justify-content-between">
+							<span>分类列表</span>
+							<button type="button" class="btn btn-primary btn-sm">
+								<svg class="bi" width="14" height="14" fill="currentColor">
+									<use xlink:href="./assets/iconfonts/bootstrap-icons.svg#node-plus" />
+								</svg>
+								添加新分类
+							</button>
+						</div>
+						<div class="card-body">
+							<table class="table table-bordered table-hover mb-0 bg-white">
+								<thead class="thead-light">
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">分类名称</th>
+										<th scope="col">父级分类</th>
+										<th scope="col">父级ID</th>
+										<th scope="col">操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th scope="row">1</th>
+										<td>前端</td>
+										<td>编程</td>
+										<td>1</td>
+										<td>
+											<button type="button" class="btn btn-primary btn-sm">
+												<svg class="bi" width="13" height="13" fill="currentColor">
+													<use
+														xlink:href="./assets/iconfonts/bootstrap-icons.svg#pencil-square" />
+												</svg>
+												编辑
+											</button>
+											<button type="button" class="btn btn-danger btn-sm">
+												<svg class="bi" width="13" height="13" fill="currentColor">
+													<use xlink:href="./assets/iconfonts/bootstrap-icons.svg#trash" />
+												</svg>
+												删除
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
-					<div class="card-body">
-						<table class="table table-bordered table-hover mb-0 bg-white">
-							<thead class="thead-light">
-								<tr>
-									<th scope="col">#</th>
-									<th scope="col">分类名称</th>
-									<th scope="col">父级分类</th>
-									<th scope="col">父级ID</th>
-									<th scope="col">操作</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<th scope="row">1</th>
-									<td>前端</td>
-									<td>编程</td>
-									<td>1</td>
-									<td>
-										<button type="button" class="btn btn-primary btn-sm">
-											<svg class="bi" width="13" height="13" fill="currentColor">
-												<use
-													xlink:href="./assets/iconfonts/bootstrap-icons.svg#pencil-square" />
-											</svg>
-											编辑
-										</button>
-										<button type="button" class="btn btn-danger btn-sm">
-											<svg class="bi" width="13" height="13" fill="currentColor">
-												<use xlink:href="./assets/iconfonts/bootstrap-icons.svg#trash" />
-											</svg>
-											删除
-										</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
 				</div>
 			</div>
 		</div>
-
-	</div>
-	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<script src="./assets/lib/jQuery/jquery-3.5.1.min.js"></script>
-	<script src="./assets/lib/bootstrap-4.5.0/js/popper.min.js"></script>
-	<script src="./assets/lib/bootstrap-4.5.0/js/bootstrap.min.js"></script>
-	<script src="./assets/lib/layer/layer.js"></script>
-	<script src="./assets/lib/Validform/js/Validform_v5.3.2_min.js"></script>
-	<script src="./assets/js/layout.js"></script>
-</body>
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="./assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+		<script src="./assets/lib/bootstrap-4.6.0/js/bootstrap.min.js"></script>
+		<script src="./assets/lib/layer/layer.js"></script>
+		<script src="./assets/lib/Validform/js/Validform_v5.3.2_min.js"></script>
+		<script src="./assets/js/layout.js"></script>
+	</body>
 
 </html>

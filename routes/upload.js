@@ -12,7 +12,7 @@ const sharp = require('sharp');
 var uuidv1 = require('uuid/v1');
 
 /**
- * @api {post} /upload/editor/ 富文本编辑器图片上传API
+ * @api {post} /upload/editor/ 富文本编辑器图片上传
  * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，不限制尺寸，存储至details文件夹
  * @apiName uploadEditor
  * @apiGroup Upload Image
@@ -68,8 +68,8 @@ router.post("/editor", upload.single('file'), async function (req, res) {
 });
 
 /**
- * @api {post} /upload/common/ 通用图片上传API
- * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，不限制尺寸，avatar存储至avatar文件夹,common存储至common文件夹
+ * @api {post} /upload/common/ 通用图片上传
+ * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，头像上传，图片必须是正方形，通用上传不限制尺寸，avatar存储至avatar文件夹,common存储至common文件夹
  * @apiName uploadCommon
  * @apiGroup Upload Image
  * 
@@ -78,7 +78,7 @@ router.post("/editor", upload.single('file'), async function (req, res) {
  * 
  * @apiSampleRequest /upload/common/
  * 
- * @apiSuccess {String} data 返回图片地址.
+ * @apiSuccess {String} src 返回图片地址.
  */
 router.post("/common", upload.single('file'), async function (req, res) {
 	//上传类型
@@ -89,7 +89,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
 	var reg = /^image\/\w+$/;
 	var flag = reg.test(mimetype);
 	if (!flag) {
-		res.json({
+		res.status(400).json({
 			status: false,
 			msg: "格式错误，请选择一张图片!"
 		});
@@ -97,14 +97,22 @@ router.post("/common", upload.single('file'), async function (req, res) {
 	}
 	//判断图片体积是否小于2M
 	if (size >= 2 * 1024 * 1024) {
-		res.json({
+		res.status(400).json({
 			status: false,
 			msg: "图片体积太大，请压缩图片!"
 		});
 		return;
 	}
-	//扩展名
-	var { format } = await sharp(req.file.buffer).metadata();
+	// 获取图片信息
+	var { width, height, format } = await sharp(req.file.buffer).metadata();
+	// 判读图片尺寸
+	if (type == "avatar" && width != height) {
+		res.status(400).json({
+			status: false,
+			msg: "图片必须为正方形，请重新上传!"
+		});
+		return;
+	}
 	// 生成文件名
 	var filename = uuidv1();
 	//储存文件夹
@@ -116,7 +124,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
 		res.json({
 			status: true,
 			msg: "图片上传处理成功!",
-			data: process.env.server + fileFolder + filename + '.' + format
+			src: process.env.server + fileFolder + filename + '.' + format
 		});
 	} catch (error) {
 		res.json({
@@ -127,18 +135,21 @@ router.post("/common", upload.single('file'), async function (req, res) {
 });
 
 /**
- * @api {post} /upload/delete 删除图片API
+ * @api {post} /upload/remove 删除图片
  * @apiDescription 如果上传错误的图片，通过此API删除错误的图片
  * @apiName uploadDelete
  * @apiGroup Upload Image
+ * @apiPermission user admin
+ * 
+ * @apiParam {String} src 图片文件路径,注意图片路径必须是绝对路径，例：http://localhost:3003/images/path/to/photo.jpg
  *
- * @apiParam {String} src 图片文件路径,注：src='./images/goods/file.jpg'，必须严格按照规范路径，'./images'不可省略;
- *
- * @apiSampleRequest /upload/delete
+ * @apiSampleRequest /upload/remove
  */
 
-router.post('/delete', function (req, res) {
-	let realPath = path.resolve(__dirname, '../public/', req.body.src);
+router.post('/remove', function (req, res) {
+	let { src } = req.body;
+	src = src.replace(/.+\/images/, "./images");
+	let realPath = path.resolve(__dirname, '../public/', src);
 	fs.unlink(realPath, function (err) {
 		if (err) throw err;
 		res.json({
@@ -146,7 +157,6 @@ router.post('/delete', function (req, res) {
 			msg: "success!"
 		});
 	})
-
 });
 
 module.exports = router;
