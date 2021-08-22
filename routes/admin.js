@@ -179,9 +179,11 @@ router.get('/info', async (req, res) => {
 
 /**
  * @api {post} /admin/info 编辑管理员个人资料
+ * @apiDescription 只有超级管理员才有权限修改用户角色，普通管理员无权限更改角色。
  * @apiName AdminUpdate
  * @apiGroup Admin
- *
+ * @apiPermission 超级管理员
+ * 
  * @apiParam { Number } id 管理员id.
  * @apiParam { String } username 用户名.
  * @apiParam { String } fullname 姓名.
@@ -198,8 +200,8 @@ router.post('/info', async (req, res) => {
 	let { id, username, fullname, role, sex, tel, email, avatar } = req.body;
 	let sql = `UPDATE admin SET username = ?,fullname = ?,sex = ?,tel = ?,email = ?, avatar = ? WHERE id = ?;
 	UPDATE admin_role SET role_id = ? WHERE admin_id = ?`;
-	let [{ affectedRows }] = await db.query(sql,
-		[username, fullname, sex, tel, email, avatar, id, role, id]);
+	let [{ affectedRows }] = await db.query(sql, [username, fullname, sex, tel, email, avatar, id, role,
+		id]);
 	if (!affectedRows) {
 		res.json({
 			status: false,
@@ -211,6 +213,41 @@ router.post('/info', async (req, res) => {
 		status: true,
 		msg: "修改成功！"
 	});
+});
+
+/**
+ * @api { post } /admin/account 修改本账户信息
+ * @apiDescription 管理员自行修改本账户信息，但是无权限分配角色。
+ * @apiName UpdateAccount
+ * @apiGroup Admin
+ * @apiPermission admin
+ * 
+ * @apiParam { String } username 用户名.
+ * @apiParam { String } fullname 姓名.
+ * @apiParam { String } sex 性别.
+ * @apiParam { String } tel 手机号码.
+ * @apiParam { String } email 邮箱地址.
+ * @apiParam { String } avatar 头像地址.
+ *
+ * @apiSampleRequest /admin/account
+ */
+ router.post("/account/", function (req, res) {
+    let { id } = req.user;
+    let { fullname, sex, avatar, tel, email } = req.body;
+    let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE id = ?`;
+    db.query(sql, [fullname, sex, avatar, tel, email, id], function (results) {
+        if (!results.affectedRows) {
+            res.json({
+                status: false,
+                msg: "修改失败！"
+            });
+            return;
+        }
+        res.json({
+            status: true,
+            msg: "修改成功！"
+        });
+    });
 });
 
 /**

@@ -132,7 +132,7 @@ router.post('/info', async (req, res) => {
  * @apiSampleRequest /user
  */
 
-router.post('/', async (req, res) => {
+router.post('/remove', async (req, res) => {
     let { id } = req.body;
     let sql = 'DELETE FROM user WHERE id = ?';
     let { affectedRows } = await db.query(sql, [id]);
