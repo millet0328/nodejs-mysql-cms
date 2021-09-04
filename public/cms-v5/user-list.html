@@ -7,9 +7,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" type="text/css" href="./assets/lib/bootstrap-5.1.0/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="./assets/lib/Validform/css/style.css">
 	<link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
-	<title>标签列表</title>
+	<title>用户列表</title>
 </head>
 
 <body>
@@ -22,28 +21,28 @@
 			<!-- 内容 -->
 			<div class="col-10">
 				<div class="card shadow-sm">
-					<div class="card-header d-flex justify-content-between">
-						<span>标签列表</span>
-						<button type="button" class="btn btn-primary btn-sm">
-							<svg class="bi" width="14" height="14" fill="currentColor">
-								<use xlink:href="./assets/iconfonts/bootstrap-icons.svg#bookmark-plus" />
-							</svg>
-							添加新标签
-						</button>
+					<div class="card-header">
+						用户列表
 					</div>
 					<div class="card-body">
 						<table class="table table-bordered table-hover mb-0 bg-white">
 							<thead class="thead-light">
 								<tr>
 									<th scope="col">#</th>
-									<th scope="col">标签名</th>
+									<th scope="col">用户名</th>
+									<th scope="col">姓名</th>
+									<th scope="col">性别</th>
+									<th scope="col">手机</th>
 									<th scope="col">操作</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
 									<th scope="row">1</th>
-									<td>科技</td>
+									<td>admin</td>
+									<td>黄小米</td>
+									<td>女</td>
+									<td>15863008280</td>
 									<td>
 										<button type="button" class="btn btn-outline-primary btn-sm">
 											<svg class="bi" width="13" height="13" fill="currentColor">
@@ -63,7 +62,6 @@
 							</tbody>
 						</table>
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -75,6 +73,7 @@
 	<script src="./assets/lib/layer/layer.js"></script>
 	<script src="./assets/lib/Validform/js/Validform_v5.3.2_min.js"></script>
 	<script src="./assets/js/layout.js"></script>
+
 </body>
 
 </html>

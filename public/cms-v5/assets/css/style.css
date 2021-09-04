@@ -1,22 +1,24 @@
+html,
+body {
+    font-size: 14px;
+}
+
 .bg {
-	width: 100vw;
-	height: 100vh;
-	background: url(../img/login-bg.jpg) no-repeat center;
-	background-size: cover;
+    width: 100vw;
+    height: 100vh;
+    background: url(../img/login-bg.jpg) no-repeat center;
+    background-size: cover;
 }
 
 .form-panel {
-	position: absolute;
-	right: 30px;
-	top: 50%;
-	transform: translateY(-50%);
-	width: 350px;
+    right: 30px;
+    width: 350px;
 }
 
 
 .user .dropdown-menu {
-	left: auto;
-	right: 0;
+    left: auto;
+    right: 0;
 }
 
 /* 表格垂直居中 */
@@ -27,5 +29,5 @@
 .table>tfoot>tr>th,
 .table>thead>tr>td,
 .table>thead>tr>th {
-	vertical-align: middle;
+    vertical-align: middle;
 }

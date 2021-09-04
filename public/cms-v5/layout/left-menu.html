@@ -8,7 +8,7 @@
                 文章管理
             </div>
         </div>
-        <div id="collapse1" class="collapse" data-bs-parent="#accordion">
+        <div id="collapse1" class="collapse" data-bs-parent="#collapse1">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <a href="./article-list.html" class="text-decoration-none">
@@ -29,38 +29,17 @@
             </ul>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header" id="headingTwo">
-            <div data-bs-toggle="collapse" data-bs-target="#collapse2">
-                <svg class="bi mr-1" width="16" height="16" fill="currentColor">
-                    <use xlink:href="./assets/iconfonts/bootstrap-icons.svg#tags" />
-                </svg>
-                标签管理
-            </div>
-        </div>
-        <div id="collapse2" class="collapse">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <a href="./tag-list.html" class="text-decoration-none">
-                        <svg class="bi mr-1" width="16" height="16" fill="currentColor">
-                             <use xlink:href="./assets/iconfonts/bootstrap-icons.svg#tag" />
-                        </svg>
-                        标签列表
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+
     <div class="card">
         <div class="card-header">
-            <div data-bs-toggle="collapse" data-bs-target="#collapse3">
+            <div data-bs-toggle="collapse" data-bs-target="#collapse2">
                 <svg class="bi mr-1" width="16" height="16" fill="currentColor">
                     <use xlink:href="./assets/iconfonts/bootstrap-icons.svg#diagram-3" />
                 </svg>
                 分类管理
             </div>
         </div>
-        <div id="collapse3" class="collapse" data-bs-parent="#accordion">
+        <div id="collapse2" class="collapse" data-bs-parent="#collapse2">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <a href="./category-list.html" class="text-decoration-none">
@@ -75,6 +54,28 @@
     </div>
     <div class="card">
         <div class="card-header">
+            <div data-bs-toggle="collapse" data-bs-target="#collapse3">
+                <svg class="bi mr-1" width="16" height="16" fill="currentColor">
+                    <use xlink:href="./assets/iconfonts/bootstrap-icons.svg#tags" />
+                </svg>
+                用户管理
+            </div>
+        </div>
+        <div id="collapse3" class="collapse"  data-bs-parent="#collapse3">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <a href="./user-list.html" class="text-decoration-none">
+                        <svg class="bi mr-1" width="16" height="16" fill="currentColor">
+                            <use xlink:href="./assets/iconfonts/bootstrap-icons.svg#person" />
+                        </svg>
+                        用户列表
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
             <div data-bs-toggle="collapse" data-bs-target="#collapse4">
                 <svg class="bi mr-1" width="16" height="16" fill="currentColor">
                     <use xlink:href="./assets/iconfonts/bootstrap-icons.svg#chat-square-text" />
@@ -82,7 +83,7 @@
                 公告管理
             </div>
         </div>
-        <div id="collapse4" class="collapse" data-bs-parent="#accordion">
+        <div id="collapse4" class="collapse" data-bs-parent="#collapse4">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <a href="#" class="text-decoration-none">
@@ -112,7 +113,7 @@
                 评论管理
             </div>
         </div>
-        <div id="collapse5" class="collapse" data-bs-parent="#accordion">
+        <div id="collapse5" class="collapse" data-bs-parent="#collapse5">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <a href="#" class="text-decoration-none">
@@ -142,7 +143,7 @@
                 账户管理
             </div>
         </div>
-        <div id="collapse6" class="collapse" data-bs-parent="#accordion">
+        <div id="collapse6" class="collapse" data-bs-parent="#collapse6">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <a href="./admin-list.html" class="text-decoration-none">
@@ -152,14 +153,7 @@
                         账户列表
                     </a>
                 </li>
-                <li class="list-group-item">
-                    <a href="#" class="text-decoration-none">
-                        <svg class="bi mr-1" width="16" height="16" fill="currentColor">
-                            <use xlink:href="./assets/iconfonts/bootstrap-icons.svg#collection" />
-                        </svg>
-                        用户组
-                    </a>
-                </li>
+
                 <li class="list-group-item">
                     <a href="#" class="text-decoration-none">
                         <svg class="bi mr-1" width="16" height="16" fill="currentColor">
