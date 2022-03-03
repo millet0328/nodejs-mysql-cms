@@ -4,13 +4,21 @@ var router = express.Router();
 let db = require('../config/mysql');
 
 /**
+ * @apiDefine Authorization
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ */
+
+/**
  * @api {post} /category/add 添加分类
  * @apiDescription 注意：目前最多支持二级分类
  * @apiName AddCategory
+ * @apiPermission 后台系统
  * @apiGroup Category
- *
- * @apiParam { String } name 分类名称.
- * @apiParam { Number } parent_id 父级分类id.一级分类的parent_id=0
+ * 
+ * @apiUse Authorization
+ * 
+ * @apiBody { String } name 分类名称.
+ * @apiBody { Number } parent_id 父级分类id.一级分类的parent_id=0
  *
  * @apiSampleRequest /category/add
  */
@@ -31,9 +39,12 @@ router.post("/add", async (req, res) => {
  * @api {post} /category/remove 删除指定id分类
  * @apiDescription 注意：删除指定id分类,如果其拥有子级分类不允许删除，必须清空子分类才可删除。
  * @apiName RemoveCategory
+ * @apiPermission 后台系统
  * @apiGroup Category
- *
- * @apiParam { Number } id 分类id
+ * 
+ * @apiUse Authorization
+ * 
+ * @apiBody { Number } id 分类id
  *
  * @apiSampleRequest /category/remove
  */
@@ -61,9 +72,12 @@ router.post("/remove", async (req, res) => {
 /**
  * @api {get} /category/detail 获取指定id的分类详情
  * @apiName CategoryDetail
+ * @apiPermission 后台系统
  * @apiGroup Category
- *
- * @apiParam { Number } id 分类id
+ * 
+ * @apiUse Authorization
+ * 
+ * @apiQuery { Number } id 分类id
  *
  * @apiSampleRequest /category/detail
  */
@@ -80,11 +94,14 @@ router.get("/detail", async (req, res) => {
 /**
  * @api {post} /category/edit 编辑指定id分类
  * @apiName EditCategory
+ * @apiPermission 后台系统
  * @apiGroup Category
- *
- * @apiParam { Number } id 分类id
- * @apiParam { String } name 分类名称.
- * @apiParam { Number } parent_id 父级分类id.一级分类的parent_id=0
+ * 
+ * @apiUse Authorization
+ * 
+ * @apiBody { Number } id 分类id
+ * @apiBody { String } name 分类名称.
+ * @apiBody { Number } parent_id 父级分类id.一级分类的parent_id=0
  *
  * @apiSampleRequest /category/edit
  */
@@ -107,8 +124,11 @@ router.post('/edit', async (req, res) => {
 /**
  * @api {get} /category/list 获取所有分类
  * @apiName CategoryList
+ * @apiPermission 后台系统、前台
  * @apiGroup Category
- *
+ * 
+ * @apiUse Authorization
+ * 
  * @apiSampleRequest /category/list
  */
 router.get('/list', async (req, res) => {
@@ -123,9 +143,12 @@ router.get('/list', async (req, res) => {
 /**
  * @api {get} /category/sub 获取子级分类
  * @apiName CategorySub
+ * @apiPermission 后台系统、前台
  * @apiGroup Category
  * 
- * @apiParam { Number } id 父级id。一级分类的父类id=0;
+ * @apiUse Authorization
+ * 
+ * @apiQuery { Number } id 父级id。一级分类的父类id=0;
  * 
  * @apiSampleRequest /category/sub
  */

@@ -12,12 +12,20 @@ const sharp = require('sharp');
 var uuidv1 = require('uuid/v1');
 
 /**
+ * @apiDefine Authorization
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ */
+
+/**
  * @api {post} /upload/editor/ 富文本编辑器图片上传
  * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，不限制尺寸，存储至details文件夹
  * @apiName uploadEditor
+ * @apiPermission 后台系统
  * @apiGroup Upload Image
  * 
- * @apiParam {File} file File文件对象;
+ * @apiUse Authorization
+ * 
+ * @apiBody {File} file File文件对象;
  * 
  * @apiSampleRequest /upload/editor/
  * 
@@ -71,10 +79,11 @@ router.post("/editor", upload.single('file'), async function (req, res) {
  * @api {post} /upload/common/ 通用图片上传
  * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，头像上传，图片必须是正方形，通用上传不限制尺寸，avatar存储至avatar文件夹,common存储至common文件夹
  * @apiName uploadCommon
+ * @apiPermission 后台系统、前台
  * @apiGroup Upload Image
  * 
- * @apiParam {File} file File文件对象;
- * @apiParam {String="common","avatar"} type 上传类型：avatar--头像上传；common--通用上传；
+ * @apiBody {File} file File文件对象;
+ * @apiBody {String="common","avatar"} type 上传类型：avatar--头像上传；common--通用上传；
  * 
  * @apiSampleRequest /upload/common/
  * 
@@ -139,15 +148,24 @@ router.post("/common", upload.single('file'), async function (req, res) {
  * @apiDescription 如果上传错误的图片，通过此API删除错误的图片
  * @apiName uploadDelete
  * @apiGroup Upload Image
- * @apiPermission user admin
+ * @apiPermission 后台系统、前台
  * 
- * @apiParam {String} src 图片文件路径,注意图片路径必须是绝对路径，例：http://localhost:3003/images/path/to/photo.jpg
+ * @apiBody {String} src 图片文件路径,注意图片路径必须是绝对路径，例：http://localhost:3003/images/path/to/photo.jpg
  *
  * @apiSampleRequest /upload/remove
  */
 
 router.post('/remove', function (req, res) {
 	let { src } = req.body;
+	// 判断是否是默认头像
+	let isDefault = src.includes('/avatar/default.jpg');
+	if (isDefault) {
+		res.json({
+			status: false,
+			msg: "默认头像不可删除!"
+		});
+		return;
+	}
 	src = src.replace(/.+\/images/, "./images");
 	let realPath = path.resolve(__dirname, '../public/', src);
 	fs.unlink(realPath, function (err) {

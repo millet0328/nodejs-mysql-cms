@@ -2,12 +2,20 @@ const express = require('express');
 const router = express.Router();
 // 数据库
 let db = require('../config/mysql');
+
+/**
+ * @apiDefine Authorization
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ */
+
 /**
  * @api {get} /tag/list 获取标签列表
  * @apiName TagList
  * @apiGroup Tag
- * @apiPermission user
+ * @apiPermission 后台系统
  *
+ * @apiUse Authorization
+ * 
  * @apiSampleRequest /tag/list
  */
 router.get('/list', async (req, res) => {
@@ -23,9 +31,11 @@ router.get('/list', async (req, res) => {
  * @api {post} /tag/ 创建新的标签
  * @apiName AddTag
  * @apiGroup Tag
- * @apiPermission user
+ * @apiPermission 后台系统
  *
- * @apiParam { String } name 标签名.
+ * @apiUse Authorization
+ * 
+ * @apiBody { String } name 标签名.
  *
  * @apiSampleRequest /tag/
  */
@@ -48,10 +58,12 @@ router.post('/', async (req, res) => {
  * @api {put} /tag/:id 编辑标签
  * @apiName EditTag
  * @apiGroup Tag
- * @apiPermission user
+ * @apiPermission 后台系统
  *
+ * @apiUse Authorization
+ * 
  * @apiParam { Number } id 标签id.
- * @apiParam { String } name 标签名称.
+ * @apiBody { String } name 标签名称.
  *
  * @apiExample {js} 参数示例:
  * /tag/3
@@ -86,8 +98,10 @@ router.put('/:id', async (req, res) => {
  * @apiDescription 有文章与标签关联，不允许删除标签；将关联文章删除，标签没有关联，可以删除标签；
  * @apiName RemoveTag
  * @apiGroup Tag
- * @apiPermission user
+ * @apiPermission 后台系统
  *
+ * @apiUse Authorization
+ * 
  * @apiParam { Number } id 标签id.
  *
  * @apiExample {js} 参数示例:

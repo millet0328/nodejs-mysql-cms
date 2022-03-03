@@ -4,16 +4,24 @@ var router = express.Router();
 var db = require('../config/mysql');
 
 /**
+ * @apiDefine Authorization
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ */
+
+/**
  * @api {post} /article/release 添加新的文章
  * @apiName ReleaseArticle
+ * @apiPermission 后台系统
  * @apiGroup Article
- *
- * @apiParam { Number } cate_1st 一级分类id.
- * @apiParam { Number } cate_2nd 二级分类id.
- * @apiParam { String } title 文章标题.
- * @apiParam { String } description 文章摘要.
- * @apiParam { String } main_photo 文章主图.
- * @apiParam { String } content 文章内容.
+ * 
+ * @apiUse Authorization
+ * 
+ * @apiBody { Number } cate_1st 一级分类id.
+ * @apiBody { Number } cate_2nd 二级分类id.
+ * @apiBody { String } title 文章标题.
+ * @apiBody { String } description 文章摘要.
+ * @apiBody { String } main_photo 文章主图.
+ * @apiBody { String } content 文章内容.
  *
  * @apiSampleRequest /article/release
  */
@@ -38,9 +46,12 @@ router.post("/release/", async (req, res) => {
 /**
  * @api {post} /article/remove 删除指定id的文章
  * @apiName RemoveArticle
+ * @apiPermission 后台系统
  * @apiGroup Article
- *
- * @apiParam { Number } id 文章id
+ * 
+ * @apiUse Authorization
+ * 
+ * @apiBody { Number } id 文章id
  *
  * @apiSampleRequest /article/remove
  */
@@ -58,9 +69,10 @@ router.post('/remove', async (req, res) => {
 /**
  * @api {get} /article/detail 获取指定id的文章详情
  * @apiName ArticleDetail
+ * @apiPermission 后台系统、前台
  * @apiGroup Article
  *
- * @apiParam { Number } id 文章id
+ * @apiQuery { Number } id 文章id
  *
  * @apiSampleRequest /article/detail
  */
@@ -78,15 +90,18 @@ router.get('/detail', async (req, res) => {
 /**
  * @api {post} /article/edit 编辑指定id文章
  * @apiName EditArticle
+ * @apiPermission 后台系统
  * @apiGroup Article
- *
- * @apiParam { Number } id 文章id.
- * @apiParam { Number } cate_1st 一级分类id.
- * @apiParam { Number } cate_2nd 二级分类id.
- * @apiParam { String } title 文章标题.
- * @apiParam { String } description 文章摘要.
- * @apiParam { String } content 文章内容.
- * @apiParam { String } main_photo 文章主图.
+ * 
+ * @apiUse Authorization
+ * 
+ * @apiBody { Number } id 文章id.
+ * @apiBody { Number } cate_1st 一级分类id.
+ * @apiBody { Number } cate_2nd 二级分类id.
+ * @apiBody { String } title 文章标题.
+ * @apiBody { String } description 文章摘要.
+ * @apiBody { String } content 文章内容.
+ * @apiBody { String } main_photo 文章主图.
  *
  * @apiSampleRequest /article/edit
  */
@@ -119,10 +134,11 @@ router.post('/edit', async (req, res) => {
  * @api {get} /article/list 获取所有文章列表
  * @apiDescription 注意：默认按照日期降序排序
  * @apiName ArticleList
+ * @apiPermission 后台系统、前台
  * @apiGroup Article
  *
- * @apiParam { Number } pagesize 每一页文章数量.
- * @apiParam { Number } pageindex 第几页.
+ * @apiQuery { Number } pagesize 每一页文章数量.
+ * @apiQuery { Number } pageindex 第几页.
  *
  * @apiSuccess {Object[]} data 文章数组.
  * @apiSuccess {Number} total 文章总数.
@@ -147,11 +163,12 @@ router.get("/list", async (req, res) => {
  * @api {get} /article/category 获取某分类下的文章列表
  * @apiDescription 注意：默认按照日期降序排序
  * @apiName ArticleCategory
+ * @apiPermission 后台系统、前台
  * @apiGroup Article
  *
- * @apiParam { Number } id 一级分类id.
- * @apiParam { Number } pagesize 每一页文章数量.
- * @apiParam { Number } pageindex 第几页.
+ * @apiQuery { Number } id 一级分类id.
+ * @apiQuery { Number } pagesize 每一页文章数量.
+ * @apiQuery { Number } pageindex 第几页.
  *
  * @apiSampleRequest /article/category
  */

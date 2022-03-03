@@ -5,6 +5,12 @@ let db = require('../config/mysql');
 let { pool } = db;
 // JSON Web Token
 const jwt = require("jsonwebtoken");
+
+/**
+ * @apiDefine Authorization
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ */
+
 /**
  * @apiDefine SuccessResponse
  * @apiSuccess { Boolean } status 请求状态.
@@ -26,18 +32,20 @@ const jwt = require("jsonwebtoken");
  *      }
  *  }
  */
+
 /**
  * @api {post} /admin/register 注册管理员账户
  * @apiDescription 注册成功， 返回token, 请在头部headers中设置Authorization: `Bearer ${token}`,所有请求都必须携带token;
  * @apiName AdminRegister
  * @apiGroup Admin
+ * @apiPermission 后台系统
  *
- * @apiParam { String } username 用户名.
- * @apiParam { String } password 密码.
- * @apiParam { String } fullname 姓名.
- * @apiParam { String } sex 性别.
- * @apiParam { String } tel 手机号码.
- * @apiParam { String } [email] 邮箱地址.
+ * @apiBody { String } username 用户名.
+ * @apiBody { String } password 密码.
+ * @apiBody { String } fullname 姓名.
+ * @apiBody { String } sex 性别.
+ * @apiBody { String } tel 手机号码.
+ * @apiBody { String } [email] 邮箱地址.
  * 
  * @apiUse SuccessResponse
  * 
@@ -45,41 +53,43 @@ const jwt = require("jsonwebtoken");
  */
 router.post('/register', async (req, res) => {
 	let { username, password, fullname, sex, tel, email } = req.body;
+	// 默认头像
+	let defaultAvatar = `${process.env.server}/images/avatar/default.jpg`;
 	// 查询账户是否重名
 	let sql = 'SELECT * FROM admin WHERE username = ?';
-	let results = await db.query(sql, [username]);
+	let [admin] = await db.query(sql, [username]);
 	// 查询账户是否存在
-	if (results.length) {
+	if (admin) {
 		res.json({
 			msg: "账户已存在",
 			status: false,
 		});
 		return;
 	}
-	pool.getConnection(function(err, connection) {
+	pool.getConnection(function (err, connection) {
 		if (err) throw err; // not connected!
-		connection.beginTransaction(function(err) {
+		connection.beginTransaction(function (err) {
 			if (err) throw err;
-			let sql =
-				`INSERT INTO admin (username,password,fullname,sex,tel,email) VALUES (?,?,?,?,?,?)`;
-			connection.query(sql, [username, password, fullname, sex, tel, email], function(
-				error, results, fields) {
+			// 创建新账户
+			let sql = `INSERT INTO admin (username, password, fullname, sex, tel, email, avatar) VALUES (?,?,?,?,?,?,?)`;
+			connection.query(sql, [username, password, fullname, sex, tel, email, defaultAvatar], function (error, results, fields) {
 				let { insertId, affectedRows } = results;
 				if (error || affectedRows <= 0) {
-					return connection.rollback(function() {
+					return connection.rollback(function () {
 						throw error || `${affectedRows} rows changed!`;
 					});
 				}
+				// 给新账户分配角色，默认角色为3
 				let sql = `INSERT INTO admin_role (admin_id,role_id) VALUES (?,3)`;
-				connection.query(sql, [insertId], function(error, results, fields) {
+				connection.query(sql, [insertId], function (error, results, fields) {
 					if (error) {
-						return connection.rollback(function() {
+						return connection.rollback(function () {
 							throw error;
 						});
 					}
-					connection.commit(function(err) {
+					connection.commit(function (err) {
 						if (err) {
-							return connection.rollback(function() {
+							return connection.rollback(function () {
 								throw err;
 							});
 						}
@@ -90,8 +100,7 @@ router.post('/register', async (req, res) => {
 						role: 3,
 					};
 					// 生成token
-					let token = jwt.sign(payload,
-						'secret', { expiresIn: '4h' });
+					let token = jwt.sign(payload, 'secret', { expiresIn: '4h' });
 					// 存储成功
 					res.json({
 						status: true,
@@ -114,10 +123,11 @@ router.post('/register', async (req, res) => {
  * @api {post} /admin/login 登录管理员账户
  * @apiDescription 登录成功， 返回token,有效期4小时，请在头部headers中设置Authorization: `Bearer ${token}`, 所有请求都必须携带token;
  * @apiName AdminLogin
+ * @apiPermission 后台系统
  * @apiGroup Admin
  *
- * @apiParam { String } username 用户名.
- * @apiParam { String } password 密码.
+ * @apiBody { String } username 用户名.
+ * @apiBody { String } password 密码.
  * 
  * @apiUse SuccessResponse
  * 
@@ -126,17 +136,16 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
 	let { username, password } = req.body;
-	let sql =
-		`SELECT a.*,r.id AS role FROM ADMIN a LEFT JOIN admin_role ar ON a.id = ar.admin_id LEFT JOIN role r ON r.id = ar.role_id  WHERE username = ? AND password = ?`;
-	let results = await db.query(sql, [username, password]);
-	if (results.length == 0) {
+	let sql = `SELECT a.*,r.id AS role FROM ADMIN a LEFT JOIN admin_role ar ON a.id = ar.admin_id LEFT JOIN role r ON r.id = ar.role_id  WHERE username = ? AND password = ?`;
+	let [admin] = await db.query(sql, [username, password]);
+	if (!admin) {
 		res.json({
 			msg: "账号或密码错误！",
 			status: false,
 		});
 		return;
 	}
-	let { id, role } = results[0];
+	let { id, role } = admin;
 	// 登录成功
 	let payload = {
 		id,
@@ -160,16 +169,18 @@ router.post('/login', async (req, res) => {
 /**
  * @api {get} /admin/info 获取管理员个人资料
  * @apiName AdminInfo
+ * @apiPermission 后台系统
  * @apiGroup Admin
- *
- * @apiParam { Number } id 管理员id.
+ * 
+ * @apiUse Authorization
+ * 
+ * @apiQuery { Number } id 管理员id.
  *
  * @apiSampleRequest /admin/info
  */
 router.get('/info', async (req, res) => {
 	let { id } = req.query;
-	var sql =
-		'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id WHERE a.id = ?';
+	var sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id WHERE a.id = ?';
 	let results = await db.query(sql, [id]);
 	res.json({
 		status: true,
@@ -182,16 +193,18 @@ router.get('/info', async (req, res) => {
  * @apiDescription 只有超级管理员才有权限修改用户角色，普通管理员无权限更改角色。
  * @apiName AdminUpdate
  * @apiGroup Admin
- * @apiPermission 超级管理员
+ * @apiPermission 超级管理员--后台系统
  * 
- * @apiParam { Number } id 管理员id.
- * @apiParam { String } username 用户名.
- * @apiParam { String } fullname 姓名.
- * @apiParam { String } role 角色id.
- * @apiParam { String } sex 性别.
- * @apiParam { String } tel 手机号码.
- * @apiParam { String } email 邮箱地址.
- * @apiParam { String } avatar 头像地址.
+ * @apiUse Authorization
+ * 
+ * @apiBody { Number } id 管理员id.
+ * @apiBody { String } username 用户名.
+ * @apiBody { String } fullname 姓名.
+ * @apiBody { String } role 角色id.
+ * @apiBody { String } sex 性别.
+ * @apiBody { String } tel 手机号码.
+ * @apiBody { String } email 邮箱地址.
+ * @apiBody { String } avatar 头像地址.
  *
  * @apiSampleRequest /admin/info
  */
@@ -200,8 +213,7 @@ router.post('/info', async (req, res) => {
 	let { id, username, fullname, role, sex, tel, email, avatar } = req.body;
 	let sql = `UPDATE admin SET username = ?,fullname = ?,sex = ?,tel = ?,email = ?, avatar = ? WHERE id = ?;
 	UPDATE admin_role SET role_id = ? WHERE admin_id = ?`;
-	let [{ affectedRows }] = await db.query(sql, [username, fullname, sex, tel, email, avatar, id, role,
-		id]);
+	let [{ affectedRows }] = await db.query(sql, [username, fullname, sex, tel, email, avatar, id, role, id]);
 	if (!affectedRows) {
 		res.json({
 			status: false,
@@ -220,42 +232,46 @@ router.post('/info', async (req, res) => {
  * @apiDescription 管理员自行修改本账户信息，但是无权限分配角色。
  * @apiName UpdateAccount
  * @apiGroup Admin
- * @apiPermission admin
+ * @apiPermission 后台系统
  * 
- * @apiParam { String } username 用户名.
- * @apiParam { String } fullname 姓名.
- * @apiParam { String } sex 性别.
- * @apiParam { String } tel 手机号码.
- * @apiParam { String } email 邮箱地址.
- * @apiParam { String } avatar 头像地址.
+ * @apiUse Authorization
+ * 
+ * @apiBody { String } username 用户名.
+ * @apiBody { String } fullname 姓名.
+ * @apiBody { String } sex 性别.
+ * @apiBody { String } tel 手机号码.
+ * @apiBody { String } email 邮箱地址.
+ * @apiBody { String } avatar 头像地址.
  *
  * @apiSampleRequest /admin/account
  */
- router.post("/account/", function (req, res) {
-    let { id } = req.user;
-    let { fullname, sex, avatar, tel, email } = req.body;
-    let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE id = ?`;
-    db.query(sql, [fullname, sex, avatar, tel, email, id], function (results) {
-        if (!results.affectedRows) {
-            res.json({
-                status: false,
-                msg: "修改失败！"
-            });
-            return;
-        }
-        res.json({
-            status: true,
-            msg: "修改成功！"
-        });
-    });
+router.post("/account/", async (req, res) => {
+	let { id } = req.user;
+	let { fullname, sex, avatar, tel, email } = req.body;
+	let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE id = ?`;
+	let { affectedRows } = await db.query(sql, [fullname, sex, avatar, tel, email, id]);
+	if (!affectedRows) {
+		res.json({
+			status: false,
+			msg: "修改失败！"
+		});
+		return;
+	}
+	res.json({
+		status: true,
+		msg: "修改成功！"
+	});
 });
 
 /**
  * @api {post} /admin/remove 删除账户
  * @apiName AdminRemove
  * @apiGroup Admin
- *
- * @apiParam { Number } id 管理员id.
+ * @apiPermission 后台系统
+ * 
+ * @apiUse Authorization
+ * 
+ * @apiBody { Number } id 管理员id.
  *
  * @apiSampleRequest /admin/remove
  */
@@ -279,14 +295,16 @@ router.post('/remove', async (req, res) => {
 /**
  * @api {get} /admin/list 获取管理员列表
  * @apiName AdminList
+ * @apiPermission 后台系统
  * @apiGroup Admin
- *
+ * 
+ * @apiUse Authorization
+ * 
  * @apiSampleRequest /admin/list
  */
 
 router.get('/list', async (req, res) => {
-	var sql =
-		'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id;'
+	var sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id;'
 	let results = await db.query(sql);
 	res.json({
 		status: true,

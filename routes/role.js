@@ -2,12 +2,20 @@ const express = require('express');
 const router = express.Router();
 // 数据库
 let db = require('../config/mysql');
+
+/**
+ * @apiDefine Authorization
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ */
+
 /**
  * @api {get} /role/list 获取角色列表
  * @apiName RoleList
  * @apiGroup Role
- * @apiPermission admin
+ * @apiPermission 后台系统
  *
+ * @apiUse Authorization
+ * 
  * @apiSampleRequest /role/list
  */
 router.get('/list', async (req, res) => {
@@ -31,9 +39,11 @@ router.get('/list', async (req, res) => {
  * @api {post} /role 添加角色
  * @apiName RoleAdd
  * @apiGroup Role
- * @apiPermission admin
+ * @apiPermission 后台系统
  *
- * @apiParam {String} name 角色名称.
+ * @apiUse Authorization
+ * 
+ * @apiBody {String} name 角色名称.
  *
  * @apiSampleRequest /role
  */
@@ -53,8 +63,10 @@ router.post('/', async (req, res) => {
  * @api {delete} /role/:id 删除角色
  * @apiName RoleDelete
  * @apiGroup Role
- * @apiPermission admin
+ * @apiPermission 后台系统
  *
+ * @apiUse Authorization
+ * 
  * @apiParam {String} id 角色id.
  * 
  * @apiExample {js} 参数示例:
@@ -82,10 +94,12 @@ router.delete('/:id', async (req, res) => {
  * @api {put} /role/:id 更新角色
  * @apiName RoleUpdate
  * @apiGroup Role
- * @apiPermission admin
+ * @apiPermission 后台系统
  *
+ * @apiUse Authorization
+ * 
  * @apiParam {String} id 角色id.
- * @apiParam {String} name 角色名称.
+ * @apiBody {String} name 角色名称.
  * 
  * @apiExample {js} 参数示例:
  * /role/3
