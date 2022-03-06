@@ -43,7 +43,7 @@ const jwt = require("jsonwebtoken");
  * @apiBody { String } username 用户名.
  * @apiBody { String } password 密码.
  * @apiBody { String } fullname 姓名.
- * @apiBody { String } sex 性别.
+ * @apiBody { String="男","女" } sex 性别.
  * @apiBody { String } tel 手机号码.
  * @apiBody { String } [email] 邮箱地址.
  * 
@@ -201,7 +201,7 @@ router.get('/info', async (req, res) => {
  * @apiBody { String } username 用户名.
  * @apiBody { String } fullname 姓名.
  * @apiBody { String } role 角色id.
- * @apiBody { String } sex 性别.
+ * @apiBody { String="男","女" } sex 性别.
  * @apiBody { String } tel 手机号码.
  * @apiBody { String } email 邮箱地址.
  * @apiBody { String } avatar 头像地址.
@@ -238,7 +238,7 @@ router.post('/info', async (req, res) => {
  * 
  * @apiBody { String } username 用户名.
  * @apiBody { String } fullname 姓名.
- * @apiBody { String } sex 性别.
+ * @apiBody { String="男","女" } sex 性别.
  * @apiBody { String } tel 手机号码.
  * @apiBody { String } email 邮箱地址.
  * @apiBody { String } avatar 头像地址.

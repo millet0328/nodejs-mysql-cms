@@ -12,14 +12,16 @@ const session = require('express-session');
 
 var indexRouter = require('./routes/index');
 
+var adminRouter = require('./routes/admin');
 var userRouter = require('./routes/user');
+var accountRouter = require('./routes/account');
 var categoryRouter = require('./routes/category');
 var articleRouter = require('./routes/article');
 var tagRouter = require('./routes/tag');
 var uploadRouter = require('./routes/upload');
-var adminRouter = require('./routes/admin');
 var roleRouter = require('./routes/role');
 var menuRouter = require('./routes/menu');
+var noticeRouter = require('./routes/notice');
 
 var app = express();
 
@@ -55,14 +57,16 @@ app.use(session({ name: 'session_id', secret: 'keyboard cat', resave: false, sav
 // }));
 
 app.use('/', indexRouter);
+app.use('/admin', adminRouter);
 app.use('/user', userRouter);
+app.use('/account', accountRouter);
 app.use('/category', categoryRouter);
 app.use('/article', articleRouter);
 app.use('/tag', tagRouter);
 app.use('/upload', uploadRouter);
-app.use('/admin', adminRouter);
 app.use('/role', roleRouter);
 app.use('/menu', menuRouter);
+app.use('/notice', noticeRouter);
 
 // 处理401错误
 app.use(function (err, req, res, next) {

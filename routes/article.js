@@ -13,9 +13,9 @@ var db = require('../config/mysql');
  * @apiName ReleaseArticle
  * @apiPermission 后台系统
  * @apiGroup Article
- * 
+ *
  * @apiUse Authorization
- * 
+ *
  * @apiBody { Number } cate_1st 一级分类id.
  * @apiBody { Number } cate_2nd 二级分类id.
  * @apiBody { String } title 文章标题.
@@ -48,9 +48,9 @@ router.post("/release/", async (req, res) => {
  * @apiName RemoveArticle
  * @apiPermission 后台系统
  * @apiGroup Article
- * 
+ *
  * @apiUse Authorization
- * 
+ *
  * @apiBody { Number } id 文章id
  *
  * @apiSampleRequest /article/remove
@@ -59,11 +59,13 @@ router.post("/release/", async (req, res) => {
 router.post('/remove', async (req, res) => {
     let { id } = req.body;
     var sql = 'DELETE FROM article WHERE id = ?';
-    let results = await db.query(sql, [id]);
-    res.json({
-        status: true,
-        msg: "删除成功"
-    });
+    let { affectedRows } = await db.query(sql, [id]);
+    if (affectedRows) {
+        res.json({
+            status: true,
+            msg: "删除成功"
+        });
+    }
 });
 
 /**
@@ -92,9 +94,9 @@ router.get('/detail', async (req, res) => {
  * @apiName EditArticle
  * @apiPermission 后台系统
  * @apiGroup Article
- * 
+ *
  * @apiUse Authorization
- * 
+ *
  * @apiBody { Number } id 文章id.
  * @apiBody { Number } cate_1st 一级分类id.
  * @apiBody { Number } cate_2nd 二级分类id.
