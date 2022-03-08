@@ -10,18 +10,25 @@ let cors = require('cors');
 // SESSION
 const session = require('express-session');
 
-var indexRouter = require('./routes/index');
-
-var adminRouter = require('./routes/admin');
-var userRouter = require('./routes/user');
-var accountRouter = require('./routes/account');
-var categoryRouter = require('./routes/category');
-var articleRouter = require('./routes/article');
-var tagRouter = require('./routes/tag');
-var uploadRouter = require('./routes/upload');
-var roleRouter = require('./routes/role');
-var menuRouter = require('./routes/menu');
-var noticeRouter = require('./routes/notice');
+var index = require('./routes/index');
+//后台
+var admin = require('./routes/admin/admin');
+var adminUser = require('./routes/admin/user');
+var adminRole = require('./routes/admin/role');
+var adminMenu = require('./routes/admin/menu');
+var adminTag = require('./routes/admin/tag');
+var adminArticle = require('./routes/admin/article');
+var adminCategory = require('./routes/admin/category');
+var adminUpload = require('./routes/admin/upload');
+var adminNotice = require('./routes/admin/notice');
+var adminComment = require('./routes/admin/comment');
+//前台
+var account = require('./routes/blog/account');
+var blogArticle = require('./routes/blog/article');
+var blogCategory = require('./routes/blog/category');
+var blogNotice = require('./routes/blog/notice');
+var blogUpload = require('./routes/blog/upload');
+var blogComment = require('./routes/blog/comment');
 
 var app = express();
 
@@ -53,20 +60,27 @@ app.use(session({ name: 'session_id', secret: 'keyboard cat', resave: false, sav
 //使用中间件验证token合法性
 //除了这些地址，其他的URL都需要验证
 // app.use(expressJwt({ secret: 'secret' }).unless({
-//     path: ['/', '/admin/register', '/admin/login', '/user/login', '/user/register', '/article/list', '/article/detail', '/article/category', '/category/list', '/category/sub', '/upload/common/', '/upload/remove']
+//     path: ['/', '/admin/register', '/admin/login', '/article/list', '/article/detail', '/article/category', '/category/list', '/category/sub', '/upload/common/', '/upload/remove']
 // }));
 
-app.use('/', indexRouter);
-app.use('/admin', adminRouter);
-app.use('/user', userRouter);
-app.use('/account', accountRouter);
-app.use('/category', categoryRouter);
-app.use('/article', articleRouter);
-app.use('/tag', tagRouter);
-app.use('/upload', uploadRouter);
-app.use('/role', roleRouter);
-app.use('/menu', menuRouter);
-app.use('/notice', noticeRouter);
+app.use('/', index);
+app.use('/admin', admin);
+app.use('/user', adminUser);
+app.use('/tag', adminTag);
+app.use('/role', adminRole);
+app.use('/menu', adminMenu);
+app.use('/category', adminCategory);
+app.use('/article', adminArticle);
+app.use('/upload', adminUpload);
+app.use('/notice', adminNotice);
+app.use('/comment', adminComment);
+
+app.use('/article', blogArticle);
+app.use('/category', blogCategory);
+app.use('/upload', blogUpload);
+app.use('/notice', blogNotice);
+app.use('/comment', blogComment);
+app.use('/account', account);
 
 // 处理401错误
 app.use(function (err, req, res, next) {

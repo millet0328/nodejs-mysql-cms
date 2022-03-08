@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // 数据库
-let db = require('../config/mysql');
+let db = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
@@ -136,4 +136,5 @@ router.delete('/:id', async (req, res) => {
         msg: "删除成功！"
     })
 });
+
 module.exports = router;

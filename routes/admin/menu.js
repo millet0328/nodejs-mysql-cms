@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // 数据库
-let db = require('../config/mysql');
+let db = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization

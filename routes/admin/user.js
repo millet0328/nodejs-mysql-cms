@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 // 数据库
-var db = require('../config/mysql');
+var db = require('../../config/mysql');
 
 /**
  * @api {post} /user/remove 删除账户

@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 // 数据库
-let db = require('../config/mysql');
+let db = require('../../config/mysql');
 let { pool } = db;
 // JSON Web Token
 const jwt = require("jsonwebtoken");
