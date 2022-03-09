@@ -40,7 +40,7 @@ router.post("/release/", async (req, res) => {
  * @api {post} /comment/remove 删除指定id的评论
  * @apiDescription 注意：本账户只能删除自己账户的评论，无权限删除其他账户评论。
  * @apiName RemoveComment
- * @apiPermission 后台系统、前台
+ * @apiPermission 前台
  * @apiGroup Comment
  *
  * @apiBody { Number } id 评论id
@@ -136,5 +136,31 @@ router.post('/edit', async (req, res) => {
     });
 });
 
+/**
+ * @api {get} /comment/list 获取一篇文章下面的评论列表
+ * @apiName CommentList
+ * @apiPermission 前台
+ * @apiGroup Comment
+ *
+ * @apiQuery { Number } id 文章id
+ * @apiQuery { Number } pagesize=10 每一页评论数量.
+ * @apiQuery { Number } pageindex=1 第几页.
+ *
+ * @apiSampleRequest /comment/list
+ */
+
+router.get("/list", async (req, res) => {
+    let { id, pagesize = 10, pageindex = 1 } = req.query;
+    pagesize = parseInt(pagesize);
+    var offset = pagesize * (pageindex - 1);
+    var sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, u.nickname AS user_nickname,a.title AS article_title FROM comment c JOIN user u ON c.user_id = u.id JOIN article a ON c.article_id = a.id WHERE c.article_id = ? ORDER BY c.create_date DESC LIMIT ? OFFSET ?;SELECT FOUND_ROWS() as total';
+    let results = await db.query(sql, [id, pagesize, offset]);
+    res.json({
+        status: true,
+        msg: "获取成功",
+        ...results[1][0],
+        data: results[0],
+    });
+});
 
 module.exports = router;

@@ -23,7 +23,7 @@ var adminUpload = require('./routes/admin/upload');
 var adminNotice = require('./routes/admin/notice');
 var adminComment = require('./routes/admin/comment');
 //前台
-var account = require('./routes/blog/account');
+var blogAccount = require('./routes/blog/account');
 var blogArticle = require('./routes/blog/article');
 var blogCategory = require('./routes/blog/category');
 var blogNotice = require('./routes/blog/notice');
@@ -64,6 +64,7 @@ app.use(session({ name: 'session_id', secret: 'keyboard cat', resave: false, sav
 // }));
 
 app.use('/', index);
+//后台
 app.use('/admin', admin);
 app.use('/user', adminUser);
 app.use('/tag', adminTag);
@@ -74,13 +75,13 @@ app.use('/article', adminArticle);
 app.use('/upload', adminUpload);
 app.use('/notice', adminNotice);
 app.use('/comment', adminComment);
-
+//前台
 app.use('/article', blogArticle);
 app.use('/category', blogCategory);
 app.use('/upload', blogUpload);
 app.use('/notice', blogNotice);
 app.use('/comment', blogComment);
-app.use('/account', account);
+app.use('/account', blogAccount);
 
 // 处理401错误
 app.use(function (err, req, res, next) {

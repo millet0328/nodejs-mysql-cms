@@ -39,15 +39,15 @@ router.get('/detail', async (req, res) => {
  * @apiPermission 后台系统、前台
  * @apiGroup Notice
  *
- * @apiQuery { Number } pagesize 每一页公告数量.
- * @apiQuery { Number } pageindex 第几页.
+ * @apiQuery { Number } pagesize=10 每一页公告数量.
+ * @apiQuery { Number } pageindex=1 第几页.
  *
  * @apiSuccess {Object[]} data 公告数组.
  *
  * @apiSampleRequest /notice/list
  */
 router.get("/list", async (req, res) => {
-    let { pagesize, pageindex } = req.query;
+    let { pagesize = 10, pageindex = 1 } = req.query;
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
     const sql = '(SELECT * FROM notice WHERE is_sticky = 1 ORDER BY update_date DESC LIMIT 9999999) UNION ALL SELECT * FROM (SELECT * FROM notice WHERE is_sticky = 0 ORDER BY create_date DESC LIMIT 9999999) AS temp LIMIT ? OFFSET ?';

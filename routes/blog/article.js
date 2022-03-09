@@ -15,7 +15,7 @@ var db = require('../../config/mysql');
  */
 router.get('/detail', async (req, res) => {
     let { id } = req.query;
-    var sql = 'SELECT * FROM article WHERE id = ?';
+    var sql = 'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c1.`name` AS cate_1st_name, c2.`name` AS cate_2nd_name FROM `article` a JOIN category c1 ON a.cate_1st = c1.id JOIN category c2 ON a.cate_2nd = c2.id WHERE a.id = ?';
     let results = await db.query(sql, [id]);
     res.json({
         status: true,
@@ -40,8 +40,8 @@ router.get('/detail', async (req, res) => {
  * @apiPermission 后台系统、前台
  * @apiGroup Article
  *
- * @apiQuery { Number } pagesize 每一页文章数量.
- * @apiQuery { Number } pageindex 第几页.
+ * @apiQuery { Number } pagesize=10 每一页文章数量.
+ * @apiQuery { Number } pageindex=1 第几页.
  *
  * @apiSuccess {Object[]} data 文章数组.
  * @apiSuccess {Number} total 文章总数.
@@ -49,7 +49,7 @@ router.get('/detail', async (req, res) => {
  * @apiSampleRequest /article/list
  */
 router.get("/list", async (req, res) => {
-    let { pagesize, pageindex } = req.query;
+    let { pagesize = 10, pageindex = 1 } = req.query;
     pagesize = parseInt(pagesize);
     var offset = pagesize * (pageindex - 1);
     var sql = 'SELECT a.id, cate_1st, cate_2nd, title, description, main_photo, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c1.`name` AS cate_1st_name, c2.`name` AS cate_2nd_name FROM `article` a JOIN category c1 ON a.cate_1st = c1.id JOIN category c2 ON a.cate_2nd = c2.id ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?;SELECT FOUND_ROWS() as total';
@@ -70,14 +70,14 @@ router.get("/list", async (req, res) => {
  * @apiGroup Article
  *
  * @apiQuery { Number } id 一级分类id.
- * @apiQuery { Number } pagesize 每一页文章数量.
- * @apiQuery { Number } pageindex 第几页.
+ * @apiQuery { Number } pagesize=10 每一页文章数量.
+ * @apiQuery { Number } pageindex=1 第几页.
  *
  * @apiSampleRequest /article/category
  */
 
 router.get("/category", async (req, res) => {
-    let { pagesize, pageindex, id } = req.query;
+    let { pagesize = 10, pageindex = 1, id } = req.query;
     pagesize = parseInt(pagesize);
     let offset = pagesize * (pageindex - 1);
     var sql = 'SELECT a.id, cate_1st, cate_2nd, title, description, main_photo, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c1.`name` AS cate_1st_name, c2.`name` AS cate_2nd_name FROM `article` a JOIN category c1 ON a.cate_1st = c1.id JOIN category c2 ON a.cate_2nd = c2.id WHERE a.cate_1st = ? ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? ; SELECT FOUND_ROWS() as total';
