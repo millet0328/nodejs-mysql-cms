@@ -36,7 +36,10 @@ router.post("/release/", async (req, res) => {
     }
     res.json({
         status: true,
-        msg: "添加成功"
+        msg: "添加成功",
+        data: {
+            id: insertId
+        }
     });
 });
 

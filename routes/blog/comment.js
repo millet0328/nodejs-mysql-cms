@@ -4,7 +4,7 @@ var router = express.Router();
 var db = require('../../config/mysql');
 
 /**
- * @api {post} /comment/release 添加新的评论
+ * @api {post} /comment/release 发表新的评论
  * @apiName CommentRelease
  * @apiPermission 前台
  * @apiGroup Comment

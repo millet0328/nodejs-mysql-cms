@@ -22,6 +22,7 @@ var adminCategory = require('./routes/admin/category');
 var adminUpload = require('./routes/admin/upload');
 var adminNotice = require('./routes/admin/notice');
 var adminComment = require('./routes/admin/comment');
+var adminSlide = require('./routes/admin/slide');
 //前台
 var blogAccount = require('./routes/blog/account');
 var blogArticle = require('./routes/blog/article');
@@ -29,6 +30,7 @@ var blogCategory = require('./routes/blog/category');
 var blogNotice = require('./routes/blog/notice');
 var blogUpload = require('./routes/blog/upload');
 var blogComment = require('./routes/blog/comment');
+var blogSlide = require('./routes/blog/slide');
 
 var app = express();
 
@@ -75,6 +77,7 @@ app.use('/article', adminArticle);
 app.use('/upload', adminUpload);
 app.use('/notice', adminNotice);
 app.use('/comment', adminComment);
+app.use('/slide', adminSlide);
 //前台
 app.use('/article', blogArticle);
 app.use('/category', blogCategory);
@@ -82,7 +85,7 @@ app.use('/upload', blogUpload);
 app.use('/notice', blogNotice);
 app.use('/comment', blogComment);
 app.use('/account', blogAccount);
-
+app.use('/slide', blogSlide);
 // 处理401错误
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
