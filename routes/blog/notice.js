@@ -15,7 +15,7 @@ var db = require('../../config/mysql');
  */
 router.get('/detail', async (req, res) => {
     let { id } = req.query;
-    const sql = 'SELECT * FROM notice WHERE id = ?';
+    const sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM notice WHERE id = ?';
     let results = await db.query(sql, [id]);
     res.json({
         status: true,
@@ -50,7 +50,7 @@ router.get("/list", async (req, res) => {
     let { pagesize = 10, pageindex = 1 } = req.query;
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
-    const sql = '(SELECT * FROM notice WHERE is_sticky = 1 ORDER BY update_date DESC LIMIT 9999999) UNION ALL SELECT * FROM (SELECT * FROM notice WHERE is_sticky = 0 ORDER BY create_date DESC LIMIT 9999999) AS temp LIMIT ? OFFSET ?';
+    const sql = '(SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM notice WHERE is_sticky = 1 ORDER BY update_date DESC LIMIT 9999999) UNION ALL SELECT * FROM (SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM notice WHERE is_sticky = 0 ORDER BY create_date DESC LIMIT 9999999) AS temp LIMIT ? OFFSET ?';
     let results = await db.query(sql, [pagesize, offset, pagesize, offset]);
     res.json({
         status: true,

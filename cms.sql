@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 10/03/2022 10:13:25
+ Date: 15/03/2022 16:34:58
 */
 
 SET NAMES utf8mb4;
@@ -94,14 +94,11 @@ CREATE TABLE `article_tag`  (
   `article_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '博客ID',
   `tag_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '标签ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客to标签中间表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客to标签中间表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of article_tag
 -- ----------------------------
-INSERT INTO `article_tag` VALUES (7, 1, 2);
-INSERT INTO `article_tag` VALUES (8, 1, 3);
-INSERT INTO `article_tag` VALUES (9, 3, 6);
 
 -- ----------------------------
 -- Table structure for category
@@ -112,7 +109,7 @@ CREATE TABLE `category`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '分类名称',
   `parent_id` int NOT NULL COMMENT '父级id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of category

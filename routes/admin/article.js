@@ -106,6 +106,74 @@ router.post('/edit', async (req, res) => {
     });
 });
 
+/**
+ * @api {post} /article/tag 给指定id文章标记标签
+ * @apiName TagArticle
+ * @apiPermission 后台系统
+ * @apiGroup Article
+ *
+ * @apiUse Authorization
+ *
+ * @apiBody { Number } id 文章id.
+ * @apiBody { Number[] } tags 标签的id数组,如[1,2,3].
+ *
+ * @apiSampleRequest /article/tag
+ */
 
+router.post("/tag/", async (req, res) => {
+    let { id, tags } = req.body;
+    // 转化为数组
+    try {
+        var insert_tags = JSON.parse(tags);
+    } catch (e) {
+        res.json({
+            status: false,
+            msg: "tags参数错误！"
+        });
+        return;
+    }
+    //获取现有tags标签id
+    const select_sql = 'SELECT tag_id FROM `article_tag` WHERE article_id = ?';
+    let exist_tags = await db.query(select_sql, [id]);
+    exist_tags = exist_tags.map((item) => item.tag_id);
+    //计算两个数组的差集
+    let rest_exist_tags = exist_tags.filter((item) => {
+        return !insert_tags.includes(item);
+    });
+    let rest_insert_tags = insert_tags.filter((item) => {
+        return !exist_tags.includes(item);
+    });
+    //转化数组格式
+    rest_insert_tags = rest_insert_tags.map((item) => `(${id},${item})`);
+    //根据rest_exist_tags删除数据，数组为空,不需要删除数据
+    if (rest_exist_tags.length) {
+        let remove_sql = `DELETE FROM article_tag WHERE article_id = ? AND tag_id IN (${rest_exist_tags.toString()});`
+        let { affectedRows } = await db.query(remove_sql, [id]);
+        if (affectedRows === 0) {
+            res.json({
+                status: false,
+                msg: "删除原有tag失败！"
+            });
+            return;
+        }
+    }
+    //根据rest_exist_tags插入数据，数组为空,不需要插入数据
+    if (rest_insert_tags.length) {
+        let insert_sql = `INSERT INTO article_tag (article_id, tag_id) VALUES ${rest_insert_tags.toString()}`;
+        let { affectedRows } = await db.query(insert_sql);
+        if (affectedRows === 0) {
+            res.json({
+                status: false,
+                msg: "插入tag失败！"
+            });
+            return;
+        }
+    }
+
+    res.json({
+        status: true,
+        msg: "添加成功"
+    });
+});
 
 module.exports = router;
