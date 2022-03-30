@@ -169,7 +169,7 @@
 							aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">创建标签</h4>
 				</div>
-				<form id="create-form" action="/tag/add" class="form-horizontal">
+				<form id="create-form" action="/tag/" class="form-horizontal">
 					<div class="modal-body">
 						<!-- 表单 -->
 						<div class="form-group">
@@ -227,10 +227,10 @@
 				url: '/category/sub',
 				data: { id: id },
 				async: false, //强制同步执行
-				success: function(res) {
+				success: function (res) {
 					if (res.status) {
 						var html = '';
-						res.data.forEach(function(item) {
+						res.data.forEach(function (item) {
 							html += `<option value ="${item.id}">${item.name}</option>`;
 						});
 						$(`select[name=${name}]`).html(html);
@@ -239,7 +239,7 @@
 			});
 		}
 		// 二级联动
-		$('select[name=cate_1st]').change(function() {
+		$('select[name=cate_1st]').change(function () {
 			//选择的一级分类id
 			var pid = $(this).val();
 			// 加载二级分类
