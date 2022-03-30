@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 // 数据库
-var db = require('../../config/mysql');
+let pool = require('../../config/mysql');
 
 /**
  * @api {get} /notice/detail 获取指定id的公告详情
@@ -16,7 +16,7 @@ var db = require('../../config/mysql');
 router.get('/detail', async (req, res) => {
     let { id } = req.query;
     const sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM notice WHERE id = ?';
-    let results = await db.query(sql, [id]);
+    let [results] = await pool.query(sql, [id]);
     res.json({
         status: true,
         msg: "获取成功",
@@ -39,8 +39,8 @@ router.get('/detail', async (req, res) => {
  * @apiPermission 后台系统、前台
  * @apiGroup Notice
  *
- * @apiQuery { Number } pagesize=10 每一页公告数量.
- * @apiQuery { Number } pageindex=1 第几页.
+ * @apiQuery { Number } [pagesize=10] 每一页公告数量.
+ * @apiQuery { Number } [pageindex=1] 第几页.
  *
  * @apiSuccess {Object[]} data 公告数组.
  *
@@ -51,7 +51,7 @@ router.get("/list", async (req, res) => {
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
     const sql = '(SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM notice WHERE is_sticky = 1 ORDER BY update_date DESC LIMIT 9999999) UNION ALL SELECT * FROM (SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM notice WHERE is_sticky = 0 ORDER BY create_date DESC LIMIT 9999999) AS temp LIMIT ? OFFSET ?';
-    let results = await db.query(sql, [pagesize, offset, pagesize, offset]);
+    let [results] = await pool.query(sql, [pagesize, offset, pagesize, offset]);
     res.json({
         status: true,
         msg: "获取成功",

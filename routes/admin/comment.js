@@ -1,7 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 // 数据库
-var db = require('../../config/mysql');
+let pool = require('../../config/mysql');
+
+/**
+ * @apiDefine Authorization
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ */
 
 /**
  * @api {post} /comment/reply 回复评论
@@ -9,6 +14,8 @@ var db = require('../../config/mysql');
  * @apiName ReplyComment
  * @apiPermission 后台系统
  * @apiGroup Comment
+ *
+ * @apiUse Authorization
  *
  * @apiBody { Number } id 评论id.
  * @apiBody { String } reply 回复内容.
@@ -19,7 +26,7 @@ var db = require('../../config/mysql');
 router.post("/reply/", async (req, res) => {
     let { id, reply } = req.body;
     const sql = 'UPDATE comment SET reply = ?,is_reply = 1,reply_date = CURRENT_TIMESTAMP() WHERE id = ?';
-    let { affectedRows } = await db.query(sql, [reply, id]);
+    let [{ affectedRows }] = await pool.query(sql, [reply, id]);
     if (!affectedRows) {
         res.json({
             status: false,
@@ -40,8 +47,10 @@ router.post("/reply/", async (req, res) => {
  * @apiPermission 后台系统
  * @apiGroup Comment
  *
- * @apiQuery { Number } pagesize=10 每一页评论数量.
- * @apiQuery { Number } pageindex=1 第几页.
+ * @apiUse Authorization
+ *
+ * @apiQuery { Number } [pagesize=10] 每一页评论数量.
+ * @apiQuery { Number } [pageindex=1] 第几页.
  *
  * @apiSampleRequest /comment/recent
  */
@@ -49,9 +58,9 @@ router.post("/reply/", async (req, res) => {
 router.get("/recent", async (req, res) => {
     let { pagesize = 10, pageindex = 1 } = req.query;
     pagesize = parseInt(pagesize);
-    var offset = pagesize * (pageindex - 1);
-    var sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, u.nickname AS user_nickname,a.title AS article_title FROM comment c JOIN user u ON c.user_id = u.id JOIN article a ON c.article_id = a.id ORDER BY c.create_date DESC LIMIT ? OFFSET ?;SELECT FOUND_ROWS() as total';
-    let results = await db.query(sql, [pagesize, offset]);
+    let offset = pagesize * (pageindex - 1);
+    let sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, u.nickname AS user_nickname,a.title AS article_title FROM comment c JOIN user u ON c.user_id = u.id JOIN article a ON c.article_id = a.id ORDER BY c.create_date DESC LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `comment`;';
+    let [results] = await pool.query(sql, [pagesize, offset]);
     res.json({
         status: true,
         msg: "获取成功",

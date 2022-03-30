@@ -10,29 +10,30 @@ let cors = require('cors');
 // SESSION
 const session = require('express-session');
 
-var index = require('./routes/index');
+const index = require('./routes/index');
 //后台
-var admin = require('./routes/admin/admin');
-var adminUser = require('./routes/admin/user');
-var adminRole = require('./routes/admin/role');
-var adminMenu = require('./routes/admin/menu');
-var adminTag = require('./routes/admin/tag');
-var adminArticle = require('./routes/admin/article');
-var adminCategory = require('./routes/admin/category');
-var adminUpload = require('./routes/admin/upload');
-var adminNotice = require('./routes/admin/notice');
-var adminComment = require('./routes/admin/comment');
-var adminSlide = require('./routes/admin/slide');
+const admin = require('./routes/admin/admin');
+const adminUser = require('./routes/admin/user');
+const adminRole = require('./routes/admin/role');
+const adminMenu = require('./routes/admin/menu');
+const adminTag = require('./routes/admin/tag');
+const adminArticle = require('./routes/admin/article');
+const adminCategory = require('./routes/admin/category');
+const adminUpload = require('./routes/admin/upload');
+const adminNotice = require('./routes/admin/notice');
+const adminComment = require('./routes/admin/comment');
+const adminSlide = require('./routes/admin/slide');
+const adminIcon = require('./routes/admin/icon');
 //前台
-var blogAccount = require('./routes/blog/account');
-var blogArticle = require('./routes/blog/article');
-var blogCategory = require('./routes/blog/category');
-var blogNotice = require('./routes/blog/notice');
-var blogUpload = require('./routes/blog/upload');
-var blogComment = require('./routes/blog/comment');
-var blogSlide = require('./routes/blog/slide');
+const blogAccount = require('./routes/blog/account');
+const blogArticle = require('./routes/blog/article');
+const blogCategory = require('./routes/blog/category');
+const blogNotice = require('./routes/blog/notice');
+const blogUpload = require('./routes/blog/upload');
+const blogComment = require('./routes/blog/comment');
+const blogSlide = require('./routes/blog/slide');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -57,12 +58,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 * */
 app.use(session({ name: 'session_id', secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 // 设置跨域资源分享CORS
-// app.use(cors({ credentials: true, origin: /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/ }));
+app.use(cors({ credentials: true, origin: /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/ }));
 
 //使用中间件验证token合法性
 //除了这些地址，其他的URL都需要验证
 // app.use(expressJwt({ secret: 'secret' }).unless({
-//     path: ['/', '/admin/register', '/admin/login', '/article/list', '/article/detail', '/article/category', '/category/list', '/category/sub', '/upload/common/', '/upload/remove']
+//     path: [
+//         '/',
+//         /^\/admin\/(login|register)$/,
+//         /^\/account\/(login|register)$/,
+//         /^\/article\/(list|detail|category)$/,
+//         /^\/category\/(list|sub)$/,
+//         /^\/notice\/(list|detail)$/,
+//         '/comment/list',
+//         '/slide/list',
+//     ]
 // }));
 
 app.use('/', index);
@@ -78,6 +88,7 @@ app.use('/upload', adminUpload);
 app.use('/notice', adminNotice);
 app.use('/comment', adminComment);
 app.use('/slide', adminSlide);
+app.use('/icon', adminIcon);
 //前台
 app.use('/article', blogArticle);
 app.use('/category', blogCategory);

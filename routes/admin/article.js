@@ -1,11 +1,10 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 // 数据库
-var db = require('../../config/mysql');
-
+let pool = require('../../config/mysql');
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
  */
 
 /**
@@ -28,8 +27,8 @@ var db = require('../../config/mysql');
 
 router.post("/release/", async (req, res) => {
     let { cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
-    var sql = 'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ?, ?, CURRENT_TIMESTAMP() , ?)';
-    let { insertId, affectedRows } = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
+    const sql = 'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ?, ?, CURRENT_TIMESTAMP() , ?)';
+    let [{ insertId, affectedRows }] = await pool.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
     if (!affectedRows) {
         res.json({
             status: false,
@@ -61,13 +60,37 @@ router.post("/release/", async (req, res) => {
 
 router.post('/remove', async (req, res) => {
     let { id } = req.body;
-    var sql = 'DELETE FROM article WHERE id = ?';
-    let { affectedRows } = await db.query(sql, [id]);
-    if (affectedRows) {
+    // 获取一个连接
+    const connection = await pool.getConnection();
+
+    try {
+        // 开启事务
+        await connection.beginTransaction();
+        // 删除标签
+        let delete_tag_sql = 'DELETE FROM article_tag WHERE article_id = ?;';
+        let [{ affectedRows: tag_affected_rows }] = await connection.query(delete_tag_sql, [id]);
+        if (tag_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "标签tag删除失败！" });
+            return;
+        }
+        // 删除账户
+        let delete_article_sql = 'DELETE FROM article WHERE id = ?;';
+        let [{ affectedRows: article_affected_rows }] = await pool.query(delete_article_sql, [id]);
+        if (article_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "文章article删除失败！" });
+            return;
+        }
+        // 一切顺利，提交事务
+        await connection.commit();
         res.json({
             status: true,
             msg: "删除成功"
         });
+    } catch (error) {
+        await connection.rollback();
+        throw error;
     }
 });
 
@@ -91,8 +114,8 @@ router.post('/remove', async (req, res) => {
  */
 router.post('/edit', async (req, res) => {
     let { id, cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
-    var sql = 'UPDATE article SET cate_1st = ? , cate_2nd = ? , title = ? , description = ? , content = ? , main_photo = ? WHERE id = ?';
-    let { affectedRows } = await db.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo, id]);
+    const sql = 'UPDATE article SET cate_1st = ? , cate_2nd = ? , title = ? , description = ? , content = ? , main_photo = ? WHERE id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo, id]);
     if (!affectedRows) {
         res.json({
             status: false,
@@ -134,7 +157,7 @@ router.post("/tag/", async (req, res) => {
     }
     //获取现有tags标签id
     const select_sql = 'SELECT tag_id FROM `article_tag` WHERE article_id = ?';
-    let exist_tags = await db.query(select_sql, [id]);
+    let exist_tags = await pool.query(select_sql, [id]);
     exist_tags = exist_tags.map((item) => item.tag_id);
     //计算两个数组的差集
     let rest_exist_tags = exist_tags.filter((item) => {
@@ -148,7 +171,7 @@ router.post("/tag/", async (req, res) => {
     //根据rest_exist_tags删除数据，数组为空,不需要删除数据
     if (rest_exist_tags.length) {
         let remove_sql = `DELETE FROM article_tag WHERE article_id = ? AND tag_id IN (${rest_exist_tags.toString()});`
-        let { affectedRows } = await db.query(remove_sql, [id]);
+        let [{ affectedRows }] = await pool.query(remove_sql, [id]);
         if (affectedRows === 0) {
             res.json({
                 status: false,
@@ -160,7 +183,7 @@ router.post("/tag/", async (req, res) => {
     //根据rest_exist_tags插入数据，数组为空,不需要插入数据
     if (rest_insert_tags.length) {
         let insert_sql = `INSERT INTO article_tag (article_id, tag_id) VALUES ${rest_insert_tags.toString()}`;
-        let { affectedRows } = await db.query(insert_sql);
+        let [{ affectedRows }] = await pool.query(insert_sql);
         if (affectedRows === 0) {
             res.json({
                 status: false,

@@ -1,23 +1,30 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 // 文件模块
 const fs = require('fs');
 const path = require('path');
 //文件传输
-var multer = require('multer');
-var upload = multer();
+const multer = require('multer');
+const upload = multer();
 //图片处理
 const sharp = require('sharp');
 //uuid
-var uuidv1 = require('uuid/v1');
+const uuidv1 = require('uuid/v1');
+
+/**
+ * @apiDefine Authorization
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ */
 
 /**
  * @api {post} /upload/common/ 通用图片上传
  * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，头像上传，图片必须是正方形，通用上传不限制尺寸，avatar存储至avatar文件夹,common存储至common文件夹
- * @apiName uploadCommon
+ * @apiName UploadCommon
  * @apiPermission 后台系统、前台
- * @apiGroup Upload Image
- * 
+ * @apiGroup Upload
+ *
+ * @apiUse Authorization
+ *
  * @apiBody {File} file File文件对象;
  * @apiBody {String="common","avatar"} type 上传类型：avatar--头像上传；common--通用上传；
  * 
@@ -51,7 +58,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
 	// 获取图片信息
 	var { width, height, format } = await sharp(req.file.buffer).metadata();
 	// 判读图片尺寸
-	if (type == "avatar" && width != height) {
+	if (type === "avatar" && width !== height) {
 		res.status(400).json({
 			status: false,
 			msg: "图片必须为正方形，请重新上传!"
@@ -82,10 +89,12 @@ router.post("/common", upload.single('file'), async function (req, res) {
 /**
  * @api {post} /upload/remove 删除图片
  * @apiDescription 如果上传错误的图片，通过此API删除错误的图片
- * @apiName uploadDelete
- * @apiGroup Upload Image
+ * @apiName UploadDelete
+ * @apiGroup Upload
  * @apiPermission 后台系统、前台
- * 
+ *
+ * @apiUse Authorization
+ *
  * @apiBody {String} src 图片文件路径,注意图片路径必须是绝对路径，例：http://localhost:3003/images/path/to/photo.jpg
  *
  * @apiSampleRequest /upload/remove

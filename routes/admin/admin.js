@@ -1,14 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 // 数据库
-let db = require('../../config/mysql');
-let { pool } = db;
+let pool = require('../../config/mysql');
 // JSON Web Token
 const jwt = require("jsonwebtoken");
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
  */
 
 /**
@@ -57,58 +56,52 @@ router.post('/register', async (req, res) => {
     let defaultAvatar = `${process.env.server}/images/avatar/default.jpg`;
     // 查询账户是否重名
     let sql = 'SELECT * FROM admin WHERE username = ?';
-    let [admin] = await db.query(sql, [username]);
+    let [results] = await pool.query(sql, [username]);
     // 查询账户是否存在
-    if (admin) {
+    if (results.length) {
         res.json({
             msg: "账户已存在",
             status: false,
         });
         return;
     }
-    pool.getConnection(function (err, connection) {
-        if (err) throw err; // not connected!
-        connection.beginTransaction(function (err) {
-            if (err) throw err;
-            // 创建新账户
-            let sql = `INSERT INTO admin (username, password, fullname, sex, tel, email, avatar) VALUES (?,?,?,?,?,?,?)`;
-            connection.query(sql, [username, password, fullname, sex, tel, email, defaultAvatar], function (error, results, fields) {
-                let { insertId, affectedRows } = results;
-                if (error || affectedRows <= 0) {
-                    return connection.rollback(function () {
-                        throw error || `${affectedRows} rows changed!`;
-                    });
-                }
-                // 给新账户分配角色，默认角色为3
-                let sql = `INSERT INTO admin_role (admin_id,role_id) VALUES (?,3)`;
-                connection.query(sql, [insertId], function (error, results, fields) {
-                    if (error) {
-                        return connection.rollback(function () {
-                            throw error;
-                        });
-                    }
-                    connection.commit(function (err) {
-                        if (err) {
-                            return connection.rollback(function () {
-                                throw err;
-                            });
-                        }
-                    });
-                    let payload = { id: insertId, username, role: 3 };
-                    // 生成token
-                    let token = jwt.sign(payload, 'secret', { expiresIn: '4h' });
-                    // 存储成功
-                    res.json({
-                        status: true,
-                        msg: "注册成功！",
-                        data: { token, id: insertId, role: 3 }
-                    });
-                });
+    // 获取一个连接
+    const connection = await pool.getConnection();
 
-            });
+    try {
+        // 开启事务
+        await connection.beginTransaction();
+        // 创建新账户
+        let insert_admin_sql = 'INSERT INTO admin (username, password, fullname, sex, tel, email, avatar) VALUES (?,?,?,?,?,?,?)';
+        let [{ insertId, affectedRows: admin_affected_rows }] = await connection.query(insert_admin_sql, [username, password, fullname, sex, tel, email, defaultAvatar]);
+        if (admin_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "账户admin创建失败！" });
+            return;
+        }
+        // 给新账户分配角色，默认角色为3
+        let insert_role_sql = 'INSERT INTO admin_role (admin_id,role_id) VALUES (?,3)';
+        let [{ affectedRows: role_affected_rows }] = await pool.query(insert_role_sql, [insertId]);
+        if (role_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "角色关系创建失败！" });
+            return;
+        }
+        // 一切顺利，提交事务
+        await connection.commit();
+        // 生成token
+        let payload = { id: insertId, username, role: 3 };
+        let token = jwt.sign(payload, 'secret', { expiresIn: '4h' });
+        // 注册成功
+        res.json({
+            status: true,
+            msg: "注册成功！",
+            data: { token, id: insertId, role: 3 }
         });
-    });
-
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    }
 });
 
 /**
@@ -129,19 +122,19 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     let { username, password } = req.body;
     let sql = `SELECT a.*,r.id AS role FROM ADMIN a LEFT JOIN admin_role ar ON a.id = ar.admin_id LEFT JOIN role r ON r.id = ar.role_id  WHERE username = ? AND password = ?`;
-    let [admin] = await db.query(sql, [username, password]);
-    if (!admin) {
+    let [results] = await pool.query(sql, [username, password]);
+    if (!results.length) {
         res.json({
             msg: "账号或密码错误！",
             status: false,
         });
         return;
     }
-    let { id, role } = admin;
-    // 登录成功
-    let payload = { id, username, role };
     // 生成token
+    let { id, role } = results[0];
+    let payload = { id, username, role };
     let token = jwt.sign(payload, 'secret', { expiresIn: '4h' });
+    // 登录成功
     res.json({
         status: true,
         msg: "登录成功！",
@@ -162,8 +155,8 @@ router.post('/login', async (req, res) => {
  */
 router.get('/info', async (req, res) => {
     let { id } = req.query;
-    var sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id WHERE a.id = ?';
-    let results = await db.query(sql, [id]);
+    const sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id WHERE a.id = ?';
+    let [results] = await pool.query(sql, [id]);
     res.json({
         status: true,
         data: results[0]
@@ -193,24 +186,42 @@ router.get('/info', async (req, res) => {
 
 router.post('/info', async (req, res) => {
     let { id, username, fullname, role, sex, tel, email, avatar } = req.body;
-    let sql = `UPDATE admin SET username = ?,fullname = ?,sex = ?,tel = ?,email = ?, avatar = ? WHERE id = ?;
-	UPDATE admin_role SET role_id = ? WHERE admin_id = ?`;
-    let [{ affectedRows }] = await db.query(sql, [username, fullname, sex, tel, email, avatar, id, role, id]);
-    if (!affectedRows) {
+    // 获取一个连接
+    const connection = await pool.getConnection();
+
+    try {
+        // 开启事务
+        await connection.beginTransaction();
+        // 更新管理员信息
+        let update_admin_sql = 'UPDATE admin SET username = ?,fullname = ?,sex = ?,tel = ?,email = ?, avatar = ? WHERE id = ?;';
+        let [{ affectedRows: admin_affected_rows }] = await connection.query(update_admin_sql, [username, fullname, sex, tel, email, avatar, id]);
+        if (admin_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "账户admin修改失败！" });
+            return;
+        }
+        // 更新角色
+        let update_role_sql = 'UPDATE admin_role SET role_id = ? WHERE admin_id = ?';
+        let [{ affectedRows: role_affected_rows }] = await pool.query(update_role_sql, [role, id]);
+        if (role_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "角色role修改失败！" });
+            return;
+        }
+        // 一切顺利，提交事务
+        await connection.commit();
         res.json({
-            status: false,
-            msg: "修改失败！"
+            status: true,
+            msg: "修改成功!"
         });
-        return;
+    } catch (error) {
+        await connection.rollback();
+        throw error;
     }
-    res.json({
-        status: true,
-        msg: "修改成功！"
-    });
 });
 
 /**
- * @api { post } /admin/account 修改本账户信息
+ * @api {post} /admin/account 修改本账户信息
  * @apiDescription 管理员自行修改本账户信息，但是无权限分配角色。
  * @apiName UpdateAccount
  * @apiGroup Admin
@@ -231,7 +242,7 @@ router.post("/account/", async (req, res) => {
     let { id } = req.user;
     let { fullname, sex, avatar, tel, email } = req.body;
     let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE id = ?`;
-    let { affectedRows } = await db.query(sql, [fullname, sex, avatar, tel, email, id]);
+    let [{ affectedRows }] = await pool.query(sql, [fullname, sex, avatar, tel, email, id]);
     if (!affectedRows) {
         res.json({
             status: false,
@@ -259,19 +270,38 @@ router.post("/account/", async (req, res) => {
  */
 router.post('/remove', async (req, res) => {
     let { id } = req.body;
-    let sql = 'DELETE FROM admin WHERE id = ?;DELETE FROM admin_role WHERE admin_id = ?';
-    let [{ affectedRows }] = await db.query(sql, [id, id]);
-    if (!affectedRows) {
+    // 获取一个连接
+    const connection = await pool.getConnection();
+
+    try {
+        // 开启事务
+        await connection.beginTransaction();
+        // 删除角色
+        let delete_role_sql = 'DELETE FROM admin_role WHERE admin_id = ?';
+        let [{ affectedRows: role_affected_rows }] = await connection.query(delete_role_sql, [id]);
+        if (role_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "角色role删除失败！" });
+            return;
+        }
+        // 删除账户
+        let delete_admin_sql = 'DELETE FROM admin WHERE id = ?';
+        let [{ affectedRows: admin_affected_rows }] = await pool.query(delete_admin_sql, [id]);
+        if (admin_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "账户admin删除失败！" });
+            return;
+        }
+        // 一切顺利，提交事务
+        await connection.commit();
         res.json({
-            status: false,
-            msg: "删除失败！"
+            status: true,
+            msg: "删除成功"
         });
-        return;
+    } catch (error) {
+        await connection.rollback();
+        throw error;
     }
-    res.json({
-        status: true,
-        msg: "删除成功"
-    });
 });
 
 /**
@@ -282,15 +312,23 @@ router.post('/remove', async (req, res) => {
  *
  * @apiUse Authorization
  *
+ * @apiQuery { Number } [pagesize=10] 每一页数量.
+ * @apiQuery { Number } [pageindex=1] 第几页.
+ *
  * @apiSampleRequest /admin/list
  */
 
 router.get('/list', async (req, res) => {
-    var sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role FROM ADMIN AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id;'
-    let results = await db.query(sql);
+    let { pagesize = 10, pageindex = 1 } = req.query;
+    pagesize = parseInt(pagesize);
+    const offset = pagesize * (pageindex - 1);
+    const sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role FROM `admin` AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `admin`;';
+    let [results] = await pool.query(sql, [pagesize, offset]);
     res.json({
         status: true,
-        data: results
+        msg: "获取成功",
+        ...results[1][0],
+        data: results[0],
     });
 });
 

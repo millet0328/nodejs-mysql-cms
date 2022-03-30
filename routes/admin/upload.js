@@ -1,27 +1,27 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 // 文件模块
 const fs = require('fs');
 const path = require('path');
 //文件传输
-var multer = require('multer');
-var upload = multer();
+const multer = require('multer');
+const upload = multer();
 //图片处理
 const sharp = require('sharp');
 //uuid
-var uuidv1 = require('uuid/v1');
+const uuidv1 = require('uuid/v1');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
  */
 
 /**
  * @api {post} /upload/editor/ 富文本编辑器图片上传
  * @apiDescription 上传图片会自动检测图片质量，压缩图片，体积<2M，不限制尺寸，存储至details文件夹
- * @apiName uploadEditor
+ * @apiName UploadEditor
  * @apiPermission 后台系统
- * @apiGroup Upload Image
+ * @apiGroup Upload
  * 
  * @apiUse Authorization
  * 
@@ -35,8 +35,8 @@ router.post("/editor", upload.single('file'), async function (req, res) {
 	//文件类型
 	let { mimetype, size } = req.file;
 	//判断是否为图片
-	var reg = /^image\/\w+$/;
-	var flag = reg.test(mimetype);
+	let reg = /^image\/\w+$/;
+	let flag = reg.test(mimetype);
 	if (!flag) {
 		res.json({
 			errno: 1,
@@ -53,11 +53,11 @@ router.post("/editor", upload.single('file'), async function (req, res) {
 		return;
 	}
 	//扩展名
-	var { format } = await sharp(req.file.buffer).metadata();
+	let { format } = await sharp(req.file.buffer).metadata();
 	// 生成文件名
-	var filename = uuidv1();
+	let filename = uuidv1();
 	//储存文件夹
-	var fileFolder = `/images/details/`;
+	let fileFolder = `/images/details/`;
 	//处理图片
 	try {
 		await sharp(req.file.buffer).toFile("public" + fileFolder + filename + '.' + format);

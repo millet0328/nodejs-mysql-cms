@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 // 数据库
-let db = require('../../config/mysql');
+let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
  */
 
 /**
@@ -27,8 +27,8 @@ let db = require('../../config/mysql');
 
 router.post("/add/", async (req, res) => {
     let { title, picture, url, target = '_blank', order } = req.body;
-    const sql = 'INSERT INTO slide ( title, picture, url, target, order ) VALUES (?, ?, ?, ?, ?)';
-    let { insertId, affectedRows } = await db.query(sql, [title, picture, url, target, order]);
+    const sql = 'INSERT INTO slide ( title, picture, url, target, order, create_date ) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP() )';
+    let [{ insertId, affectedRows }] = await pool.query(sql, [title, picture, url, target, order]);
     if (!affectedRows) {
         res.json({
             status: false,
@@ -61,7 +61,7 @@ router.post("/add/", async (req, res) => {
 router.post('/remove', async (req, res) => {
     let { id } = req.body;
     const sql = 'DELETE FROM slide WHERE id = ?';
-    let { affectedRows } = await db.query(sql, [id]);
+    let [{ affectedRows }] = await pool.query(sql, [id]);
     if (!affectedRows) {
         res.json({
             status: true,
@@ -95,7 +95,7 @@ router.post('/remove', async (req, res) => {
 router.post('/edit', async (req, res) => {
     let { id, title, picture, url, target = '_blank', order } = req.body;
     const sql = 'UPDATE slide SET title = ?, picture = ?, url = ?, target = ?, order = ? WHERE id = ?';
-    let { affectedRows } = await db.query(sql, [title, picture, url, target, order, id]);
+    let [{ affectedRows }] = await pool.query(sql, [title, picture, url, target, order, id]);
     if (!affectedRows) {
         res.json({
             status: false,
@@ -125,7 +125,7 @@ router.post('/edit', async (req, res) => {
 router.post('/switch', async (req, res) => {
     let { id, available } = req.body;
     const sql = 'UPDATE slide SET available = ? WHERE id = ?';
-    let { affectedRows } = await db.query(sql, [available, id]);
+    let [{ affectedRows }] = await pool.query(sql, [available, id]);
     if (!affectedRows) {
         res.json({
             status: false,

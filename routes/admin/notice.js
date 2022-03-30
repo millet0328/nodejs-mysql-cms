@@ -1,11 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 // 数据库
-var db = require('../../config/mysql');
+let { pool, connection } = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
  */
 
 /**
@@ -26,7 +26,7 @@ var db = require('../../config/mysql');
 router.post("/release/", async (req, res) => {
     let { title, content, is_sticky = 0 } = req.body;
     const sql = 'INSERT INTO notice ( title , content , create_date , update_date , is_sticky ) VALUES (?, ? , CURRENT_TIMESTAMP() ,CURRENT_TIMESTAMP(), ?)';
-    let { insertId, affectedRows } = await db.query(sql, [title, content, is_sticky]);
+    let [{ insertId, affectedRows }] = await pool.query(sql, [title, content, is_sticky]);
     if (!affectedRows) {
         res.json({
             status: false,
@@ -59,7 +59,7 @@ router.post("/release/", async (req, res) => {
 router.post('/remove', async (req, res) => {
     let { id } = req.body;
     const sql = 'DELETE FROM notice WHERE id = ?';
-    let { affectedRows } = await db.query(sql, [id]);
+    let [{ affectedRows }] = await pool.query(sql, [id]);
     if (!affectedRows) {
         res.json({
             status: true,
@@ -91,7 +91,7 @@ router.post('/remove', async (req, res) => {
 router.post('/edit', async (req, res) => {
     let { id, title, content, is_sticky } = req.body;
     const sql = 'UPDATE notice SET  title = ? , content = ? , is_sticky = ? WHERE id = ?';
-    let { affectedRows } = await db.query(sql, [title, content, is_sticky, id]);
+    let [{ affectedRows }] = await pool.query(sql, [title, content, is_sticky, id]);
     if (!affectedRows) {
         res.json({
             status: false,
@@ -122,7 +122,7 @@ router.post('/edit', async (req, res) => {
 router.post('/stick', async (req, res) => {
     let { id, is_sticky } = req.body;
     const sql = 'UPDATE notice SET is_sticky = ? WHERE id = ?';
-    let { affectedRows } = await db.query(sql, [is_sticky, id]);
+    let [{ affectedRows }] = await pool.query(sql, [is_sticky, id]);
     if (!affectedRows) {
         res.json({
             status: false,

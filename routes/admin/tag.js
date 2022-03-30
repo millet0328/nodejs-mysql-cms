@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 // 数据库
-let db = require('../../config/mysql');
+let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
  */
 
 /**
@@ -15,12 +15,12 @@ let db = require('../../config/mysql');
  * @apiPermission 后台系统
  *
  * @apiUse Authorization
- * 
+ *
  * @apiSampleRequest /tag/list
  */
 router.get('/list', async (req, res) => {
-    var sql = 'SELECT * FROM tag';
-    let results = await db.query(sql);
+    const sql = 'SELECT * FROM tag';
+    let [results] = await pool.query(sql);
     res.json({
         status: true,
         data: results
@@ -41,8 +41,8 @@ router.get('/list', async (req, res) => {
  */
 router.post('/', async (req, res) => {
     let { name } = req.body;
-    var sql = 'INSERT INTO tag (name) values (?)';
-    let { insertId, affectedRows } = await db.query(sql, [name]);
+    const sql = 'INSERT INTO tag (name) values (?)';
+    let [{ insertId, affectedRows }] = await pool.query(sql, [name]);
     if (affectedRows) {
         res.json({
             msg: "创建成功！",
@@ -79,7 +79,7 @@ router.put('/:id', async (req, res) => {
     let { id } = req.params;
     let { name } = req.body;
     let sql = 'UPDATE tag SET name = ? WHERE id = ?';
-    let { affectedRows } = await db.query(sql, [name, id]);
+    let [{ affectedRows }] = await pool.query(sql, [name, id]);
     if (!affectedRows) {
         res.json({
             status: false,
@@ -111,30 +111,38 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     let { id } = req.params;
-    // 判断是否有标签关联文章
-    let check_sql = 'SELECT * FROM article_tag WHERE tag_id = ?';
-    let results = await db.query(check_sql, [id]);
-    if (results.length) {
+    // 获取一个连接
+    const connection = await pool.getConnection();
+
+    try {
+        // 开启事务
+        await connection.beginTransaction();
+        // 删除标签_文章关联
+        let delete_article_sql = 'DELETE FROM FROM article_tag WHERE tag_id = ?';
+        let [{ affectedRows: article_affected_rows }] = await connection.query(delete_article_sql, [id]);
+        if (article_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "标签_文章关系删除失败！" });
+            return;
+        }
+        // 删除标签
+        let delete_tag_sql = 'DELETE FROM tag WHERE id = ?';
+        let [{ affectedRows: tag_affected_rows }] = await pool.query(delete_tag_sql, [id]);
+        if (tag_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "标签tag删除失败！" });
+            return;
+        }
+        // 一切顺利，提交事务
+        await connection.commit();
         res.json({
-            status: false,
-            msg: "删除失败，有文章关联标签！"
+            status: true,
+            msg: "删除成功"
         });
-        return;
+    } catch (error) {
+        await connection.rollback();
+        throw error;
     }
-    // 删除操作
-    let delete_sql = 'DELETE FROM tag WHERE id = ?';
-    let { affectedRows } = await db.query(delete_sql, [id]);
-    if (!affectedRows) {
-        res.json({
-            status: false,
-            msg: "删除失败！"
-        });
-        return;
-    }
-    res.json({
-        status: true,
-        msg: "删除成功！"
-    })
 });
 
 module.exports = router;

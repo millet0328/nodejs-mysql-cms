@@ -1,11 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 // 数据库
-let db = require('../../config/mysql');
+let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请设置在request header中.
+ * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
  */
 
 /**
@@ -25,8 +25,8 @@ let db = require('../../config/mysql');
 
 router.post("/add", async (req, res) => {
     let { name, parent_id } = req.body;
-    var sql = 'INSERT INTO category (`name`,parent_id) VALUES (?,?);'
-    let { insertId } = await db.query(sql, [name, parent_id]);
+    const sql = 'INSERT INTO category (`name`,parent_id) VALUES (?,?);'
+    let [{ insertId }] = await pool.query(sql, [name, parent_id]);
     res.json({
         status: true,
         msg: "添加成功！",
@@ -51,17 +51,17 @@ router.post("/add", async (req, res) => {
 
 router.post("/remove", async (req, res) => {
     let { id } = req.body;
-    let checkSQL = 'SELECT * FROM category WHERE parent_id = ?';
-    let results = await db.query(checkSQL, [id]);
-    if (results.length > 0) {
+    let select_sql = 'SELECT * FROM category WHERE parent_id = ?';
+    let [results] = await pool.query(select_sql, [id]);
+    if (results.length) {
         res.json({
             status: false,
             msg: "拥有子级分类，不允许删除！"
         });
         return;
     }
-    let deleteSQL = 'DELETE FROM category WHERE id = ?'
-    let { affectedRows } = await db.query(deleteSQL, [id]);
+    let delete_sql = 'DELETE FROM category WHERE id = ?'
+    let [{ affectedRows }] = await pool.query(delete_sql, [id]);
     if (affectedRows) {
         res.json({
             status: true,
@@ -83,8 +83,8 @@ router.post("/remove", async (req, res) => {
  */
 router.get("/detail", async (req, res) => {
     let { id } = req.query;
-    var sql = 'SELECT * FROM category WHERE id = ?';
-    let results = await db.query(sql, [id]);
+    const sql = 'SELECT * FROM category WHERE id = ?';
+    let [results] = await pool.query(sql, [id]);
     res.json({
         status: true,
         data: results[0]
@@ -106,9 +106,9 @@ router.get("/detail", async (req, res) => {
  * @apiSampleRequest /category/edit
  */
 router.post('/edit', async (req, res) => {
-    var sql = 'UPDATE category SET name = ?,parent_id = ? WHERE id = ?';
+    const sql = 'UPDATE category SET name = ?,parent_id = ? WHERE id = ?';
     let { id, name, parent_id } = req.body;
-    let { affectedRows } = await db.query(sql, [name, parent_id, id]);
+    let [{ affectedRows }] = await pool.query(sql, [name, parent_id, id]);
     if (!affectedRows) {
         res.json({
             status: false,
