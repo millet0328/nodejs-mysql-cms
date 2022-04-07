@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="./assets/lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="./assets/lib/Validform/css/style.css">
+	<link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
+	<title>注册</title>
+</head>
+
+<body>
+	<div class="bg">
+		<div class="container">
+			<div class="card form-panel bg-primary position-absolute top-50 translate-middle-y">
+				<div class="card-header text-white">
+					注册
+				</div>
+				<div class="card-body bg-white">
+					<form id="form" action="/admin/register">
+						<div class="mb-3 row">
+							<label class="col-sm-2 col-form-label">账户</label>
+							<div class="col-sm-10">
+								<input datatype="s3-15" errormsg="账户名至少3个字符,最多15个字符！" name="username" datatype=""
+									type="text" class="form-control ">
+							</div>
+						</div>
+						<div class="mb-3 row">
+							<label class="col-sm-2 col-form-label">密码</label>
+							<div class="col-sm-10">
+								<input datatype="n3-20" errormsg="密码至少3个数字,最多20个数字！" name="password" type="password"
+									class="form-control ">
+							</div>
+						</div>
+						<div class="mb-3 row">
+							<label class="col-sm-2 col-form-label">姓名</label>
+							<div class="col-sm-10">
+								<input datatype="s2-20" errormsg="姓名至少2个字符，最多20个字符！" name="fullname" type="text"
+									class="form-control ">
+							</div>
+						</div>
+						<div class="mb-3 row align-items-center">
+							<label class="col-sm-2 col-form-label">性别</label>
+							<div class="col-sm-10">
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="sex">
+									<label class="form-check-label" for="man">男</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="sex" datatype="*">
+									<label class="form-check-label" for="woman">女</label>
+								</div>
+							</div>
+						</div>
+						<div class="mb-3 row">
+							<label class="col-sm-2 col-form-label">手机</label>
+							<div class="col-sm-10">
+								<input datatype="m" name="tel" type="number" class="form-control ">
+							</div>
+						</div>
+						<div class="mb-3 row">
+							<label class="col-sm-2 col-form-label">邮箱</label>
+							<div class="col-sm-10">
+								<input datatype="e" name="email" type="text" class="form-control ">
+							</div>
+						</div>
+						<div class="mb-3 row">
+							<div class="offset-sm-2 col-sm-10">
+								<div class="form-check">
+									<input datatype="*" name="lisence" type="checkbox" class=" form-check-input"
+										id="lisence">
+									<label class="form-check-label" for="lisence">同意本站用户协议</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col offset-2">
+								<button type="submit" class="btn btn-primary btn-block">注册</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+				<div class="card-footer py-3 bg-white d-flex justify-content-between">
+					<a href="login.html" class="text-secondary text-decoration-none">登录账户</a>
+					<a href="#" class="text-secondary text-decoration-none">忘记密码？</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="./assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+	<script src="./assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="./assets//lib//Validform/js/Validform_v5.3.2_min.js"></script>
+	<script src="./assets/lib/layer/layer.js"></script>
+	<script>
+		$('#form').Validform({
+			ajaxPost: true,
+			tiptype: function (msg, o, cssctl) {
+				//o:{obj:*,type:*,curform:*},
+				//obj指向的是当前验证的表单元素（或表单对象，验证全部验证通过，提交表单时o.obj为该表单对象），
+				//type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, 
+				//curform为当前form对象;
+
+				// 检测是否 radio || checkbox
+				var isCheck = o.obj.is(':radio') || o.obj.is(':checkbox');
+				// 移除所有状态class
+				if (isCheck) {
+					var name = o.obj.prop('name');
+					var $checkGroup = o.curform.find('[name=' + name + ']');
+					$checkGroup.removeClass('is-valid is-invalid');
+				} else {
+					o.obj.removeClass('is-valid is-invalid');
+				}
+				switch (o.type) {
+					case 1:
+						break;
+					case 2:
+						if (isCheck) {
+							$checkGroup.addClass('is-valid')
+						} else {
+							o.obj.addClass('is-valid');
+						}
+						break;
+					case 3:
+						if (isCheck) {
+							$checkGroup.addClass('is-invalid');
+							// 提示信息是否存在？
+							var isExist = o.obj.parents('.form-check').next('.invalid-feedback').length > 0;
+							if (isExist) {
+								o.obj.parents('.form-check').next('.invalid-feedback').text(msg);
+							} else {
+								var $feedback = $('<div class="invalid-feedback">' + msg + '</div>');
+								o.obj.parents('.form-check').after($feedback);
+							}
+							return;
+						}
+						// 其他表单元素，添加无效状态
+						o.obj.addClass('is-invalid');
+						// 提示信息是否存在？
+						var isExist = o.obj.next('.invalid-feedback').length > 0;
+						if (isExist) {
+							o.obj.next('.invalid-feedback').text(msg);
+						} else {
+							var $feedback = $('<div class="invalid-feedback">' + msg + '</div>');
+							o.obj.after($feedback);
+						}
+						break;
+					case 4:
+						break;
+					default:
+						break;
+				}
+			},
+			callback: function (res) {
+				if (res.status) {
+					// 缓存数据
+					sessionStorage.token = res.data.token;
+					sessionStorage.id = res.data.id;
+					sessionStorage.role = res.data.role;
+					// 跳转页面
+					location.assign('./admin-list.html');
+					// 提示信息
+					layer.msg(res.msg, { icon: 1 });
+				} else {
+					layer.msg(res.msg, { icon: 5 });
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="./assets/lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="./assets/iconfonts/bootstrap-icons.css">
+	<link rel="stylesheet" href="./assets/lib/Validform/css/style.css">
+	<!-- 图片上传--组件 -->
+	<link rel="stylesheet" href="./assets/css/upload.css">
+
+	<link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
+	<title>编辑用户</title>
+</head>
+
+<body>
+	<!-- 导航 -->
+	<header></header>
+	<div class="container-fluid pt-3">
+		<div class="row">
+			<!-- 侧边栏 -->
+			<div id="left-menu" class="col-2 p-0"></div>
+			<!-- 内容 -->
+			<div class="col-10">
+				<div class="card shadow-sm">
+					<div class="card-header">
+						用户编辑
+					</div>
+					<div class="card-body">
+						<form id="form" action="/user/info">
+							<!-- 管理员id--隐藏表单 -->
+							<input type="hidden" name="id" value="">
+							<div class="mb-3 row">
+								<label class="col-sm-2 col-form-label">用户名</label>
+								<div class="col-sm-10">
+									<input datatype="s3-15" name="username" readonly type="text" class="form-control">
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<label class="col-sm-2 col-form-label">昵称</label>
+								<div class="col-sm-10">
+									<input datatype="s2-20" errormsg="昵称至少2个字符，最多20个字符" name="nickname" type="text"
+										class="form-control">
+								</div>
+							</div>
+							<div class="mb-3 row align-items-center">
+								<label class="col-sm-2 col-form-label">性别</label>
+								<div class="col-sm-10">
+									<div class="form-check form-check-inline">
+										<label class="form-check-label">
+											<input class="form-check-input" type="radio" name="sex" value="男"> 男
+										</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<label class="form-check-label">
+											<input class="form-check-input" datatype="*" type="radio" name="sex"
+												value="女"> 女
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<label class="col-sm-2 col-form-label">手机</label>
+								<div class="col-sm-10">
+									<input datatype="m" name="tel" type="text" class="form-control">
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<div class="col-sm-10 offset-sm-2">
+									<button type="submit" class="btn btn-primary">保存修改</button>
+								</div>
+							</div>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="./assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+	<script src="./assets/lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="./assets/lib/layer/layer.js"></script>
+	<script src="./assets/lib/Validform/js/Validform_v5.3.2_min.js"></script>
+	<!-- 公共layout -->
+	<script src="./assets/js/layout.js"></script>
+	<!-- 身份认证 -->
+	<script src="./assets/js/auth.js"></script>
+	<!-- 工具类函数 -->
+	<script src="./assets/js/public.js"></script>
+	<script>
+		// 表单验证--保存资料
+		$('#form').Validform({
+			ajaxPost: true,
+			tiptype: 4,
+			callback: function (res) {
+				if (res.status) {
+					layer.msg(res.msg, { icon: 1 });
+					// 重定向
+					location.replace('./user-list.html');
+				} else {
+					layer.msg(res.msg, { icon: 5 });
+				}
+			}
+		});
+	</script>
+	<script>
+		// 获取参数，赋值隐藏表单域，以备修改资料的参数id
+		var id = params('id');
+		$('input[name=id]').val(id);
+
+		// 获取个人资料
+		$.ajax({
+			type: "GET",
+			url: '/user/info',
+			data: { id: id },
+			success: function (res) {
+				if (res.status) {
+					// 还原表单
+					$('input[name=username]').val(res.data.username);
+					$('input[name=nickname]').val(res.data.nickname);
+					$(`input[name=sex][value=${res.data.sex}]`).prop('checked', true);
+					$('input[name=tel]').val(res.data.tel);
+				}
+			}
+		});
+	</script>
+
+</body>
+
+</html>

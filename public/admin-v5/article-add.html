@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="./assets/lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="./assets/lib/Validform/css/style.css">
+	<link rel="stylesheet" href="./assets/iconfonts/bootstrap-icons.css">
+	<!-- 图片上传--组件 -->
+	<link rel="stylesheet" href="./assets/css/upload.css">
+
+	<link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
+	<title>发布文章</title>
+</head>
+
+<body>
+	<!-- 导航 -->
+	<header></header>
+	<div class="container-fluid pt-3">
+		<div class="row">
+			<!-- 侧边栏 -->
+			<div id="left-menu" class="col-2 p-0"></div>
+			<!-- 内容 -->
+			<div class="col-10">
+				<div class="card shadow-sm">
+					<div class="card-header">
+						发布文章
+					</div>
+					<div class="card-body">
+						<form id="form" action="/article/release">
+							<div class="mb-3 row">
+								<label class="col-sm-1 col-form-label text-right">标题</label>
+								<div class="col-sm-11">
+									<input name="title" datatype="*2-100" errormsg="标题至少1个字，最多50个字" type="text"
+										class="form-control" placeholder="请输入文章标题">
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<label class="col-sm-1 col-form-label text-right">描述</label>
+								<div class="col-sm-11">
+									<textarea datatype="*2-400" errormsg="标题至少1个字，最多200个字" name="description"
+										class="form-control" rows="3" placeholder="博客内容的简单摘要"></textarea>
+								</div>
+							</div>
+							<div class="row">
+								<label class="col-sm-1 col-form-label text-right">分类</label>
+								<div class="mb-3 col-sm-5">
+									<select datatype="*" name="cate_1st" class="form-select" placeholder="请选择一级分类">
+									</select>
+								</div>
+								<div class="mb-3 col-sm-5">
+									<select datatype="*" name="cate_2nd" class="form-select" placeholder="请选择二级分类">
+									</select>
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<label class="col-sm-1 col-form-label text-right">主图</label>
+								<div class="col-sm-11">
+									<div class="upload-box">
+										<div class="plus text-black-50">
+											<i class="bi bi-plus-lg fs-3"></i>
+											<input type="file" class="file">
+										</div>
+										<img src="" class="photo">
+										<div class="cover text-white">
+											<i class="bi bi-x-lg fs-3 remove"></i>
+										</div>
+									</div>
+									<!-- 隐藏表单 -->
+									<input datatype="*" nullmsg="请上传一张文章主图！" name="main_photo" type="hidden" value="">
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<label class="col-sm-1 col-form-label text-right">内容</label>
+								<div class="col-sm-11">
+									<!-- 富文本编辑器 -->
+									<div id="editor"></div>
+									<!-- 隐藏表单 -->
+									<input datatype="*" nullmsg="请填写文章内容！" type="hidden" name="content" value="">
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<div class="col-sm-11 offset-sm-1">
+									<button type="submit" class="btn btn-primary">发布文章</button>
+								</div>
+							</div>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="./assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+	<script src="./assets/lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="./assets/lib/layer/layer.js"></script>
+	<script src="./assets/lib/Validform/js/Validform_v5.3.2_min.js"></script>
+	<!-- 富文本编辑器 -->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/wangeditor@4.7.7/dist/wangEditor.min.js"></script>
+	<!-- 公共layout -->
+	<script src="./assets/js/layout.js"></script>
+	<!-- 身份认证 -->
+	<script src="./assets/js/auth.js"></script>
+	<script>
+		// 初始化富文本编辑器
+		const E = window.wangEditor
+		const editor = new E('#editor');
+		// 取消自动 focus
+		editor.config.focus = false
+		// 配置 server 接口地址
+		editor.config.uploadImgServer = '/upload/editor/';
+		// 配置headers
+		editor.config.uploadImgHeaders = { Authorization: `Bearer ${sessionStorage.token}`, };
+		// 自定义FileName
+		editor.config.uploadFileName = 'file';
+		// 配置 onchange 回调函数
+		editor.config.onchange = function (newHtml) {
+			$('input[name=content]').val(newHtml);
+		};
+
+		editor.create()
+	</script>
+	<script>
+		// 获取一级分类
+		$.getJSON('/category/sub', { id: 0 }, function (res) {
+			if (res.status) {
+				var options = '';
+				res.data.forEach(function (item) {
+					options += `<option value="${item.id}">${item.name}</option>`
+				});
+				$('select[name=cate_1st]').html(options);
+				// 模拟用户触发change事件
+				$('select[name=cate_1st]').trigger('change');
+			}
+		});
+
+		$('select[name=cate_1st]').change(function () {
+			var selected = $(this).val();
+			// 加载子级分类
+			$.getJSON('/category/sub', { id: selected }, function (res) {
+				if (res.status) {
+					var options = '';
+					res.data.forEach(function (item) {
+						options += `<option value="${item.id}">${item.name}</option>`
+					});
+					$('select[name=cate_2nd]').html(options);
+				}
+			});
+		});
+		// 主图上传
+		$('.file').change(function () {
+			// 提取File对象
+			var avatar = $(this)[0].files[0];
+			// FormData
+			var formData = new FormData();
+			// 追加数据
+			formData.append('file', avatar);
+			formData.append('type', 'common');
+			// ajax
+			$.ajax({
+				type: "POST",
+				url: "/upload/common/",
+				processData: false, //data项传参不转化
+				contentType: false, //不设置content-type
+				data: formData,
+				success: function (res) {
+					if (res.status) {
+						// 信息提示
+						layer.msg(res.msg, { icon: 1 });
+						// 显示预览图
+						$('.upload-box .photo').attr('src', res.src);
+						// 切换plus加号
+						$('.upload-box').addClass('uploaded');
+						// 隐藏表单
+						$('input[name=main_photo]').val(res.src);
+					}
+				},
+				statusCode: {
+					400: function (res) {
+						layer.msg(res.responseJSON.msg, { icon: 2 });
+					}
+				},
+				complete: function () {
+					// 无论成功/失败，清空value
+					$('.file').val('');
+				}
+			});
+		});
+		// 删除头像
+		$('.remove').click(function () {
+			// 获取当前头像地址
+			var url = $(this).parent().prev('.photo').attr('src');
+			// 默认头像，不做物理删除
+			if (url.includes('default')) {
+				$('.upload-box').removeClass('uploaded');
+				// 隐藏表单
+				$('input[name=main_photo]').val('');
+				return false;
+			}
+			// 不是默认头像，物理删除
+			$.post('/upload/remove', { src: url }, function (res) {
+				if (res.status) {
+					// 提示信息
+					layer.msg(res.msg, { icon: 1 });
+					// 显示plus加号
+					$('.upload-box').removeClass('uploaded');
+					// 隐藏表单
+					$('input[name=main_photo]').val('');
+				} else {
+					layer.msg(res.msg, { icon: 5 });
+				}
+			});
+		});
+	</script>
+	<script>
+		// 发布文章
+		$('#form').Validform({
+			ajaxPost: true,
+			tiptype: 4,
+			callback: function (res) {
+				if (res.status) {
+					layer.msg(res.msg, { icon: 1 });
+				} else {
+					layer.msg(res.msg, { icon: 5 });
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,12 @@
+{
+	"name": "cms-admin",
+	"version": "1.0.0",
+	"description": "",
+	"main": "login.html",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"proxy": "http-server --proxy http://localhost:3001"
+	},
+	"author": "黄小米",
+	"license": "ISC"
+}
