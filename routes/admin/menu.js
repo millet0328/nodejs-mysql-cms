@@ -58,6 +58,11 @@ router.post("/", async (req, res) => {
         });
     } catch (error) {
         await connection.rollback();
+        res.json({
+            status: false,
+            msg: error.message,
+            error,
+        });
         throw error;
     }
 });
@@ -102,14 +107,11 @@ router.delete("/:id", async (req, res) => {
             res.json({ status: false, msg: "菜单menu删除失败！" });
             return;
         }
+
         // 删除角色中菜单
         let delete_role_sql = `DELETE FROM ROLE_MENU WHERE menu_id = ?`;
-        let [{ affectedRows: role_affected_rows }] = await pool.query(delete_role_sql, [id]);
-        if (role_affected_rows === 0) {
-            await connection.rollback();
-            res.json({ status: false, msg: "角色role_menu删除失败！" });
-            return;
-        }
+        await pool.query(delete_role_sql, [id]);
+
         // 一切顺利，提交事务
         await connection.commit();
         // 创建成功
@@ -119,6 +121,11 @@ router.delete("/:id", async (req, res) => {
         });
     } catch (error) {
         await connection.rollback();
+        res.json({
+            status: false,
+            msg: error.message,
+            error,
+        });
         throw error;
     }
 });

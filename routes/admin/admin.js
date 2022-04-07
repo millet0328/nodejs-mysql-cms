@@ -100,6 +100,11 @@ router.post('/register', async (req, res) => {
         });
     } catch (error) {
         await connection.rollback();
+        res.json({
+            status: false,
+            msg: error.message,
+            error,
+        });
         throw error;
     }
 });
@@ -216,6 +221,11 @@ router.post('/info', async (req, res) => {
         });
     } catch (error) {
         await connection.rollback();
+        res.json({
+            status: false,
+            msg: error.message,
+            error,
+        });
         throw error;
     }
 });
@@ -276,14 +286,6 @@ router.post('/remove', async (req, res) => {
     try {
         // 开启事务
         await connection.beginTransaction();
-        // 删除角色
-        let delete_role_sql = 'DELETE FROM admin_role WHERE admin_id = ?';
-        let [{ affectedRows: role_affected_rows }] = await connection.query(delete_role_sql, [id]);
-        if (role_affected_rows === 0) {
-            await connection.rollback();
-            res.json({ status: false, msg: "角色role删除失败！" });
-            return;
-        }
         // 删除账户
         let delete_admin_sql = 'DELETE FROM admin WHERE id = ?';
         let [{ affectedRows: admin_affected_rows }] = await pool.query(delete_admin_sql, [id]);
@@ -292,6 +294,10 @@ router.post('/remove', async (req, res) => {
             res.json({ status: false, msg: "账户admin删除失败！" });
             return;
         }
+        // 删除角色
+        let delete_role_sql = 'DELETE FROM admin_role WHERE admin_id = ?';
+        await connection.query(delete_role_sql, [id]);
+
         // 一切顺利，提交事务
         await connection.commit();
         res.json({
@@ -300,6 +306,11 @@ router.post('/remove', async (req, res) => {
         });
     } catch (error) {
         await connection.rollback();
+        res.json({
+            status: false,
+            msg: error.message,
+            error,
+        });
         throw error;
     }
 });

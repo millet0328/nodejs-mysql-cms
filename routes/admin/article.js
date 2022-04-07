@@ -66,14 +66,6 @@ router.post('/remove', async (req, res) => {
     try {
         // 开启事务
         await connection.beginTransaction();
-        // 删除标签
-        let delete_tag_sql = 'DELETE FROM article_tag WHERE article_id = ?;';
-        let [{ affectedRows: tag_affected_rows }] = await connection.query(delete_tag_sql, [id]);
-        if (tag_affected_rows === 0) {
-            await connection.rollback();
-            res.json({ status: false, msg: "标签tag删除失败！" });
-            return;
-        }
         // 删除账户
         let delete_article_sql = 'DELETE FROM article WHERE id = ?;';
         let [{ affectedRows: article_affected_rows }] = await pool.query(delete_article_sql, [id]);
@@ -82,6 +74,10 @@ router.post('/remove', async (req, res) => {
             res.json({ status: false, msg: "文章article删除失败！" });
             return;
         }
+        // 删除标签
+        let delete_tag_sql = 'DELETE FROM article_tag WHERE article_id = ?;';
+        await connection.query(delete_tag_sql, [id]);
+
         // 一切顺利，提交事务
         await connection.commit();
         res.json({
@@ -90,6 +86,11 @@ router.post('/remove', async (req, res) => {
         });
     } catch (error) {
         await connection.rollback();
+        res.json({
+            status: false,
+            msg: error.message,
+            error,
+        });
         throw error;
     }
 });
@@ -194,6 +195,11 @@ router.post("/tag/", async (req, res) => {
         });
     } catch (error) {
         await connection.rollback();
+        res.json({
+            status: false,
+            msg: error.message,
+            error,
+        });
         throw error;
     }
 });
