@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+	<title>用户中心</title>
+</head>
+
+<body>
+	<!-- 页头 -->
+	<header></header>
+	<!-- 内容 -->
+	<div class="container">
+		<!-- 面包屑导航 -->
+		<nav class="mt-3">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="index.html">主页</a></li>
+				<li class="breadcrumb-item active">用户中心</li>
+			</ol>
+		</nav>
+		<!-- 文章内容 -->
+		<div class="card">
+			<div class="card-header">
+				用户中心
+			</div>
+			<div class="card-body">
+				<form>
+					<div class="my-4 text-center">
+						<img src="./assets/img/avatar.jpg" width="150" class="img-thumbnail rounded-circle" alt="...">
+					</div>
+					<div class="mb-3 row">
+						<label class="col-3 col-form-label text-end">账号：</label>
+						<div class="col-7">
+							<input name="username" type="text" class="form-control" readonly>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-3 col-form-label text-end">昵称：</label>
+						<div class="col-7">
+							<input name="nickname" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-3 col-form-label text-end">性别：</label>
+						<div class="col-7">
+							<div class="form-check mt-1 form-check-inline">
+								<input class="form-check-input" name="sex" type="radio" value="男">
+								<label class="form-check-label">男</label>
+							</div>
+							<div class="form-check mt-1 form-check-inline">
+								<input class="form-check-input" name="sex" type="radio" value="女">
+								<label class="form-check-label">女</label>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-3 col-form-label text-end">手机：</label>
+						<div class="col-7">
+							<input name="tel" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-7 offset-3">
+							<button type="submit" class="btn btn-primary">保存修改</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- 页尾 -->
+	<footer></footer>
+	<script src="assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+	<!-- Option 1: Bootstrap Bundle with Popper -->
+	<script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="./assets/js/layout.js"></script>
+	<!-- 导航守卫 -->
+	<script src="./assets/js/auth.js"></script>
+	<script>
+		// 从缓存中读取数据
+		if (sessionStorage.account) {
+			var account = JSON.parse(sessionStorage.account);
+			// 还原表单
+			$('input[name=username]').val(account.username);
+			$('input[name=nickname]').val(account.nickname);
+			// 性别
+			$('input[name=sex]').each(function () {
+				if ($(this).val() == account.sex) {
+					$(this).prop('checked', true);
+				}
+			});
+			$('input[name=tel]').val(account.tel);
+		}
+	</script>
+</body>
+
+</html>

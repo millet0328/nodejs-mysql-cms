@@ -1,0 +1,15 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "front end for blog",
+  "main": "index.html",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "proxy": "http-server --proxy http://localhost:3001"
+  },
+  "author": "黄小米",
+  "license": "ISC"
+}

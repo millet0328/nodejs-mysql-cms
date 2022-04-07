@@ -1,0 +1,35 @@
+.login-card,
+.register-card {
+    width: 500px;
+}
+
+@media screen and (max-width: 678px) {
+
+    .login-card,
+    .register-card {
+        width: 100%;
+    }
+}
+
+.banner .swiper-slide a {
+    display: block;
+    height: 100%;
+}
+
+.blog-list .photo {
+    background-position: center;
+    background-size: cover;
+    height: 200px;
+    background-color: #e5c7ca;
+}
+.line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    /* 几行开始截断 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    /* 对超长数字/超长英文断行 */
+    min-height: 96px;
+}

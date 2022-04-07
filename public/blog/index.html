@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="assets/lib/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="assets/lib/swiper/css/swiper-bundle.min.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+    <title>主页</title>
+</head>
+
+<body>
+<!-- 页头 -->
+<header></header>
+<!-- 内容 -->
+<div class="container">
+    <div class="row py-2 py-md-2 py-lg-3">
+        <div class="col-8">
+            <!-- banner图片853*367 -->
+            <div class="swiper banner border">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <a href="https://www.jd.com/">
+                            <img class="img-fluid" src="assets/img/1.jpg" alt="">
+                        </a>
+                    </div>
+                    <div class="swiper-slide">
+                        <a href="https://www.jd.com/">
+                            <img class="img-fluid" src="assets/img/2.jpg" alt="">
+                        </a>
+                    </div>
+                    <div class="swiper-slide">
+                        <a href="https://www.jd.com/">
+                            <img class="img-fluid" src="assets/img/3.jpg" alt="">
+                        </a>
+                    </div>
+                </div>
+                <!-- 如果需要分页器 -->
+                <div class="swiper-pagination"></div>
+                <!-- 如果需要导航按钮 -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </div>
+        <div class="col-4">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#center"
+                            type="button">个人中心
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#notice"
+                            type="button">网站公告
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="center">
+                    <div class="text-center py-5 border border-top-0 position-relative">
+                        <img src="assets/img/avatar.jpg" width="150" class="img-thumbnail rounded-circle" alt="...">
+                        <div class="pt-5">
+                            <div class="default-display visually-hidden">
+                                <a href="./login.html" class="btn btn-primary btn-sm">立即登陆</a>
+                                <a href="./register.html" class="btn btn-outline-secondary btn-sm">现在注册</a>
+                            </div>
+                            <div class="logged-display lh-lg visually-hidden">
+                                欢迎，
+                                <a class="stretched-link" href="./user-center.html">夏目友人帐</a>
+                                <!-- 性别 -->
+                                <i class="bi bi-gender-female text-primary visually-hidden"></i>
+                                <i class="bi bi-gender-male text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="notice">
+                    <div class="list-group list-group-flush">
+                        <a href="./notice-detail.html"
+                           class="list-group-item list-group-item-action list-group-item-info">
+                            <div class="row justify-content-between">
+                                <small class="col-10  text-truncate">在这里可以看到前端技术，后端程序，网站内容管理系统等文章，还有我的程序人生！</small>
+                                <div class="col-2"><small>05-15</small></div>
+                            </div>
+                        </a>
+                        <a href="./notice-detail.html"
+                           class="list-group-item list-group-item-action list-group-item-info">
+                            <div class="row justify-content-between">
+                                <small class="col-10  text-truncate">在这里可以看到前端技术，后端程序，网站内容管理系统等文章，还有我的程序人生！</small>
+                                <div class="col-2"><small>05-15</small></div>
+                            </div>
+                        </a>
+                        <a href="./notice-detail.html"
+                           class="list-group-item list-group-item-action list-group-item-info">
+                            <div class="row justify-content-between">
+                                <small class="col-10  text-truncate">网站内容管理系统等文章，还有我的程序人生！</small>
+                                <div class="col-2"><small>05-15</small></div>
+                            </div>
+                        </a>
+                        <a href="./notice-detail.html"
+                           class="list-group-item list-group-item-action list-group-item-info">
+                            <div class="row justify-content-between">
+                                <small class="col-10  text-truncate">在这里可以看到前端技术，后端程序，网站内容管理系统等文章，还有我的程序人生！</small>
+                                <div class="col-2"><small>05-15</small></div>
+                            </div>
+                        </a>
+                        <a href="./notice-detail.html" class="list-group-item list-group-item-action text-muted">
+                            <div class="row justify-content-between">
+                                <small class="col-10  text-truncate">后端程序，网站内容管理系统等文章</small>
+                                <div class="col-2"><small>05-15</small></div>
+                            </div>
+                        </a>
+                        <a href="./notice-detail.html" class="list-group-item list-group-item-action text-muted">
+                            <div class="row justify-content-between">
+                                <small class="col-10  text-truncate">后端程序，网站内容管理系统等文章，还有我的程序人生！</small>
+                                <div class="col-2"><small>05-15</small></div>
+                            </div>
+                        </a>
+                        <a href="./notice-detail.html" class="list-group-item list-group-item-action text-muted">
+                            <div class="row justify-content-between">
+                                <small class="col-10  text-truncate">网站内容管理系统等文章</small>
+                                <div class="col-2"><small>05-15</small></div>
+                            </div>
+                        </a>
+                        <a href="./notice-detail.html" class="list-group-item list-group-item-action text-muted">
+                            <div class="row justify-content-between">
+                                <small class="col-10  text-truncate">网站内容管理系统等文章</small>
+                                <div class="col-2"><small>05-15</small></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 博客列表 -->
+    <div class="blog-list row row-cols-1 row-cols-sm-2 row-cols-md-3 g-2">
+        <div class="col">
+            <div class="card">
+                <div class="card-img-top photo" style="background-image: url('./assets/img/1.jpg')"></div>
+                <div class="card-body text-black text-opacity-50">
+                    <h5 class="card-title">
+                        <a class="stretched-link text-decoration-none" href="article-detail.html">Card title</a>
+                    </h5>
+                    <p class="card-text">
+                        This is a wider card with supporting text below as a natural blead-in to additional
+                        content. This content is a little bit longer.
+                    </p>
+                    <p class="card-text">
+                        <small>Last updated 3 mins ago</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 页尾 -->
+<footer></footer>
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+<script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/lib/swiper/js/swiper-bundle.min.js"></script>
+<script src="./assets/js/layout.js"></script>
+<script type="text/javascript">
+    var bannerSwiper = new Swiper('.banner', {
+        loop: true, // 循环模式选项
+        // 如果需要分页器
+        pagination: {
+            el: '.swiper-pagination',
+        },
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+        },
+        // 如果需要前进后退按钮
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+</script>
+<script type="text/javascript">
+    // 查询缓存账户数据
+    if (sessionStorage.account) {
+        // 已登录
+        $('.logged-display').removeClass('visually-hidden');
+        // 获取缓存账户数据
+        var account = JSON.parse(sessionStorage.account);
+        $('.logged-display').html(
+            `欢迎，
+					<a class="stretched-link" href="./user-center.html">${account.nickname}</a>
+					<!-- 性别 -->
+					<i class="bi ${account.sex === '男' ? 'bi-gender-male text-primary' : 'bi-gender-female text-danger'}"></i>
+				`
+        );
+    } else {
+        // 未登录
+        $('.default-display').removeClass('visually-hidden');
+    }
+</script>
+<script type="text/javascript">
+    // 获取文章列表
+    $.getJSON('/article/list', { pageindex: 1, pagesize: 30 }, function (res) {
+        if (res.status) {
+            var html = '';
+            res.data.forEach(function (item, index) {
+                html += `
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-img-top photo" style="background-image: url('${item.main_photo}')"></div>
+                                <div class="card-body text-black text-opacity-50">
+                                    <h5 class="card-title text-truncate">
+                                        <a class="stretched-link text-decoration-none" href="./article-detail.html?id=${item.id}">${item.title}</a>
+                                    </h5>
+                                    <p class="card-text line-clamp-4">${item.description}</p>
+                                    <p class="card-text">
+                                        <small>${item.create_time}</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>`
+            });
+            $('.blog-list').html(html);
+        }
+    });
+</script>
+</body>
+
+</html>

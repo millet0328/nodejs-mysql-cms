@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/lib/swiper/css/swiper-bundle.min.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+    <title>分类</title>
+</head>
+
+<body>
+<!-- 页头 -->
+<header></header>
+<!-- 内容 -->
+<div class="container">
+    <!-- 面包屑导航 -->
+    <nav class="mt-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">主页</a></li>
+            <li class="breadcrumb-item active">公告列表</li>
+        </ol>
+    </nav>
+    <!-- 公告列表 -->
+    <div class="card">
+        <div class="notice-list list-group list-group-flush">
+            <a href="#" class="list-group-item list-group-item-action list-group-item-info">
+                <div class="row justify-content-between">
+                    <small class="col-11 text-truncate">在这里可以看到前端技术，后端程序，网站内容管理系统等文章，还有我的程序人生！</small>
+                    <div class="col-1 text-end"><small>05-15</small></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- 页尾 -->
+<footer></footer>
+<script src="assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="./assets/js/layout.js"></script>
+<script>
+    // 获取公告列表
+    $.getJSON('/notice/list', { pageindex: 1, pagesize: 30 }, function (res) {
+        if (res.status) {
+            var html = '';
+            res.data.forEach(function (item, index) {
+                html += `
+                    <a href="./notice-detail.html?id=${item.id}" class="list-group-item list-group-item-action ${item.is_sticky ? 'list-group-item-info' : ''}">
+                        <div class="row justify-content-between">
+                            <small class="col-10 text-truncate">${item.title}</small>
+                            <div class="col-2 text-end"><small>${item.create_time}</small></div>
+                        </div>
+                    </a>`
+            });
+            $('.notice-list').html(html);
+        }
+    });
+</script>
+</body>
+
+</html>

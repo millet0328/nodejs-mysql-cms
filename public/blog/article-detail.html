@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="assets/lib/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+    <title>文章详情</title>
+</head>
+
+<body>
+<!-- 页头 -->
+<header></header>
+<!-- 内容 -->
+<div class="container">
+    <!-- 面包屑导航 -->
+    <nav class="mt-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">主页</a></li>
+            <li class="breadcrumb-item"><a href="article-list.html">分类</a></li>
+            <li class="breadcrumb-item active">当前文章标题</li>
+        </ol>
+    </nav>
+    <!-- 文章内容 -->
+    <div class="card">
+        <div id="article" class="card-body">
+
+        </div>
+    </div>
+    <!-- 评论列表 -->
+    <div class="card mt-4">
+        <div class="card-header">
+            发表评论
+        </div>
+        <div class="card-body">
+            <!-- 评论框 -->
+            <form action="">
+                <div class="row">
+                    <div class="col-2 text-center position-relative">
+                        <img src="assets/img/avatar.jpg" class="img-thumbnail rounded-circle" style="height: 120px">
+                        <div class="pt-4">
+                            <div class="default-display" hidden>
+                                <a class="stretched-link text-decoration-none" href="./login.html">立即登陆</a>
+                            </div>
+                            <div class="logged-display">
+                                <a class="stretched-link text-decoration-none" href="./user-center.html">夏目友人帐</a>
+                                <!-- 性别 -->
+                                <i class="bi bi-gender-female text-primary visually-hidden"></i>
+                                <i class="bi bi-gender-male text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-10">
+                        <textarea class="form-control" rows="5"></textarea>
+                        <div class="text-end pt-3">
+                            <button type="submit" class="btn btn-primary btn-sm">发表评论</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- 评论列表 -->
+    <div class="card mt-4">
+        <div class="card-header">
+            全部评论
+        </div>
+        <ul class="list-group list-group-flush small">
+            <li class="list-group-item">
+                <div class="row py-3">
+                    <div class="col-1 text-center">
+                        <a href="user-center.html">
+                            <img src="assets/img/avatar.jpg" class="img-thumbnail rounded-circle" style="height: 80px">
+                        </a>
+                    </div>
+                    <div class="col-11 text-muted">
+                        <p class="d-flex justify-content-between">
+                            <a href="user-center.html" class="text-decoration-none text-dark">安琪拉</a>
+                            <span class="timestamp">2020-09-01</span>
+                        </p>
+                        <p class="">
+                            算法第4个，递归运用(斐波那契数列)： 爬楼梯问题。
+                            感觉没有描述清楚，有个前提，一次爬1级或者2级。
+                            初始在第0级，到第一级有1种方法(s(1) = 1)。到第二级有两种方法(s(2) = 2) ，到第二级楼梯，可以是从第一级上来的，也可以是直接从第0级爬2级上来的。
+                            s(n) = s(n-1) + s(n-2)
+                        </p>
+                        <div class="d-flex">
+                            <div class="pe-5">
+                                <i class="bi bi-hand-thumbs-up"></i> 32
+                            </div>
+                            <div class="pe-5">
+                                <i class="bi bi-chat-square-text"></i> 12
+                            </div>
+                        </div>
+                        <!-- 回复评论 -->
+                        <div class="row py-3 mx-0 mt-3 bg-light border">
+                            <div class="col-1 text-center">
+                                <a href="user-center.html">
+                                    <img src="assets/img/avatar.jpg" class="img-thumbnail rounded-circle"
+                                         style="height: 60px">
+                                </a>
+                            </div>
+                            <div class="col-11 text-muted">
+                                <p class="d-flex justify-content-between">
+                                    <a href="user-center.html" class="text-decoration-none text-dark">钟无艳</a>
+                                    <span class="timestamp">2020-09-01</span>
+                                </p>
+                                <p class="">
+                                    80！80！小锤锤
+                                </p>
+                                <div class="d-flex">
+                                    <div class="pe-5">
+                                        <i class="bi bi-hand-thumbs-up"></i> 32
+                                    </div>
+                                    <div class="pe-5">
+                                        <i class="bi bi-chat-square-text"></i> 3
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row py-3">
+                    <div class="col-1 text-center">
+                        <a href="user-center.html">
+                            <img src="assets/img/avatar.jpg" class="img-thumbnail rounded-circle" style="height: 80px">
+                        </a>
+                    </div>
+                    <div class="col-11 text-muted">
+                        <p class="d-flex justify-content-between">
+                            <a href="user-center.html" class="text-decoration-none text-dark">夏目友人帐</a>
+                            <span class="timestamp">2020-09-01</span>
+                        </p>
+                        <p class="">浅拷贝的说法不对，等号赋值不算浅拷贝。Object.assign是浅拷贝。</p>
+                        <div class="d-flex">
+                            <div class="pe-5">
+                                <i class="bi bi-hand-thumbs-up"></i> 点赞
+                            </div>
+                            <div class="pe-5">
+                                <i class="bi bi-chat-square-text"></i> 回复
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </li>
+            <li class="list-group-item">
+                <div class="row py-3">
+                    <div class="col-1 text-center">
+                        <a href="user-center.html">
+                            <img src="assets/img/avatar.jpg" class="img-thumbnail rounded-circle" style="height: 80px">
+                        </a>
+                    </div>
+                    <div class="col-11 text-muted">
+                        <p class="d-flex justify-content-between">
+                            <a href="user-center.html" class="text-decoration-none text-dark">Robin</a>
+                            <span class="timestamp">2020-09-01</span>
+                        </p>
+                        <p class="">你好，问下，浏览器输入地址那边是不是第一步查询缓存</p>
+                        <div class="d-flex">
+                            <div class="pe-5">
+                                <i class="bi bi-hand-thumbs-up"></i> 点赞
+                            </div>
+                            <div class="pe-5">
+                                <i class="bi bi-chat-square-text"></i> 回复
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </li>
+            <li class="list-group-item">
+                <div class="row py-3">
+                    <div class="col-1 text-center">
+                        <a href="user-center.html">
+                            <img src="assets/img/avatar.jpg" class="img-thumbnail rounded-circle" style="height: 80px">
+                        </a>
+                    </div>
+                    <div class="col-11 text-muted">
+                        <p class="d-flex justify-content-between">
+                            <a href="user-center.html" class="text-decoration-none text-dark">黄小米</a>
+                            <span class="timestamp">2020-09-01</span>
+                        </p>
+                        <p class="">6666</p>
+                        <div class="d-flex">
+                            <div class="pe-5">
+                                <i class="bi bi-hand-thumbs-up"></i> 点赞
+                            </div>
+                            <div class="pe-5">
+                                <i class="bi bi-chat-square-text"></i> 回复
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- 页尾 -->
+<footer></footer>
+<script src="assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="./assets/js/layout.js"></script>
+<script src="./assets/js/public.js"></script>
+<script>
+    // 获取地址栏参数
+    var id = query("id");
+    // 获取文章详情
+    $.getJSON("/article/detail", { id: id }, function (res) {
+        if (res.status) {
+            $('#article').html(`
+					<h1 class="card-title display-6 text-center mb-4">${res.data.title}</h1>
+					<p class="text-center text-muted">
+						<small>发布日期：${res.data.create_time}</small>
+					</p>
+					${res.data.content}
+				`);
+            // 修改面包屑导航
+            $('.breadcrumb-item:eq(1) a').attr('href', `./article-list.html?id=${res.data.cate_1st}`).text(res.data.cate_1st_name);
+            $('.breadcrumb-item:eq(2)').text(res.data.title);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+    <title>公告详情</title>
+</head>
+
+<body>
+<!-- 页头 -->
+<header></header>
+<!-- 内容 -->
+<div class="container">
+    <!-- 面包屑导航 -->
+    <nav class="mt-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">主页</a></li>
+            <li class="breadcrumb-item"><a href="./notice-list.html">公告</a></li>
+            <li class="breadcrumb-item active">当前文章标题</li>
+        </ol>
+    </nav>
+    <!-- 文章内容 -->
+    <div class="card">
+        <div id="article" class="card-body">
+
+        </div>
+    </div>
+</div>
+<!-- 页尾 -->
+<footer></footer>
+<script src="assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="./assets/js/layout.js"></script>
+<script src="./assets/js/public.js"></script>
+<script>
+    // 获取地址栏参数
+    var id = query("id");
+    // 获取文章详情
+    $.getJSON("/notice/detail", { id: id }, function (res) {
+        if (res.status) {
+            $('#article').html(`
+					<h1 class="card-title display-6 text-center mb-4">${res.data.title}</h1>
+					<p class="text-center text-muted">
+						<small>发布日期：${res.data.create_time}</small>
+					</p>
+					${res.data.content}
+				`);
+            // 修改面包屑导航
+            $('.breadcrumb-item:eq(1) a').attr('href', `./notice-list.html?id=${res.data.cate_1st}`).text(res.data.cate_1st_name);
+            $('.breadcrumb-item:eq(2)').text(res.data.title);
+        }
+    });
+</script>
+</body>
+
+</html>
