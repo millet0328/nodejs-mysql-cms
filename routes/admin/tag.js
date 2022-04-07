@@ -104,7 +104,7 @@ router.put('/:id', async (req, res) => {
 
 /**
  * @api {delete} /tag/:id 删除标签
- * @apiDescription 有文章与标签关联，不允许删除标签；将关联文章删除，标签没有关联，可以删除标签；
+ * @apiDescription 删除标签，如果有文章关联此标签，将同时删除此关联关系；
  * @apiName RemoveTag
  * @apiGroup Tag
  * @apiPermission 后台系统
@@ -126,20 +126,31 @@ router.delete('/:id', async (req, res) => {
     try {
         // 开启事务
         await connection.beginTransaction();
-        // 删除标签_文章关联
-        let delete_article_sql = 'DELETE FROM article_tag WHERE tag_id = ?';
-        let [{ affectedRows: article_affected_rows }] = await connection.query(delete_article_sql, [id]);
-        if (article_affected_rows === 0) {
-            await connection.rollback();
-            res.json({ status: false, msg: "标签_文章关系删除失败！" });
-            return;
-        }
         // 删除标签
         let delete_tag_sql = 'DELETE FROM tag WHERE id = ?';
         let [{ affectedRows: tag_affected_rows }] = await pool.query(delete_tag_sql, [id]);
         if (tag_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "标签tag删除失败！" });
+            return;
+        }
+        // 查询article_tag表是否有文章关联
+        let select_connect_sql = 'SELECT * FROM article_tag WHERE tag_id = ?';
+        let [results] = await pool.query(select_connect_sql, [id]);
+        // 如果没有文章关联，仅删除标签即可
+        if (results.length === 0) {
+            res.json({
+                status: true,
+                msg: "删除成功"
+            });
+            return;
+        }
+        // 如果有文章关联标签，删除标签_文章关联
+        let delete_connect_sql = 'DELETE FROM article_tag WHERE tag_id = ?';
+        let [{ affectedRows: article_affected_rows }] = await connection.query(delete_connect_sql, [id]);
+        if (article_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "标签_文章关系删除失败！" });
             return;
         }
         // 一切顺利，提交事务
