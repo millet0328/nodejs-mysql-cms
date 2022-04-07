@@ -131,22 +131,22 @@ router.post('/edit', async (req, res) => {
 });
 
 /**
- * @api {post} /slide/switch 启用/禁用幻灯片
- * @apiName SwitchSlide
+ * @api {post} /slide/usable 启用/禁用幻灯片
+ * @apiName UsableSlide
  * @apiPermission 后台系统
  * @apiGroup Slide
  *
  * @apiUse Authorization
  *
  * @apiBody { Number } id 幻灯片id.
- * @apiBody { Number=1,-1 } available 是否启用。1-启用，-1-禁用。
+ * @apiBody { Number=1,-1 } usable 是否启用。1-启用，-1-禁用。
  *
- * @apiSampleRequest /slide/switch
+ * @apiSampleRequest /slide/usable
  */
-router.post('/switch', async (req, res) => {
-    let { id, available } = req.body;
-    const sql = 'UPDATE slide SET available = ? WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(sql, [available, id]);
+router.post('/usable', async (req, res) => {
+    let { id, usable } = req.body;
+    const sql = 'UPDATE slide SET usable = ? WHERE id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [usable, id]);
     if (!affectedRows) {
         res.json({
             status: false,

@@ -81,7 +81,8 @@ router.post('/login', async (req, res) => {
         return;
     }
     // 判断账户是否禁用
-    if (results[0].status === 0) {
+    let { id, usable } = results[0];
+    if (usable === 0) {
         res.json({
             msg: "账号已被禁用，请联系站长！",
             status: false,
@@ -89,7 +90,6 @@ router.post('/login', async (req, res) => {
         return;
     }
     // 生成token
-    let { id } = results[0];
     let payload = { id, username };
     let token = jwt.sign(payload, 'secret', { expiresIn: '4h' });
     // 登录成功

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // 数据库
-let { pool, connection } = require('../../config/mysql');
+let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
