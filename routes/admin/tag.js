@@ -14,16 +14,25 @@ let pool = require('../../config/mysql');
  * @apiGroup Tag
  * @apiPermission 后台系统
  *
+ * @apiQuery { Number } [pagesize=10] 每一页数量.
+ * @apiQuery { Number } [pageindex=1] 第几页.
+ *
  * @apiUse Authorization
  *
  * @apiSampleRequest /tag/list
  */
 router.get('/list', async (req, res) => {
-    const sql = 'SELECT * FROM tag';
-    let [results] = await pool.query(sql);
+    let { pagesize = 10, pageindex = 1 } = req.query;
+    // 计算偏移量
+    pagesize = parseInt(pagesize);
+    let offset = pagesize * (pageindex - 1);
+    // 查询
+    const sql = 'SELECT * FROM tag LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM tag';
+    let [results] = await pool.query(sql, [pagesize, offset]);
     res.json({
         status: true,
-        data: results
+        ...results[1][0],
+        data: results[0],
     });
 });
 
@@ -34,7 +43,7 @@ router.get('/list', async (req, res) => {
  * @apiPermission 后台系统
  *
  * @apiUse Authorization
- * 
+ *
  * @apiBody { String } name 标签名.
  *
  * @apiSampleRequest /tag/
@@ -61,7 +70,7 @@ router.post('/', async (req, res) => {
  * @apiPermission 后台系统
  *
  * @apiUse Authorization
- * 
+ *
  * @apiParam { Number } id 标签id.
  * @apiBody { String } name 标签名称.
  *
@@ -101,7 +110,7 @@ router.put('/:id', async (req, res) => {
  * @apiPermission 后台系统
  *
  * @apiUse Authorization
- * 
+ *
  * @apiParam { Number } id 标签id.
  *
  * @apiExample {js} 参数示例:
@@ -118,7 +127,7 @@ router.delete('/:id', async (req, res) => {
         // 开启事务
         await connection.beginTransaction();
         // 删除标签_文章关联
-        let delete_article_sql = 'DELETE FROM FROM article_tag WHERE tag_id = ?';
+        let delete_article_sql = 'DELETE FROM article_tag WHERE tag_id = ?';
         let [{ affectedRows: article_affected_rows }] = await connection.query(delete_article_sql, [id]);
         if (article_affected_rows === 0) {
             await connection.rollback();

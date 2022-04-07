@@ -38,9 +38,8 @@ router.post("/common", upload.single('file'), async function (req, res) {
 	//文件类型
 	let { mimetype, size } = req.file;
 	//判断是否为图片
-	var reg = /^image\/\w+$/;
-	var flag = reg.test(mimetype);
-	if (!flag) {
+	const isImage = /^image\/\w+$/.test(mimetype)
+	if (!isImage) {
 		res.status(400).json({
 			status: false,
 			msg: "格式错误，请选择一张图片!"
@@ -56,7 +55,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
 		return;
 	}
 	// 获取图片信息
-	var { width, height, format } = await sharp(req.file.buffer).metadata();
+	let { width, height, format } = await sharp(req.file.buffer).metadata();
 	// 判读图片尺寸
 	if (type === "avatar" && width !== height) {
 		res.status(400).json({
@@ -66,9 +65,9 @@ router.post("/common", upload.single('file'), async function (req, res) {
 		return;
 	}
 	// 生成文件名
-	var filename = uuidv1();
+	const filename = uuidv1()
 	//储存文件夹
-	var fileFolder = `/images/${type}/`;
+	const fileFolder = `/images/${type}/`
 	//处理图片
 	try {
 		await sharp(req.file.buffer).toFile("public" + fileFolder + filename + '.' + format);
@@ -112,7 +111,7 @@ router.post('/remove', function (req, res) {
 		return;
 	}
 	src = src.replace(/.+\/images/, "./images");
-	let realPath = path.resolve(__dirname, '../public/', src);
+	let realPath = path.resolve(__dirname, '../../public/', src);
 	fs.unlink(realPath, function (err) {
 		if (err) throw err;
 		res.json({
