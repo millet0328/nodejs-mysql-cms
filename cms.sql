@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 30/03/2022 08:01:59
+ Date: 08/04/2022 01:58:51
 */
 
 SET NAMES utf8mb4;
@@ -80,7 +80,6 @@ CREATE TABLE `article`  (
 -- ----------------------------
 -- Records of article
 -- ----------------------------
-INSERT INTO `article` VALUES (1, 2, 11, '百度向今日头条索赔9000万，称其不正当竞争窃取搜索结果', '今日头条(北京字节跳动科技有限公司)因大量窃取百度“TOP1” 搜索产品结果，被百度以不正当竞争为由起诉到北京市海淀区人民法院，要求字节跳动立即停止侵权，赔偿相关经济损失及合理支出共计人民币9000万元，并连续30天在其App及网站首页道歉。', '<p>科技先生4月26日讯，今日头条(北京字节跳动科技有限公司)因大量窃取百度“TOP1” 搜索产品结果，被百度以不正当竞争为由起诉到北京市海淀区人民法院，要求字节跳动立即停止侵权，赔偿相关经济损失及合理支出共计人民币9000万元，并连续30天在其App及网站首页道歉。</p><p>除民事起诉外，百度也同时向法院提交了行为禁止保全申请书。</p><div><br></div><p>百度方面向法院出示的一些证据中显示：在今日头条搜索 “螃蟹和西红柿吃会中毒吗”，首个搜索结果中的图片上打着百度LOGO水印;而搜索“1立方厘米水等于多少升”，首条搜索结果中，嵌入了“抄自百度”的字眼。百度方面表示，这些是百度为防止TOP1搜索结果被抄袭预先打下的“防伪标记”。</p><p>百度方面表示，“TOP1”产品，是百度 2017 年初推出的“搜索结果首条直接满足”搜索产品的简称。不同于传统搜索用URL(链接地址)满足用户搜索需求，TOP1产品创造性地在搜索结果首位，将用户所寻找的答案或者查找的资源直接展示给用户，提升用户获取信息的效率。</p><div><br></div><p>TOP1 产品属于百度在AI领域的前瞻性探索，需要极高的技术运用，也需要强大的生态运营能力，百度为此投入了大量人力物力。</p><p>而在今日头条“头条搜索”服务的搜索结果中，存在大量盗用百度“TOP1产品”搜索结果的内容，盗用内容既包括百度公司运用算法和历史数据挖掘出的匹配用户需求的TOP1搜索结果，也包括百度花费大量成本与生态合作伙伴一起运营的TOP1搜索结果。</p><p>百度认为，这种行为是对自己技术及劳动成果的公然窃取，已经构成侵权。</p>', '2019-04-26 14:55:21', '2020-04-13 21:46:10', 'http://localhost:3001/images/common/355a67c0-67f0-11e9-b7fb-3d2cafb359a4.jpeg');
 INSERT INTO `article` VALUES (2, 2, 11, '亚马逊2019第一季度财报：净利润同比增长118% AWS业务增速迅猛', '根据这份财报显示，亚马逊销售额增速不错。第一季度总净销售额为597亿美元，高于市场预期596.53亿美元，对比去年同期为510.42亿美元同比增长17%。', '<p>美股研究社最新消息 亚马逊在周四盘后发布2019财年第一季度的财报。</p><p>根据这份财报显示，亚马逊销售额增速不错。第一季度总净销售额为597亿美元，高于市场预期596.53亿美元，对比去年同期为510.42亿美元同比增长17%。</p><p>本季度亚马逊各条业务增长都不错，其中北美地区净销售额为358.12亿美元，去年同期为307.25亿美元；线上商店销售额为294.98亿美元，去年同期为269.39亿美元；国际净销售额为161.92亿美元，去年同期为148.75亿美元。</p><div><br></div><p>净利润方面，亚马逊第一季度净利润为35.61亿美元，高于市场预期23.81亿美元，达到去年同期16.29亿美元的2倍以上，同比增长118%。</p><p>其中，季度广告服务以及其他销售额为27.16亿美元，去年同期为20.31亿美元；季度AWS运营利润增速迅猛达到22.23亿美元，去年同期为14亿美元，同比增长近59%。</p><p>第一季度EPS 7.09美元，市场预期4.67美元。</p><p>目前，亚马逊预计第二季度总销售额为595-635亿美元，预计第二季度运营利润为26-36亿美元。受财报利好消息影响，目前亚马逊盘后涨幅已经超过1%.</p>', '2019-04-26 14:56:54', '2020-04-13 21:46:20', 'http://localhost:3001/images/common/6f70b4a0-67f0-11e9-b7fb-3d2cafb359a4.jpeg');
 INSERT INTO `article` VALUES (3, 2, 11, '疫情以来，中关村创业大街吸引35家创业企业注册', '2月10日复工截至3月17日，中关村创业大街集群注册平台累计收到注册申请41家，有35个项目通过评审。相比去年月均18个项目通过评审，数量更多，而且，通过对项目内容、核心团队履历、所属行业分析，质量也高于以往。', '<p>2月10日复工截至3月17日，中关村创业大街集群注册平台累计收到注册申请41家，有35个项目通过评审。相比去年月均18个项目通过评审，数量更多，而且，通过对项目内容、核心团队履历、所属行业分析，质量也高于以往。</p><p style=\"text-align: center;\"><img src=\"https://inews.gtimg.com/newsapp_bt/0/11464404908/1000\" style=\"max-width:100%;\"><br></p><div></div><p>“我们通常通过三个维度来评价一个创业项目的质量：所属行业领域、创始团队履历、核心技术及商业模式。”3月17日上午，中关村创业大街总经理聂丽霞向记者介绍。</p><p>疫情以来，中关村创业大街集群注册平台有35个项目通过评审，有24个技术已经成熟，产品已经开发完成，有部分项目还开展了市场合作。其余9家产品或技术还在研发阶段。相比以往，技术或产品成熟的申请项目数量倍增。</p><p>从项目创始人履历来看，35个项目的主要创始人当中，有57.1%是硕士及以上学历，还有一位是博士后创业；有40%有百度、IBM、中海油、微软、华为等大企业工作经历。平均年龄37.4岁。</p><p>从创业项目所属行业来看，主要集中在大数据、工业互联网、区块链技术、人工智能、软件信息化服务、新能源等新兴科技领域。涉及传统行业的，大多也是把新技术应用在细分领域里深耕。比如，有一个创业项目专门是做企业微信应用升级和周边应用程序开发的，市场前景非常广阔。</p><p>据介绍，去年5月13日，中关村创业大街集群注册平台正式授牌，开始为创业者免费提供企业注册服务，只需要一个注册地址、不需要实际在此办公，集群注册政策非常适合初创企业。创业大街还为集群注册企业提供政策咨询、产业对接和投融资等加速服务，满足初创企业的发展需求。</p><p>2019年，平台累计接受申请270个，注册成功137个。平均月成功注册约18家。</p><p>新冠肺炎疫情期间，创业者的热情为什么没受影响，反倒格外高涨呢？</p><p>“疫情期间，宅在家里不能外出，让我们更能潜下心来了好好思考自己的创业项目，修炼内功。而且，这期间，政府的支持政策更多、更到位，对创业者来说，创业成本更低。”北京彩云长天科技有限公司创始人何杰说。</p><p>何杰2019年6月从原公司辞职，创业伙伴7月也离开了原公司，他们的项目专注于AI数据处理。2月15日前后，何杰在家登录中关村创业大街“创业会客厅”线上平台，按要求填写提交了相关材料，申请加入集群注册平台。3月6日，他们就拿到了营业执照，迈出了公司化运营的第一步。</p>', '2020-03-18 09:19:55', '2020-04-13 21:49:02', 'http://localhost:3001/images/common/6d6da420-68b6-11ea-94f5-2514290e3ea7.jpeg');
 INSERT INTO `article` VALUES (4, 2, 4, '《寄生虫》背后的韩国寄生史', '看完《寄生虫》，和朋友们聊了聊，大家一致认同这部电影隐喻气息浓烈，达成共识后就丢下了它，没想到这几天翻了翻影评，发现很多人都认为这是在讲述阶级的隐喻，又和朋友们聊了聊，才发现我们一开始就有一点不同的看法。', '<p>开篇我先<strong>吐槽</strong>一下微信开发者的文档，<strong>千年不更新</strong>。</p><p><em>写文时间：2020年3月14日</em>，先敲个时间，别那边偷偷改了有人吐槽我。</p><p>文档中写的<strong>拒绝</strong>和<strong>允许</strong>都会触发回调，然后我测试<strong>拒绝的时候就不会触发回调</strong>。</p><h2 id=\"item-1\">微信授权逻辑</h2><p><img referrerpolicy=\"no-referrer\" src=\"https://segmentfault.com/img/bVbExhl\" alt=\"image.png\" title=\"image.png\"></p><ol><li>进入页面，获取授权状态，（getUserid）一般是看cookie里面有用户信息吗。</li><li>有用户信息，pass。</li><li><p>无用户信息。这里只是打个标记，并不在一进入页面就强制授权。而是在用户操作的时候提示用户授权，因为这样体验比较好。<br>体验上是可以告诉用户你浏览我们是不需要你的信息的，而你在我们平台互动是需要注册登录的。</p><ol><li>用户拒绝授权，这里页面是无感知的，所以不做任何处理。但是页面可以知道用户是非首次互动，这时候可以先弹出一个框告知用户，用户需要允许授权。</li><li>用户允许授权，这个时候会触发刷新页面。这里建议页面给自己加个标记，就是用户触发授权的事件，刷新之后重新调用一下。</li></ol></li></ol><h3 id=\"item-1-1\">需求一:&nbsp;<strong>拒绝授权的时候弹窗</strong></h3><p><em>嘿嘿你猜我在做的是什么</em>。</p><p>我看之前代码是有拒绝回调逻辑的，而且我也在文档中确认过了。<br>但是我在测试的时候发现，拒绝不会触发回调，成功的时候逻辑是对的。</p><p>那么在这个场景下，我们怎么显示呢？</p><ol><li>我们做一个小页面藏在授权弹框后面，因为拒绝的时候页面无变化，用户就可以看到后面的小页面。</li><li>基于方案1我们发现，网慢的情况下，同意授权的用户也会看到弹窗，这对于我们要求体验的前端er来说是不好的。我们这里可以尝试<strong>给一个稍微大一点的setTimeout显示小页面</strong>。</li><li>基于方案2，因为微信授权弹窗不会阻塞主进程，所以我们并不能稳定控制小页面的显示与隐藏。极端情况下用户的体验仍是不好的。那么我们应该怎么办呢？<strong>捶产品，砍需求</strong>，哈哈当然是不做这个弹框，把这部分的功能<strong>换另一种交互方式咯</strong>。</li></ol><h3 id=\"item-1-2\">需求二: 非微信绑定的域名做微信授权</h3><p>因为现在微信管得太严了，怕被微信拉黑，所以考虑使用其他域名做分享外链。</p><p>但是我们又希望可以<strong>在微信授权登录一下</strong>，这样这个需求就来了。</p><p>微信中绑定的安全域名和回调域名为&nbsp;<code>a.com</code>，<br>我们分享到微信打开的域名为&nbsp;<code>b.com</code>。</p><h4>方案一：跨域方案</h4><p>首先我们要明确几个要点。</p><ol><li><strong>我方服务端判断登录是判断&nbsp;<code>cookie</code>&nbsp;</strong>。</li><li>对于前端来讲&nbsp;<code>a.com</code>&nbsp;和&nbsp;<code>b.com</code>&nbsp;是<strong>跨域</strong>的。</li><li><code>a.com</code>&nbsp;是无法把&nbsp;<code>cookie</code>&nbsp;写到&nbsp;<code>b.com</code>&nbsp;下的。</li><li>同样&nbsp;<code>b.com</code>&nbsp;也无法读取&nbsp;<code>a.com</code>&nbsp;的&nbsp;<code>cookie</code>。</li></ol><p>好了基于上面的要点。我们开始实现功能。</p><ol><li><code>a.com/wxauth</code>&nbsp;会触发微信授权，我们默认用户同意授权</li><li>微信会将页面重定向到 callback 页面。（这里是在公众号配置好的）</li><li>callback 页面写&nbsp;<code>cookie</code>。这个时候我们就能拿到用户登录信息。</li><li>但是基于上面我们跨域的cookie是无法共享的。那么我们可以开<code>CORS</code>来使用，<code>a.com</code>&nbsp;的接口允许&nbsp;<code>b.com</code>的页面发出请求。</li><li>但是跨域的情况下默认是不携带&nbsp;<code>cookie</code>&nbsp;的。这个时候我们可以配置&nbsp;<code>withCredentials</code>&nbsp;来达到携带cookie的目的。</li></ol><p>基于上面的跨域方案，我们&nbsp;<code>b.com</code>&nbsp;下面没有任何&nbsp;<code>cookie</code>，只有页面。<br>我们所有的请求和&nbsp;<code>cookie</code>&nbsp;都放在&nbsp;<code>a.com</code>。</p><h4>方案二：共享，我觉得叫授权验证也可以</h4><p>上个方案是所有请求都走&nbsp;<code>a.com</code>。</p><p>这个方案是所有请求都走当前域名。我网上看了几个别人做好的，也都是这种方案。</p><p>这种方案其实可以把&nbsp;<code>a.com</code>&nbsp;理解成第三方平台。</p><p><img referrerpolicy=\"no-referrer\" src=\"https://segmentfault.com/img/bVbExwp\" alt=\"image.png\" title=\"image.png\"></p>', '2020-03-18 09:44:26', '2021-07-20 10:26:21', 'http://localhost:3001/images/common/9bde6050-6925-11ea-a704-ab781b5ae732.jpeg');
@@ -101,8 +100,6 @@ CREATE TABLE `article_tag`  (
 -- ----------------------------
 -- Records of article_tag
 -- ----------------------------
-INSERT INTO `article_tag` VALUES (1, 1, 1);
-INSERT INTO `article_tag` VALUES (2, 1, 2);
 
 -- ----------------------------
 -- Table structure for category
@@ -147,7 +144,7 @@ CREATE TABLE `comment`  (
   `create_date` timestamp NOT NULL COMMENT '创建时间',
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of comment
@@ -502,14 +499,14 @@ CREATE TABLE `notice`  (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '编辑时间',
   `is_sticky` tinyint NOT NULL DEFAULT 0 COMMENT '是否置顶，1-置顶，0-正常',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of notice
 -- ----------------------------
-INSERT INTO `notice` VALUES (1, '欢迎进入听雨轩', '《桃花诗》　　\r\n\r\n明.唐寅\r\n\r\n桃花坞里桃花庵，桃花庵下桃花仙。　　\r\n\r\n桃花仙人种桃树，又折花枝当酒钱。　　\r\n\r\n酒醒只在花前坐，酒醉还须花下眠。　　\r\n\r\n花前花后日复日，酒醉酒醒年复年。　　\r\n\r\n不愿鞠躬车马前，但愿老死花酒间。　　\r\n\r\n车尘马足贵者趣，酒盏花枝贫者缘。　　\r\n\r\n若将富贵比贫贱，一在平地一在天。　　\r\n\r\n若将贫贱比车马，他得驱驰我得闲。　　\r\n\r\n世人笑我忒疯癫，我笑世人看不穿。　　\r\n\r\n记得五陵豪杰墓，无酒无花锄作田。', '2022-03-06 16:37:01', NULL, 0);
-INSERT INTO `notice` VALUES (2, '登鹳雀楼', '白日依山尽，黄河入海流。\r\n欲穷千里目，更上一层楼。', '2022-03-06 16:38:59', '2022-03-06 16:39:31', 1);
-INSERT INTO `notice` VALUES (3, '江雪', '千山鸟飞绝，万径人踪灭。\r\n孤舟蓑笠翁，独钓寒江雪。', '2022-03-06 16:39:48', NULL, 1);
+INSERT INTO `notice` VALUES (1, '桃花诗', '<p style=\"text-align:center;\">《桃花诗》</p><p style=\"text-align:center;\">&nbsp;明.唐寅</p><p style=\"text-align:center;\">桃花坞里桃花庵，桃花庵下桃花仙。</p><p style=\"text-align:center;\">桃花仙人种桃树，又折花枝当酒钱。</p><p style=\"text-align:center;\">酒醒只在花前坐，酒醉还须花下眠。</p><p style=\"text-align:center;\">花前花后日复日，酒醉酒醒年复年。</p><p style=\"text-align:center;\">不愿鞠躬车马前，但愿老死花酒间。</p><p style=\"text-align:center;\">&nbsp;车尘马足贵者趣，酒盏花枝贫者缘。</p><p style=\"text-align:center;\">若将富贵比贫贱，一在平地一在天。</p><p style=\"text-align:center;\">若将贫贱比车马，他得驱驰我得闲。</p><p style=\"text-align:center;\">世人笑我忒疯癫，我笑世人看不穿。</p><p style=\"text-align:center;\">记得五陵豪杰墓，无酒无花锄作田。</p>', '2022-03-06 16:37:01', '2022-04-08 01:08:16', 1);
+INSERT INTO `notice` VALUES (2, '登鹳雀楼', '<p>白日依山尽，黄河入海流。\n欲穷千里目，更上一层楼。</p>', '2022-03-06 16:38:59', '2022-04-08 01:07:41', 1);
+INSERT INTO `notice` VALUES (3, '江雪', '千山鸟飞绝，万径人踪灭。\r\n孤舟蓑笠翁，独钓寒江雪。', '2022-03-06 16:39:48', '2022-04-08 01:09:45', 0);
 
 -- ----------------------------
 -- Table structure for role
@@ -579,6 +576,31 @@ INSERT INTO `role_menu` VALUES (36, 1, 19);
 INSERT INTO `role_menu` VALUES (37, 1, 20);
 INSERT INTO `role_menu` VALUES (38, 1, 21);
 INSERT INTO `role_menu` VALUES (39, 1, 22);
+INSERT INTO `role_menu` VALUES (40, 1, 1);
+INSERT INTO `role_menu` VALUES (41, 2, 1);
+INSERT INTO `role_menu` VALUES (42, 2, 21);
+INSERT INTO `role_menu` VALUES (43, 2, 22);
+INSERT INTO `role_menu` VALUES (44, 2, 19);
+INSERT INTO `role_menu` VALUES (45, 2, 20);
+INSERT INTO `role_menu` VALUES (46, 2, 7);
+INSERT INTO `role_menu` VALUES (47, 2, 14);
+INSERT INTO `role_menu` VALUES (48, 2, 16);
+INSERT INTO `role_menu` VALUES (49, 3, 1);
+INSERT INTO `role_menu` VALUES (50, 3, 21);
+INSERT INTO `role_menu` VALUES (51, 3, 22);
+INSERT INTO `role_menu` VALUES (52, 3, 19);
+INSERT INTO `role_menu` VALUES (53, 3, 20);
+INSERT INTO `role_menu` VALUES (54, 3, 7);
+INSERT INTO `role_menu` VALUES (55, 3, 14);
+INSERT INTO `role_menu` VALUES (56, 4, 1);
+INSERT INTO `role_menu` VALUES (57, 4, 3);
+INSERT INTO `role_menu` VALUES (58, 4, 10);
+INSERT INTO `role_menu` VALUES (59, 4, 11);
+INSERT INTO `role_menu` VALUES (60, 4, 5);
+INSERT INTO `role_menu` VALUES (61, 4, 19);
+INSERT INTO `role_menu` VALUES (62, 4, 20);
+INSERT INTO `role_menu` VALUES (63, 4, 7);
+INSERT INTO `role_menu` VALUES (64, 4, 14);
 
 -- ----------------------------
 -- Table structure for slide
@@ -590,16 +612,19 @@ CREATE TABLE `slide`  (
   `picture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '图片地址',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '跳转的url',
   `target` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '_blank' COMMENT '跳转方式，_blank，_self',
-  `order` int NULL DEFAULT NULL COMMENT '排序',
-  `available` tinyint NULL DEFAULT 1 COMMENT '状态,1-正常，0-禁用',
+  `slide_order` int NULL DEFAULT NULL COMMENT '排序',
+  `usable` tinyint NULL DEFAULT 1 COMMENT '状态,1-正常，-1-禁用',
   `create_date` datetime NOT NULL COMMENT '创建日期',
   `update_date` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改日期',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of slide
 -- ----------------------------
+INSERT INTO `slide` VALUES (1, '1', 'http://localhost:3001/images/common/4cb37c20-b42a-11ec-9686-9534ec65c3ac.jpeg', 'http://www.test.com/', '_blank', 1, 1, '2022-04-04 23:36:36', '2022-04-07 01:59:22');
+INSERT INTO `slide` VALUES (2, '测试标题', 'http://localhost:3001/images/common/2647d170-b435-11ec-a1e0-9ff51000691e.jpeg', 'http://www.123.com', '_blank', 2, -1, '2022-04-05 00:35:14', '2022-04-07 17:02:56');
+INSERT INTO `slide` VALUES (3, 'test', 'http://localhost:3001/images/common/14858e90-b43b-11ec-8b84-0b17af77884d.jpeg', 'http://www.vote.com', '_self', 3, -1, '2022-04-05 01:18:03', '2022-04-07 17:02:52');
 
 -- ----------------------------
 -- Table structure for tag
@@ -632,15 +657,15 @@ CREATE TABLE `user`  (
   `nickname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `sex` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '男' COMMENT '性别',
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号码',
-  `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态，1-正常，0-禁用',
+  `usable` tinyint NOT NULL DEFAULT 1 COMMENT '状态，1-正常，0-禁用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES (1, 'user1', '123', 'papi酱', '女', '15863008280', 1);
 INSERT INTO `user` VALUES (2, 'user2', '123', '夏目友人帐', '女', '13475829262', 1);
-INSERT INTO `user` VALUES (3, 'user3', '123', '乌鸦校尉', '男', '13485956526', 1);
+INSERT INTO `user` VALUES (3, 'user3', '123', '乌鸦校尉', '男', '13485956526', 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
