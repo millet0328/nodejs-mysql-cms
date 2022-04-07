@@ -99,20 +99,12 @@ router.delete('/:id', async (req, res) => {
         }
         // 删除role_menu关联表数据
         let delete_menu_sql = `DELETE FROM role_menu WHERE role_id = ?`
-        let [{ affectedRows: menu_affected_rows }] = await pool.query(delete_menu_sql, [id]);
-        if (menu_affected_rows === 0) {
-            await connection.rollback();
-            res.json({ status: false, msg: "删除关联菜单role_menu失败！" });
-            return;
-        }
+        await pool.query(delete_menu_sql, [id]);
+
         // 删除admin_role关联表数据
         let delete_admin_sql = `DELETE FROM admin_role WHERE role_id = ?`
-        let [{ affectedRows: admin_affected_rows }] = await pool.query(delete_admin_sql, [id]);
-        if (admin_affected_rows === 0) {
-            await connection.rollback();
-            res.json({ status: false, msg: "删除关联管理员admin_role失败！" });
-            return;
-        }
+        await pool.query(delete_admin_sql, [id]);
+
         // 一切顺利，提交事务
         await connection.commit();
         // 设置成功
@@ -122,6 +114,11 @@ router.delete('/:id', async (req, res) => {
         });
     } catch (error) {
         await connection.rollback();
+        res.json({
+            status: false,
+            msg: error.message,
+            error,
+        });
         throw error;
     }
 });
@@ -294,6 +291,11 @@ router.post('/menu', async (req, res) => {
         });
     } catch (error) {
         await connection.rollback();
+        res.json({
+            status: false,
+            msg: error.message,
+            error,
+        });
         throw error;
     }
 });
