@@ -7,6 +7,7 @@ let pool = require('../../config/mysql');
  * @apiDefine Authorization
  * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
  */
+
 /**
  * @api {post} /menu 添加菜单
  * @apiName MenuInsert

@@ -144,20 +144,10 @@ router.post('/edit', async (req, res) => {
  */
 
 router.post("/tag/", async (req, res) => {
-    let { id, tags } = req.body;
-    // 转化为数组
-    try {
-        var insert_tags = JSON.parse(tags);
-    } catch (e) {
-        res.json({
-            status: false,
-            msg: "tags参数错误！"
-        });
-        return;
-    }
+    let { id, tags: insert_tags } = req.body;
     //获取现有tags标签id
     const select_sql = 'SELECT tag_id FROM `article_tag` WHERE article_id = ?';
-    let exist_tags = await pool.query(select_sql, [id]);
+    let [exist_tags] = await pool.query(select_sql, [id]);
     exist_tags = exist_tags.map((item) => item.tag_id);
     //计算两个数组的差集
     let rest_exist_tags = exist_tags.filter((item) => {
@@ -168,35 +158,44 @@ router.post("/tag/", async (req, res) => {
     });
     //转化数组格式
     rest_insert_tags = rest_insert_tags.map((item) => `(${id},${item})`);
-    //根据rest_exist_tags删除数据，数组为空,不需要删除数据
-    if (rest_exist_tags.length) {
-        let remove_sql = `DELETE FROM article_tag WHERE article_id = ? AND tag_id IN (${rest_exist_tags.toString()});`
-        let [{ affectedRows }] = await pool.query(remove_sql, [id]);
-        if (affectedRows === 0) {
-            res.json({
-                status: false,
-                msg: "删除原有tag失败！"
-            });
-            return;
-        }
-    }
-    //根据rest_exist_tags插入数据，数组为空,不需要插入数据
-    if (rest_insert_tags.length) {
-        let insert_sql = `INSERT INTO article_tag (article_id, tag_id) VALUES ${rest_insert_tags.toString()}`;
-        let [{ affectedRows }] = await pool.query(insert_sql);
-        if (affectedRows === 0) {
-            res.json({
-                status: false,
-                msg: "插入tag失败！"
-            });
-            return;
-        }
-    }
 
-    res.json({
-        status: true,
-        msg: "添加成功"
-    });
+    // 获取一个连接
+    const connection = await pool.getConnection();
+
+    try {
+        // 开启事务
+        await connection.beginTransaction();
+        //根据rest_exist_tags删除数据，数组为空,不需要删除数据
+        if (rest_exist_tags.length) {
+            let delete_sql = `DELETE FROM article_tag WHERE article_id = ? AND tag_id IN (${rest_exist_tags.toString()});`
+            let [{ affectedRows }] = await pool.query(delete_sql, [id]);
+            if (affectedRows === 0) {
+                await connection.rollback();
+                res.json({ status: false, msg: "删除原有tag失败！" });
+                return;
+            }
+        }
+        //根据rest_exist_tags插入数据，数组为空,不需要插入数据
+        if (rest_insert_tags.length) {
+            let insert_sql = `INSERT INTO article_tag (article_id, tag_id) VALUES ${rest_insert_tags.toString()}`;
+            let [{ affectedRows }] = await pool.query(insert_sql);
+            if (affectedRows === 0) {
+                await connection.rollback();
+                res.json({ status: false, msg: "插入tag失败！" });
+                return;
+            }
+        }
+        // 一切顺利，提交事务
+        await connection.commit();
+        // 添加成功
+        res.json({
+            status: true,
+            msg: "添加成功"
+        });
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    }
 });
 
 module.exports = router;

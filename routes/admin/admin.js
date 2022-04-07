@@ -322,7 +322,7 @@ router.get('/list', async (req, res) => {
     let { pagesize = 10, pageindex = 1 } = req.query;
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
-    const sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role FROM `admin` AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `admin`;';
+    const sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role_id FROM `admin` AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `admin`;';
     let [results] = await pool.query(sql, [pagesize, offset]);
     res.json({
         status: true,
