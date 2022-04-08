@@ -12,7 +12,7 @@ let pool = require('../../config/mysql');
  * @apiSampleRequest /category/list
  */
 router.get('/list', async (req, res) => {
-    const sql = 'SELECT c1.*,c2.`name` AS parent_name FROM `category` c1 JOIN category c2 ON c1.parent_id = c2.id';
+    const sql = 'SELECT c1.*,c2.`name` AS parent_name FROM `category` c1 LEFT JOIN category c2 ON c1.parent_id = c2.id';
     let [results] = await pool.query(sql);
     res.json({
         status: true,
