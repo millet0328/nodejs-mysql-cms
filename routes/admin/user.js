@@ -55,7 +55,7 @@ router.get('/list', async (req, res) => {
     let { pagesize = 10, pageindex = 1 } = req.query;
     pagesize = parseInt(pagesize);
     let offset = pagesize * (pageindex - 1);
-    const sql = 'SELECT id,username,nickname,sex,tel,status FROM user LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `user`;';
+    const sql = 'SELECT id,username,nickname,sex,tel,usable FROM user LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `user`;';
     let [results] = await pool.query(sql, [pagesize, offset]);
     res.json({
         status: true,
@@ -65,23 +65,23 @@ router.get('/list', async (req, res) => {
 });
 
 /**
- * @api {post} /user/disable 启用/禁用账户
- * @apiName UserDisable
+ * @api {post} /user/usable 启用/禁用账户
+ * @apiName UserUsable
  * @apiPermission 后台系统
  * @apiGroup User
  *
  * @apiUse Authorization
  *
  * @apiBody { Number } id 用户id.
- * @apiBody { Number=1,0 } status 状态，1-启用，0-禁用.
+ * @apiBody { Number=1,0 } usable 状态，1-启用，0-禁用.
  *
- * @apiSampleRequest /user/disable
+ * @apiSampleRequest /user/usable
  */
 
-router.post('/disable', async (req, res) => {
-    let { id, status } = req.body;
-    let sql = 'UPDATE user SET status = ? WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(sql, [id, status]);
+router.post('/usable', async (req, res) => {
+    let { id, usable } = req.body;
+    let sql = 'UPDATE user SET usable = ? WHERE id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [usable, id]);
     if (!affectedRows) {
         res.json({
             status: false,
