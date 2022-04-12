@@ -57,9 +57,11 @@ router.post("/reply/", async (req, res) => {
 
 router.get("/recent", async (req, res) => {
     let { pagesize = 10, pageindex = 1 } = req.query;
+    // 计算偏移量
     pagesize = parseInt(pagesize);
     let offset = pagesize * (pageindex - 1);
-    let sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, u.nickname AS user_nickname,a.title AS article_title FROM comment c JOIN user u ON c.user_id = u.id JOIN article a ON c.article_id = a.id ORDER BY c.create_date DESC LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `comment`;';
+
+    let sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(c.reply_date,"%Y-%m-%d %T") AS reply_time, u.nickname AS user_nickname,a.title AS article_title FROM comment c LEFT JOIN user u ON c.user_id = u.id JOIN article a ON c.article_id = a.id ORDER BY c.create_date DESC LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `comment`;';
     let [results] = await pool.query(sql, [pagesize, offset]);
     res.json({
         status: true,
