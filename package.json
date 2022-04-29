@@ -8,25 +8,25 @@
     "api": "apidoc -i routes/ -o public/api/"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.3",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "cross-env": "^7.0.2",
     "debug": "~2.6.9",
-    "express": "~4.16.0",
-    "express-jwt": "^5.3.1",
+    "express": "^4.17.3",
+    "express-jwt": "^6.1.1",
     "express-session": "^1.17.2",
-    "http-errors": "~1.6.2",
-    "jade": "~1.11.0",
+    "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
-    "morgan": "~1.9.0",
-    "multer": "^1.4.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4",
     "mysql2": "^2.3.3",
-    "sharp": "^0.25.4",
-    "uuid": "^3.3.2"
+    "pug": "^3.0.2",
+    "sharp": "^0.30.3",
+    "uuid": "^8.3.2"
   },
   "apidoc": {
     "name": "CMS管理系统API文档",
-    "title": "CMS管理系统API文档"
+    "title": "CMS管理系统API文档",
+    "description": "仔细阅读API文档--权限字段"
   },
   "devDependencies": {
     "cross-env": "^7.0.3"

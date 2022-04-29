@@ -37,7 +37,7 @@ const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -62,18 +62,18 @@ app.use(cors({ credentials: true, origin: /^((https|http|ftp|rtsp|mms)?:\/\/)[^\
 
 //使用中间件验证token合法性
 //除了这些地址，其他的URL都需要验证
-// app.use(expressJwt({ secret: 'secret' }).unless({
-//     path: [
-//         '/',
-//         /^\/admin\/(login|register)$/,
-//         /^\/account\/(login|register)$/,
-//         /^\/article\/(list|detail|category)$/,
-//         /^\/category\/(list|sub)$/,
-//         /^\/notice\/(list|detail)$/,
-//         '/comment/list',
-//         '/slide/list',
-//     ]
-// }));
+app.use(expressJwt({ secret: 'secret', algorithms: ['HS256'] }).unless({
+    path: [
+        '/',
+        /^\/admin\/(login|register)$/,
+        /^\/account\/(login|register)$/,
+        /^\/article\/(list|detail|category)$/,
+        /^\/category\/(list|sub)$/,
+        /^\/notice\/(list|detail)$/,
+        '/comment/list',
+        '/slide/list',
+    ]
+}));
 
 app.use('/', index);
 //后台
