@@ -5,7 +5,7 @@ let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
  */
 
 /**
@@ -16,7 +16,7 @@ let pool = require('../../config/mysql');
  *
  * @apiUse Authorization
  *
- * @apiBody {String} name 分类名称.
+ * @apiBody {String} name 菜单名称.
  * @apiBody {String} component 关联组件名称.
  * @apiBody {Number} pId 父级id.
  * @apiBody {String} path 菜单url地址.
@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
         await connection.beginTransaction();
         // 插入菜单
         let insert_menu_sql = `INSERT INTO MENU (name,pId,component,path,menu_order) VALUES (?,?,?,?,?) `;
-        let [{ insertId, affectedRows: menu_affected_rows }] = await pool.query(insert_menu_sql, [name, pId, component, path, menu_order]);
+        let [{ insertId, affectedRows: menu_affected_rows }] = await connection.query(insert_menu_sql, [name, pId, component, path, menu_order]);
         if (menu_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "菜单menu创建失败！" });
@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
         }
         // 新菜单需要添加进入超级管理员中
         let insert_role_sql = `INSERT INTO role_menu (role_id,menu_id) VALUES (1,?)`;
-        let [{ affectedRows: role_affected_rows }] = await pool.query(insert_role_sql, [insertId]);
+        let [{ affectedRows: role_affected_rows }] = await connection.query(insert_role_sql, [insertId]);
         if (role_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "角色role_menu创建失败！" });
@@ -89,7 +89,7 @@ router.delete("/:id", async (req, res) => {
     if (results.length > 0) {
         res.json({
             status: false,
-            msg: "拥有子级分类，不允许删除！"
+            msg: "拥有子级菜单，不允许删除！"
         });
         return;
     }
@@ -101,7 +101,7 @@ router.delete("/:id", async (req, res) => {
         await connection.beginTransaction();
         // 删除菜单
         let delete_menu_sql = `DELETE FROM MENU WHERE id = ?`;
-        let [{ affectedRows: menu_affected_rows }] = await pool.query(delete_menu_sql, [id]);
+        let [{ affectedRows: menu_affected_rows }] = await connection.query(delete_menu_sql, [id]);
         if (menu_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "菜单menu删除失败！" });
@@ -110,7 +110,7 @@ router.delete("/:id", async (req, res) => {
 
         // 删除角色中菜单
         let delete_role_sql = `DELETE FROM ROLE_MENU WHERE menu_id = ?`;
-        await pool.query(delete_role_sql, [id]);
+        await connection.query(delete_role_sql, [id]);
 
         // 一切顺利，提交事务
         await connection.commit();
@@ -138,7 +138,7 @@ router.delete("/:id", async (req, res) => {
  * @apiUse Authorization
  *
  * @apiParam {Number} id 菜单id.
- * @apiBody {String} name 分类名称.
+ * @apiBody {String} name 菜单名称.
  * @apiBody {String} component 关联组件名称.
  * @apiBody {Number} pId 父级id.
  * @apiBody {String} path 菜单url地址.
@@ -153,7 +153,7 @@ router.put("/:id", async (req, res) => {
     let { id } = req.params;
     let { name, pId, component, path, menu_order } = req.body;
     let sql = `UPDATE MENU SET name = ?,pId = ?,component = ?, path = ?, menu_order = ? WHERE id = ? `;
-    let [{ affectedRows }, fields] = await pool.query(sql, [name, pId, component, path, menu_order, id]);
+    let [{ affectedRows }] = await pool.query(sql, [name, pId, component, path, menu_order, id]);
     if (affectedRows === 0) {
         res.json({
             status: false,
@@ -187,7 +187,7 @@ router.put("/icon/:id", async (req, res) => {
     let { id } = req.params;
     let { icon_id } = req.body;
     let sql = `UPDATE MENU SET icon_id = ? WHERE id = ? `;
-    let [{ affectedRows }, fields] = await pool.query(sql, [icon_id, id]);
+    let [{ affectedRows }] = await pool.query(sql, [icon_id, id]);
     if (affectedRows === 0) {
         res.json({
             status: false,
@@ -216,7 +216,7 @@ router.put("/icon/:id", async (req, res) => {
 router.get("/sub", async (req, res) => {
     let { pId } = req.query;
     let sql = `SELECT m.*, i.name AS 'icon_name' FROM MENU m LEFT JOIN ICON i ON m.icon_id = i.id WHERE m.pId = ? ORDER BY m.menu_order`;
-    let [results, fields] = await pool.query(sql, [pId]);
+    let [results] = await pool.query(sql, [pId]);
     res.json({
         status: true,
         msg: "获取成功!",
@@ -224,62 +224,56 @@ router.get("/sub", async (req, res) => {
     });
 });
 
-
 /**
- * @api {get} /menu/tree 获取所有菜单--树形结构
- * @apiName MenuTree
+ * @api {get} /menu/all 获取所有菜单
+ * @apiName AllMenu
  * @apiGroup Menu
  * @apiPermission 后台系统
  *
  * @apiUse Authorization
  *
- * @apiSampleRequest /menu/tree
+ * @apiQuery { String="flat","tree" } [type="flat"] 返回数据格式。flat--扁平数组；tree--树形结构
+ *
+ * @apiSampleRequest /menu/all
  */
-router.get('/tree', async (req, res) => {
-    let sql = `SELECT m.*, i.name AS 'icon_name' FROM MENU m LEFT JOIN ICON i ON m.icon_id = i.id ORDER BY menu_order;`;
+router.get('/all', async (req, res) => {
+    let { type = 'flat' } = req.query;
+    // 查询菜单
+    let sql = `SELECT m.*, i.name AS 'icon_name' FROM MENU m LEFT JOIN ICON i ON m.icon_id = i.id ORDER BY menu_order`;
     let [results] = await pool.query(sql, []);
-    // 筛选出一级菜单
-    let cate_1st = results.filter((item) => item.pId === 0);
-    // 转换为树形结构--递归函数
-    const parseToTree = function (list) {
-        return list.map((parent) => {
-            let children = results.filter((child) => child.pId === parent.id);
-            if (children.length) {
-                return { ...parent, children: parseToTree(children) }
-            } else {
-                return { ...parent }
-            }
+    // 扁平数组
+    if (type === 'flat') {
+        res.json({
+            status: true,
+            msg: "获取成功!",
+            data: results
+        });
+        return;
+    }
+    // 树形结构
+    if (type === 'tree') {
+        // 筛选出一级菜单
+        let menu_1st = results.filter((item) => item.pId === 0);
+        // 转换为树形结构--递归函数
+        const parseToTree = function (list) {
+            return list.map((parent) => {
+                let children = results.filter((child) => child.pId === parent.id);
+                if (children.length) {
+                    return { ...parent, children: parseToTree(children) }
+                } else {
+                    return { ...parent }
+                }
+            });
+        }
+        // 生成树形菜单
+        let tree_menu = parseToTree(menu_1st);
+        //成功
+        res.json({
+            status: true,
+            msg: "获取成功!",
+            data: tree_menu
         });
     }
-    // 生成树形菜单
-    let tree_menu = parseToTree(cate_1st);
-    //成功
-    res.json({
-        status: true,
-        msg: "获取成功!",
-        data: tree_menu
-    });
-});
-
-/**
- * @api {get} /menu/list 获取所有菜单--偏平数组
- * @apiName MenuList
- * @apiGroup Menu
- * @apiPermission 后台系统
- *
- * @apiUse Authorization
- *
- * @apiSampleRequest /menu/list
- */
-router.get('/list', async (req, res) => {
-    let sql = `SELECT m.*, i.name AS 'icon_name' FROM MENU m LEFT JOIN ICON i ON m.icon_id = i.id ORDER BY menu_order;`;
-    let [results] = await pool.query(sql, []);
-    //成功
-    res.json({
-        status: true,
-        msg: "获取成功!",
-        data: results
-    });
 });
 
 module.exports = router;

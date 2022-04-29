@@ -4,7 +4,7 @@ const router = express.Router();
 let pool = require('../../config/mysql');
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
  */
 
 /**
@@ -66,9 +66,9 @@ router.post('/remove', async (req, res) => {
     try {
         // 开启事务
         await connection.beginTransaction();
-        // 删除账户
+        // 删除文章
         let delete_article_sql = 'DELETE FROM article WHERE id = ?;';
-        let [{ affectedRows: article_affected_rows }] = await pool.query(delete_article_sql, [id]);
+        let [{ affectedRows: article_affected_rows }] = await connection.query(delete_article_sql, [id]);
         if (article_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "文章article删除失败！" });
@@ -169,7 +169,7 @@ router.post("/tag/", async (req, res) => {
         //根据rest_exist_tags删除数据，数组为空,不需要删除数据
         if (rest_exist_tags.length) {
             let delete_sql = `DELETE FROM article_tag WHERE article_id = ? AND tag_id IN (${rest_exist_tags.toString()});`
-            let [{ affectedRows }] = await pool.query(delete_sql, [id]);
+            let [{ affectedRows }] = await connection.query(delete_sql, [id]);
             if (affectedRows === 0) {
                 await connection.rollback();
                 res.json({ status: false, msg: "删除原有tag失败！" });
@@ -179,7 +179,7 @@ router.post("/tag/", async (req, res) => {
         //根据rest_exist_tags插入数据，数组为空,不需要插入数据
         if (rest_insert_tags.length) {
             let insert_sql = `INSERT INTO article_tag (article_id, tag_id) VALUES ${rest_insert_tags.toString()}`;
-            let [{ affectedRows }] = await pool.query(insert_sql);
+            let [{ affectedRows }] = await connection.query(insert_sql);
             if (affectedRows === 0) {
                 await connection.rollback();
                 res.json({ status: false, msg: "插入tag失败！" });

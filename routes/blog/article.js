@@ -20,7 +20,7 @@ router.get('/detail', async (req, res) => {
     let [tags] = await pool.query(tag_sql, [id]);
     // 查询文章详情
     const article_sql = 'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c1.`name` AS cate_1st_name, c2.`name` AS cate_2nd_name FROM `article` a JOIN category c1 ON a.cate_1st = c1.id JOIN category c2 ON a.cate_2nd = c2.id WHERE a.id = ?';
-    let [results, fields] = await pool.query(article_sql, [id]);
+    let [results] = await pool.query(article_sql, [id]);
     results[0].tags = tags;
     res.json({
         status: true,

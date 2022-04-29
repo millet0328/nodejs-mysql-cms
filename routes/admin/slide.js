@@ -8,7 +8,7 @@ const fs = require('fs/promises');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
  */
 
 /**
@@ -76,7 +76,7 @@ router.post('/remove', async (req, res) => {
         // 删除slide表数据
         const delete_sql = 'DELETE FROM slide WHERE id = ?';
         let [{ affectedRows }] = await pool.query(delete_sql, [id]);
-        if (!affectedRows) {
+        if (affectedRows === 0) {
             res.json({
                 status: true,
                 msg: "删除失败！"

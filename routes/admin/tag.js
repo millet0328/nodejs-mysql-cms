@@ -5,7 +5,7 @@ let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
  */
 
 /**
@@ -128,7 +128,7 @@ router.delete('/:id', async (req, res) => {
         await connection.beginTransaction();
         // 删除标签
         let delete_tag_sql = 'DELETE FROM tag WHERE id = ?';
-        let [{ affectedRows: tag_affected_rows }] = await pool.query(delete_tag_sql, [id]);
+        let [{ affectedRows: tag_affected_rows }] = await connection.query(delete_tag_sql, [id]);
         if (tag_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "标签tag删除失败！" });

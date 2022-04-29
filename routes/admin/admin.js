@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
  */
 
 /**
@@ -54,9 +54,11 @@ router.post('/register', async (req, res) => {
     let { username, password, fullname, sex, tel, email } = req.body;
     // 默认头像
     let defaultAvatar = `${process.env.server}/images/avatar/default.jpg`;
+    // 获取一个连接
+    const connection = await pool.getConnection();
     // 查询账户是否重名
     let sql = 'SELECT * FROM admin WHERE username = ?';
-    let [results] = await pool.query(sql, [username]);
+    let [results] = await connection.query(sql, [username]);
     // 查询账户是否存在
     if (results.length) {
         res.json({
@@ -65,8 +67,6 @@ router.post('/register', async (req, res) => {
         });
         return;
     }
-    // 获取一个连接
-    const connection = await pool.getConnection();
 
     try {
         // 开启事务
@@ -84,7 +84,7 @@ router.post('/register', async (req, res) => {
         let [{ affectedRows: role_affected_rows }] = await pool.query(insert_role_sql, [insertId]);
         if (role_affected_rows === 0) {
             await connection.rollback();
-            res.json({ status: false, msg: "角色关系创建失败！" });
+            res.json({ status: false, msg: "默认角色admin_role设置失败！" });
             return;
         }
         // 一切顺利，提交事务
@@ -128,7 +128,7 @@ router.post('/login', async (req, res) => {
     let { username, password } = req.body;
     let sql = `SELECT a.*,r.id AS role FROM ADMIN a LEFT JOIN admin_role ar ON a.id = ar.admin_id LEFT JOIN role r ON r.id = ar.role_id  WHERE username = ? AND password = ?`;
     let [results] = await pool.query(sql, [username, password]);
-    if (!results.length) {
+    if (results.length === 0) {
         res.json({
             msg: "账号或密码错误！",
             status: false,
@@ -167,6 +167,8 @@ router.get('/info', async (req, res) => {
         data: results[0]
     });
 });
+
+// TODO 检测用户名是否可用
 
 /**
  * @api {post} /admin/info 编辑管理员个人资料
@@ -207,7 +209,7 @@ router.post('/info', async (req, res) => {
         }
         // 更新角色
         let update_role_sql = 'UPDATE admin_role SET role_id = ? WHERE admin_id = ?';
-        let [{ affectedRows: role_affected_rows }] = await pool.query(update_role_sql, [role, id]);
+        let [{ affectedRows: role_affected_rows }] = await connection.query(update_role_sql, [role, id]);
         if (role_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "角色role修改失败！" });
@@ -288,7 +290,7 @@ router.post('/remove', async (req, res) => {
         await connection.beginTransaction();
         // 删除账户
         let delete_admin_sql = 'DELETE FROM admin WHERE id = ?';
-        let [{ affectedRows: admin_affected_rows }] = await pool.query(delete_admin_sql, [id]);
+        let [{ affectedRows: admin_affected_rows }] = await connection.query(delete_admin_sql, [id]);
         if (admin_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "账户admin删除失败！" });
@@ -331,6 +333,7 @@ router.post('/remove', async (req, res) => {
 
 router.get('/list', async (req, res) => {
     let { pagesize = 10, pageindex = 1 } = req.query;
+    // 计算偏移量
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
     const sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role_id FROM `admin` AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `admin`;';
