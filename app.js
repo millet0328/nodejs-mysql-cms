@@ -24,6 +24,7 @@ const adminNotice = require('./routes/admin/notice');
 const adminComment = require('./routes/admin/comment');
 const adminSlide = require('./routes/admin/slide');
 const adminIcon = require('./routes/admin/icon');
+const adminLink = require('./routes/admin/link');
 //前台
 const blogAccount = require('./routes/blog/account');
 const blogArticle = require('./routes/blog/article');
@@ -32,6 +33,7 @@ const blogNotice = require('./routes/blog/notice');
 const blogUpload = require('./routes/blog/upload');
 const blogComment = require('./routes/blog/comment');
 const blogSlide = require('./routes/blog/slide');
+const blogLink = require('./routes/blog/link');
 
 const app = express();
 
@@ -65,13 +67,14 @@ app.use(cors({ credentials: true, origin: /^((https|http|ftp|rtsp|mms)?:\/\/)[^\
 app.use(expressJwt({ secret: 'secret', algorithms: ['HS256'] }).unless({
     path: [
         '/',
-        /^\/admin\/(login|register)$/,
+        /^\/admin\/(login|register|check\/username)$/,
         /^\/account\/(login|register)$/,
-        /^\/article\/(list|detail|category)$/,
+        /^\/article\/(list|detail)$/,
         /^\/category\/(list|sub)$/,
         /^\/notice\/(list|detail)$/,
         '/comment/list',
         '/slide/list',
+        '/link/list',
     ]
 }));
 
@@ -89,6 +92,7 @@ app.use('/notice', adminNotice);
 app.use('/comment', adminComment);
 app.use('/slide', adminSlide);
 app.use('/icon', adminIcon);
+app.use('/link', adminLink);
 //前台
 app.use('/article', blogArticle);
 app.use('/category', blogCategory);
@@ -97,6 +101,7 @@ app.use('/notice', blogNotice);
 app.use('/comment', blogComment);
 app.use('/account', blogAccount);
 app.use('/slide', blogSlide);
+app.use('/link', blogLink);
 // 处理401错误
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
