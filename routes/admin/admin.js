@@ -57,8 +57,8 @@ router.post('/register', async (req, res) => {
     // 获取一个连接
     const connection = await pool.getConnection();
     // 查询账户是否重名
-    let sql = 'SELECT * FROM admin WHERE username = ?';
-    let [results] = await connection.query(sql, [username]);
+    let select_sql = 'SELECT id FROM admin WHERE username = ?';
+    let [results] = await connection.query(select_sql, [username]);
     // 查询账户是否存在
     if (results.length) {
         res.json({
@@ -105,7 +105,7 @@ router.post('/register', async (req, res) => {
             msg: error.message,
             error,
         });
-        throw error;
+
     }
 });
 
@@ -168,7 +168,34 @@ router.get('/info', async (req, res) => {
     });
 });
 
-// TODO 检测用户名是否可用
+/**
+ * @api {post} /admin/check/username 检测用户名是否可用
+ * @apiName AdminCheckUsername
+ * @apiGroup Admin
+ * @apiPermission 后台系统
+ *
+ * @apiBody { String } username 用户名.
+ *
+ * @apiSampleRequest /admin/check/username
+ */
+router.post('/check/username', async (req, res) => {
+    let { username } = req.body;
+    // 查询账户是否重名
+    let select_sql = 'SELECT id FROM admin WHERE username = ?';
+    let [results] = await pool.query(select_sql, [username]);
+    // 查询账户是否存在
+    if (results.length) {
+        res.json({
+            status: false,
+            msg: "用户名已存在，请重新命名！",
+        });
+        return;
+    }
+    res.json({
+        status: true,
+        msg: "恭喜，用户名可用！",
+    });
+});
 
 /**
  * @api {post} /admin/info 编辑管理员个人资料
@@ -228,7 +255,7 @@ router.post('/info', async (req, res) => {
             msg: error.message,
             error,
         });
-        throw error;
+
     }
 });
 
@@ -255,7 +282,7 @@ router.post("/account/", async (req, res) => {
     let { fullname, sex, avatar, tel, email } = req.body;
     let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE id = ?`;
     let [{ affectedRows }] = await pool.query(sql, [fullname, sex, avatar, tel, email, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"
@@ -313,7 +340,7 @@ router.post('/remove', async (req, res) => {
             msg: error.message,
             error,
         });
-        throw error;
+
     }
 });
 
@@ -336,6 +363,7 @@ router.get('/list', async (req, res) => {
     // 计算偏移量
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
+    // TODO 单条语句SQL
     const sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role_id FROM `admin` AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `admin`;';
     let [results] = await pool.query(sql, [pagesize, offset]);
     res.json({
