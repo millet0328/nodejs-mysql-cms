@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+// 处理 async error
+require('express-async-errors');
 // JSON WEB TOKEN
 const expressJwt = require('express-jwt');
 // CORS
@@ -102,6 +104,7 @@ app.use('/comment', blogComment);
 app.use('/account', blogAccount);
 app.use('/slide', blogSlide);
 app.use('/link', blogLink);
+
 // 处理401错误
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
@@ -109,9 +112,10 @@ app.use(function (err, req, res, next) {
             status: false,
             ...err,
         });
+    } else {
+        next(err);
     }
 });
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));
