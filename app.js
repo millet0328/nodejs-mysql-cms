@@ -69,6 +69,7 @@ app.use(cors({ credentials: true, origin: /^((https|http|ftp|rtsp|mms)?:\/\/)[^\
 app.use(expressJwt({ secret: 'secret', algorithms: ['HS256'] }).unless({
     path: [
         '/',
+        /\/images\/*/,
         /^\/admin\/(login|register|check\/username)$/,
         /^\/account\/(login|register)$/,
         /^\/article\/(list|detail)$/,
@@ -105,6 +106,11 @@ app.use('/account', blogAccount);
 app.use('/slide', blogSlide);
 app.use('/link', blogLink);
 
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    next(createError(404));
+});
+
 // 处理401错误
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
@@ -115,10 +121,6 @@ app.use(function (err, req, res, next) {
     } else {
         next(err);
     }
-});
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(createError(404));
 });
 
 // error handler
