@@ -29,7 +29,7 @@ router.post("/release/", async (req, res) => {
     let { cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
     const sql = 'INSERT INTO article (cate_1st ,cate_2nd , title , description , content , create_date , main_photo ) VALUES (?, ? , ? , ?, ?, CURRENT_TIMESTAMP() , ?)';
     let [{ insertId, affectedRows }] = await pool.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "添加失败！"
@@ -91,7 +91,6 @@ router.post('/remove', async (req, res) => {
             msg: error.message,
             error,
         });
-        throw error;
     }
 });
 
@@ -117,7 +116,7 @@ router.post('/edit', async (req, res) => {
     let { id, cate_1st, cate_2nd, title, description, content, main_photo } = req.body;
     const sql = 'UPDATE article SET cate_1st = ? , cate_2nd = ? , title = ? , description = ? , content = ? , main_photo = ? WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [cate_1st, cate_2nd, title, description, content, main_photo, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"
@@ -200,7 +199,6 @@ router.post("/tag/", async (req, res) => {
             msg: error.message,
             error,
         });
-        throw error;
     }
 });
 

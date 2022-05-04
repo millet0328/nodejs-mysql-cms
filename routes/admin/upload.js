@@ -40,7 +40,7 @@ router.post("/editor", upload.single('file'), async function (req, res) {
     if (!flag) {
         res.json({
             errno: 1,
-            msg: "格式错误，请选择一张图片!"
+            message: "格式错误，请选择一张图片!"
         });
         return;
     }
@@ -48,7 +48,7 @@ router.post("/editor", upload.single('file'), async function (req, res) {
     if (size >= 2 * 1024 * 1024) {
         res.json({
             errno: 1,
-            msg: "图片体积太大，请压缩图片!"
+            message: "图片体积太大，请压缩图片!"
         });
         return;
     }
@@ -72,7 +72,7 @@ router.post("/editor", upload.single('file'), async function (req, res) {
     } catch (error) {
         res.json({
             errno: 1,
-            msg: error,
+            message: error,
         });
     }
 });

@@ -18,7 +18,7 @@ let pool = require('../../config/mysql');
  * @apiSampleRequest /slide/list
  */
 router.get("/list", async (req, res) => {
-    let { pagesize = 10, pageindex = 1, usable = 1 } = req.query;
+    let { pagesize = 10, pageindex = 1, usable } = req.query;
     // 计算偏移量
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
@@ -27,14 +27,21 @@ router.get("/list", async (req, res) => {
     if (usable) {
         select_sql += ` AND usable = ${usable}`
     }
-    select_sql += ' ORDER BY `slide_order` ASC LIMIT ? OFFSET ?;SELECT COUNT(*) as total FROM `slide`'
+    select_sql += ' ORDER BY `slide_order` ASC LIMIT ? OFFSET ?;'
     // 判断启用/禁用状态
-    let [results] = await pool.query(select_sql, [pagesize, offset]);
+    let [slides] = await pool.query(select_sql, [pagesize, offset]);
+    // 计算总数
+    let total_sql = `SELECT COUNT(*) as total FROM slide WHERE 1 = 1`;
+    if (usable) {
+        total_sql += ` AND usable = ${usable}`
+    }
+    let [total] = await pool.query(total_sql, []);
+
     res.json({
         status: true,
         msg: "获取成功",
-        ...results[1][0],
-        data: results[0],
+        data: slides,
+        ...total[0],
     });
 });
 

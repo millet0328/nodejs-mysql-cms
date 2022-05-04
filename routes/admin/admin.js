@@ -105,7 +105,6 @@ router.post('/register', async (req, res) => {
             msg: error.message,
             error,
         });
-
     }
 });
 
@@ -255,7 +254,6 @@ router.post('/info', async (req, res) => {
             msg: error.message,
             error,
         });
-
     }
 });
 
@@ -340,7 +338,6 @@ router.post('/remove', async (req, res) => {
             msg: error.message,
             error,
         });
-
     }
 });
 
@@ -363,14 +360,17 @@ router.get('/list', async (req, res) => {
     // 计算偏移量
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
-    // TODO 单条语句SQL
-    const sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role_id FROM `admin` AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `admin`;';
-    let [results] = await pool.query(sql, [pagesize, offset]);
+    // 查询列表
+    let select_sql = 'SELECT a.id,a.username,a.fullname,a.sex,a.email,a.avatar,a.tel,r.role_name,r.id AS role_id FROM `admin` AS a LEFT JOIN admin_role AS ar ON a.id = ar.admin_id LEFT JOIN role AS r ON r.id = ar.role_id LIMIT ? OFFSET ?';
+    let [admins] = await pool.query(select_sql, [pagesize, offset]);
+    // 计算总数
+    let total_sql = `SELECT COUNT(*) as total FROM admin`;
+    let [total] = await pool.query(total_sql, []);
     res.json({
         status: true,
         msg: "获取成功",
-        ...results[1][0],
-        data: results[0],
+        data: admins,
+        ...total[0],
     });
 });
 

@@ -32,7 +32,7 @@ router.post("/add/", async (req, res) => {
     let { title, picture, url, target = '_blank', slide_order } = req.body;
     const sql = 'INSERT INTO slide ( title, picture, url, target, slide_order, create_date ) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP() )';
     let [{ insertId, affectedRows }] = await pool.query(sql, [title, picture, url, target, slide_order]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "添加失败！"
@@ -78,14 +78,14 @@ router.post('/remove', async (req, res) => {
         let [{ affectedRows }] = await pool.query(delete_sql, [id]);
         if (affectedRows === 0) {
             res.json({
-                status: true,
+                status: false,
                 msg: "删除失败！"
             });
             return;
         }
         res.json({
             status: true,
-            msg: "删除成功"
+            msg: "删除成功!"
         });
     } catch (error) {
         res.json({
@@ -117,7 +117,7 @@ router.post('/edit', async (req, res) => {
     let { id, title, picture, url, target = '_blank', slide_order } = req.body;
     const sql = 'UPDATE slide SET title = ?, picture = ?, url = ?, target = ?, slide_order = ? WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [title, picture, url, target, slide_order, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"
@@ -147,7 +147,7 @@ router.post('/usable', async (req, res) => {
     let { id, usable } = req.body;
     const sql = 'UPDATE slide SET usable = ? WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [usable, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"

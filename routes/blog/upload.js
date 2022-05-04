@@ -80,7 +80,8 @@ router.post("/common", upload.single('file'), async function (req, res) {
     } catch (error) {
         res.json({
             status: false,
-            msg: error,
+            msg: error.message,
+            ...error,
         });
     }
 });

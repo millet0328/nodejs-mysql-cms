@@ -20,12 +20,11 @@ router.get('/detail', async (req, res) => {
     let [tags] = await pool.query(tag_sql, [id]);
     // 查询文章详情
     const article_sql = 'SELECT a.*, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c1.`name` AS cate_1st_name, c2.`name` AS cate_2nd_name FROM `article` a JOIN category c1 ON a.cate_1st = c1.id JOIN category c2 ON a.cate_2nd = c2.id WHERE a.id = ?';
-    let [results] = await pool.query(article_sql, [id]);
-    results[0].tags = tags;
+    let [articles] = await pool.query(article_sql, [id]);
     res.json({
         status: true,
         msg: "获取成功",
-        data: results[0]
+        data: { ...articles[0], ...tags }
     });
 });
 
@@ -61,31 +60,41 @@ router.get("/list", async (req, res) => {
     // 计算偏移量
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
-    // 根据参数，拼接SQL
-    let article_sql = 'SELECT SQL_CALC_FOUND_ROWS a.id, cate_1st, cate_2nd, title, description, main_photo, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time , DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c1.`name` AS cate_1st_name, c2.`name` AS cate_2nd_name FROM `article` a JOIN category c1 ON a.cate_1st = c1.id JOIN category c2 ON a.cate_2nd = c2.id WHERE 1 = 1';
     let cate = [null, 'cate_1st', 'cate_2nd'];
+    // 根据参数，拼接SQL
+    let article_sql = 'SELECT a.id, cate_1st, cate_2nd, title, description, main_photo, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time, c1.`name` AS cate_1st_name, c2.`name` AS cate_2nd_name FROM `article` a JOIN category c1 ON a.cate_1st = c1.id JOIN category c2 ON a.cate_2nd = c2.id WHERE 1 = 1';
+
+    let total_sql = `SELECT COUNT(*) AS total FROM article WHERE 1 = 1`;
+
+    let tag_sql = 'SELECT t.*, at.article_id FROM ( SELECT id FROM article WHERE 1 = 1';
+
     if (cate_level) {
         let cate_name = cate[cate_level];
         article_sql += ` AND ${cate_name} = ${cate_id}`;
+        total_sql += ` AND ${cate_name} = ${cate_id}`;
+        tag_sql += ` AND ${cate_name} = ${cate_id}`;
     }
     if (keyword) {
-        article_sql += ` AND a.title LIKE '%${keyword}%'`;
+        article_sql += ` AND title LIKE '%${keyword}%'`;
+        total_sql += ` AND title LIKE '%${keyword}%'`;
+        tag_sql += ` AND title LIKE '%${keyword}%'`;
     }
-    article_sql += ' ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? ;SELECT FOUND_ROWS() as total;'
+    article_sql += ' ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ?';
+    tag_sql += ` ORDER BY create_date DESC, update_date DESC LIMIT ? OFFSET ? ) AS a JOIN article_tag at ON a.id = at.article_id JOIN tag t ON at.tag_id = t.id`;
     // 查询文章
-    let [results, fields] = await pool.query(article_sql, [pagesize, offset]);
-    // 循环查询tag标签
-    for (const item of results[0]) {
-        let tag_sql = 'SELECT t.* FROM article_tag at JOIN tag t ON at.tag_id = t.id WHERE article_id = ?';
-        let [tags] = await pool.query(tag_sql, [item.id]);
-        item.tags = tags;
-    }
-
+    let [articles] = await pool.query(article_sql, [pagesize, offset]);
+    // 计算总数
+    let [total] = await pool.query(total_sql, []);
+    // 查询tag标签
+    let [tags] = await pool.query(tag_sql, [pagesize, offset]);
+    articles.forEach((article) => {
+        article.tags = tags.filter((item) => item.article_id === article.id);
+    });
     res.json({
         status: true,
         msg: "获取成功",
-        ...results[1][0],
-        data: results[0],
+        data: articles,
+        ...total[0],
     });
 });
 

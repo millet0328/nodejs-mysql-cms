@@ -109,7 +109,7 @@ router.post('/edit', async (req, res) => {
     const sql = 'UPDATE category SET name = ?,parent_id = ? WHERE id = ?';
     let { id, name, parent_id } = req.body;
     let [{ affectedRows }] = await pool.query(sql, [name, parent_id, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"

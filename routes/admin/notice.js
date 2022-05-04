@@ -27,7 +27,7 @@ router.post("/release/", async (req, res) => {
     let { title, content, is_sticky = 0 } = req.body;
     const sql = 'INSERT INTO notice ( title , content , create_date , update_date , is_sticky ) VALUES (?, ? , CURRENT_TIMESTAMP() ,CURRENT_TIMESTAMP(), ?)';
     let [{ insertId, affectedRows }] = await pool.query(sql, [title, content, is_sticky]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "添加失败！"
@@ -60,7 +60,7 @@ router.post('/remove', async (req, res) => {
     let { id } = req.body;
     const sql = 'DELETE FROM notice WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: true,
             msg: "删除失败！"
@@ -92,7 +92,7 @@ router.post('/edit', async (req, res) => {
     let { id, title, content, is_sticky } = req.body;
     const sql = 'UPDATE notice SET  title = ? , content = ? , is_sticky = ? WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [title, content, is_sticky, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"
@@ -123,7 +123,7 @@ router.post('/stick', async (req, res) => {
     let { id, is_sticky } = req.body;
     const sql = 'UPDATE notice SET is_sticky = ? WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [is_sticky, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"

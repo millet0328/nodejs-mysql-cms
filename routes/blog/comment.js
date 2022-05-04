@@ -27,7 +27,7 @@ router.post("/release/", async (req, res) => {
     let { article_id, content } = req.body;
     const sql = 'INSERT INTO comment ( user_id , article_id , content , create_date ) VALUES (?, ? , ? ,CURRENT_TIMESTAMP() )';
     let [{ insertId, affectedRows }] = await pool.query(sql, [id, article_id, content]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "添加失败！"
@@ -71,7 +71,7 @@ router.post('/remove', async (req, res) => {
     }
     const delete_sql = 'DELETE FROM comment WHERE id = ? AND user_id = ?';
     let [{ affectedRows }] = await pool.query(delete_sql, [id, user_id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "删除失败！"
@@ -134,7 +134,7 @@ router.post('/edit', async (req, res) => {
     }
     const update_sql = 'UPDATE comment SET content = ? WHERE id = ? AND user_id = ?';
     let [{ affectedRows }] = await pool.query(update_sql, [content, id, user_id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"
@@ -164,13 +164,17 @@ router.get("/list", async (req, res) => {
     let { id, pagesize = 10, pageindex = 1 } = req.query;
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
-    const sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, u.nickname AS user_nickname,a.title AS article_title FROM comment c JOIN user u ON c.user_id = u.id JOIN article a ON c.article_id = a.id WHERE c.article_id = ? ORDER BY c.create_date DESC LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `comment` WHERE article_id = ?';
-    let [results] = await pool.query(sql, [id, pagesize, offset, id]);
+    // 查询列表
+    const select_sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, u.nickname AS user_nickname,a.title AS article_title FROM comment c JOIN user u ON c.user_id = u.id JOIN article a ON c.article_id = a.id WHERE c.article_id = ? ORDER BY c.create_date DESC LIMIT ? OFFSET ?';
+    let [comments] = await pool.query(select_sql, [id, pagesize, offset]);
+    // 计算总数
+    let total_sql = `SELECT COUNT(*) as total FROM comment WHERE article_id = ?`;
+    let [total] = await pool.query(total_sql, [id]);
     res.json({
         status: true,
         msg: "获取成功",
-        ...results[1][0],
-        data: results[0],
+        data: comments,
+        ...total[0],
     });
 });
 

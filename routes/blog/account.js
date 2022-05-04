@@ -40,7 +40,7 @@ router.post('/register', async (req, res) => {
     // 无重名
     const insert_sql = 'INSERT INTO user (username,password,nickname,sex,tel) VALUES (?,?,?,?,?)';
     let [{ insertId, affectedRows }] = await pool.query(insert_sql, [username, password, nickname, sex, tel]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             msg: "注册失败！",
             status: false,
@@ -146,7 +146,7 @@ router.post('/info', async (req, res) => {
     let { nickname, sex, tel } = req.body;
     let sql = 'UPDATE user SET nickname = ?,sex = ?,tel = ? WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [nickname, sex, tel, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"

@@ -25,7 +25,7 @@ router.post('/remove', async (req, res) => {
     let { id } = req.body;
     let sql = 'DELETE FROM user WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "删除失败！"
@@ -55,12 +55,16 @@ router.get('/list', async (req, res) => {
     let { pagesize = 10, pageindex = 1 } = req.query;
     pagesize = parseInt(pagesize);
     let offset = pagesize * (pageindex - 1);
-    const sql = 'SELECT id,username,nickname,sex,tel,usable FROM user LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `user`;';
-    let [results] = await pool.query(sql, [pagesize, offset]);
+    // 查询列表
+    const select_sql = 'SELECT id,username,nickname,sex,tel,usable FROM user LIMIT ? OFFSET ?';
+    let [users] = await pool.query(select_sql, [pagesize, offset]);
+    // 计算总数
+    let total_sql = `SELECT COUNT(*) as total FROM user`;
+    let [total] = await pool.query(total_sql, []);
     res.json({
         status: true,
-        ...results[1][0],
-        data: results[0],
+        data: users,
+        ...total[0],
     });
 });
 
@@ -82,7 +86,7 @@ router.post('/usable', async (req, res) => {
     let { id, usable } = req.body;
     let sql = 'UPDATE user SET usable = ? WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [usable, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"
