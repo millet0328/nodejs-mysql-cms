@@ -109,4 +109,34 @@ router.put('/:id', async (req, res) => {
     });
 });
 
+/**
+ * @api {post} /link/usable 启用/禁用友情链接
+ * @apiName UsableLink
+ * @apiPermission 后台系统
+ * @apiGroup Link
+ *
+ * @apiUse Authorization
+ *
+ * @apiBody { Number } id 幻灯片id.
+ * @apiBody { Number=1,-1 } usable 是否启用。1-启用，-1-禁用。
+ *
+ * @apiSampleRequest /link/usable
+ */
+router.post('/usable', async (req, res) => {
+    let { id, usable } = req.body;
+    const sql = 'UPDATE link SET usable = ? WHERE id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [usable, id]);
+    if (affectedRows === 0) {
+        res.json({
+            status: false,
+            msg: "修改失败！"
+        });
+        return;
+    }
+    res.json({
+        status: true,
+        msg: "修改成功！"
+    });
+});
+
 module.exports = router;

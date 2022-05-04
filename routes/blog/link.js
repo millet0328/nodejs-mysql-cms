@@ -4,7 +4,7 @@ const router = express.Router();
 let pool = require('../../config/mysql');
 
 /**
- * @api {get} /link/list 获取所有幻灯片列表
+ * @api {get} /link/list 获取所有友情链接列表
  * @apiName LinkList
  * @apiPermission 后台系统、前台
  * @apiGroup Link
@@ -19,7 +19,7 @@ let pool = require('../../config/mysql');
  */
 
 router.get("/list", async (req, res) => {
-    let { pagesize = 10, pageindex = 1, usable = 1 } = req.query;
+    let { pagesize = 10, pageindex = 1, usable } = req.query;
     // 计算偏移量
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
