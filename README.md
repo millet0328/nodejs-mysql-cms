@@ -13,7 +13,7 @@ cd {项目目录}
 
 ## 安装依赖包，必须cnpm
 ```
-cnpm i
+$ cnpm i
 ```
 
 ## 还原数据库
@@ -24,19 +24,15 @@ cnpm i
 
 ## 重新生成API文档
 ```
-npm run api
+$ npm run api
 ```
 
 ## 启动
 ```
-npm start
+$ npm start
 ```
 
 ## 后台API文档地址
 ```
 http://localhost:3001/api/
-```
-## CMS管理系统地址
-```
-http://localhost:3001/admin/
 ```

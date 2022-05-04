@@ -5,7 +5,7 @@ let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
  */
 
 /**
@@ -27,15 +27,18 @@ router.get('/list', async (req, res) => {
     // 计算偏移量
     pagesize = parseInt(pagesize);
     let offset = pagesize * (pageindex - 1);
-    // 查询
-    let sql = `SELECT id, role_name AS name FROM role LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM role`;
-    let [results] = await pool.query(sql, [pagesize, offset]);
+    // 查询角色
+    let select_sql = `SELECT id, role_name AS name FROM role LIMIT ? OFFSET ?`;
+    let [roles] = await pool.query(select_sql, [pagesize, offset]);
+    // 计算总数
+    let total_sql = `SELECT COUNT(*) as total FROM role`;
+    let [total] = await pool.query(total_sql, []);
     // 获取成功
     res.json({
         status: true,
         msg: "获取成功！",
-        ...results[1][0],
-        data: results[0],
+        data: roles,
+        ...total[0],
     });
 });
 
@@ -91,7 +94,7 @@ router.delete('/:id', async (req, res) => {
         await connection.beginTransaction();
         // 删除角色
         let delete_role_sql = `DELETE FROM role WHERE id = ?`;
-        let [{ affectedRows: role_affected_rows }] = await pool.query(delete_role_sql, [id]);
+        let [{ affectedRows: role_affected_rows }] = await connection.query(delete_role_sql, [id]);
         if (role_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "删除role失败！" });
@@ -99,11 +102,11 @@ router.delete('/:id', async (req, res) => {
         }
         // 删除role_menu关联表数据
         let delete_menu_sql = `DELETE FROM role_menu WHERE role_id = ?`
-        await pool.query(delete_menu_sql, [id]);
+        await connection.query(delete_menu_sql, [id]);
 
         // 删除admin_role关联表数据
         let delete_admin_sql = `DELETE FROM admin_role WHERE role_id = ?`
-        await pool.query(delete_admin_sql, [id]);
+        await connection.query(delete_admin_sql, [id]);
 
         // 一切顺利，提交事务
         await connection.commit();
@@ -119,7 +122,6 @@ router.delete('/:id', async (req, res) => {
             msg: error.message,
             error,
         });
-        throw error;
     }
 });
 
@@ -149,7 +151,7 @@ router.put('/:id', async (req, res) => {
     let { name } = req.body;
     let sql = `UPDATE role SET role_name = ? WHERE id = ?`;
     let [{ affectedRows }] = await pool.query(sql, [name, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "fail！"
@@ -163,67 +165,56 @@ router.put('/:id', async (req, res) => {
 });
 
 /**
- * @api {get} /role/menu/tree 根据角色获取侧边栏菜单--树形结构
- * @apiName RoleMenuTree
+ * @api {get} /role/menu/ 根据角色获取侧边栏菜单
+ * @apiName RoleMenu
  * @apiGroup Role
  * @apiPermission 后台系统
  *
  * @apiUse Authorization
  *
  * @apiQuery {Number} id 角色id.
+ * @apiQuery { String="flat","tree" } [type="flat"] 返回数据格式。flat--扁平数组；tree--树形结构
  *
- * @apiSampleRequest /role/menu/tree
+ * @apiSampleRequest /role/menu/
  */
-router.get('/menu/tree', async (req, res) => {
-    let { id } = req.query;
-    let sql = `SELECT m.*, i.name AS 'icon_name' FROM MENU m JOIN role_menu rm ON rm.menu_id = m.id LEFT JOIN ICON i ON m.icon_id = i.id WHERE rm.role_id = ? ORDER BY menu_order;`;
+router.get('/menu/', async (req, res) => {
+    let { id, type = 'flat' } = req.query;
+    // 查询菜单
+    let sql = `SELECT m.*, i.name AS 'icon_name' FROM MENU m JOIN role_menu rm ON rm.menu_id = m.id LEFT JOIN ICON i ON m.icon_id = i.id WHERE rm.role_id = ? ORDER BY menu_order`;
     let [results] = await pool.query(sql, [id]);
-    // 筛选出一级菜单
-    let cate_1st = results.filter((item) => item.pId === 1);
-    // 转换为树形结构--递归函数
-    const parseToTree = function (list) {
-        return list.map((parent) => {
-            let children = results.filter((child) => child.pId === parent.id);
-            if (children.length) {
-                return { ...parent, children: parseToTree(children) }
-            } else {
-                return { ...parent }
-            }
+    // 扁平数组
+    if (type === 'flat') {
+        res.json({
+            status: true,
+            msg: "获取成功!",
+            data: results
+        });
+        return;
+    }
+    // 树形结构
+    if (type === 'tree') {
+        // 筛选出一级菜单
+        let menu_1st = results.filter((item) => item.pId === 1);
+        // 转换为树形结构--递归函数
+        const parseToTree = function (list) {
+            return list.map((parent) => {
+                let children = results.filter((child) => child.pId === parent.id);
+                if (children.length) {
+                    return { ...parent, children: parseToTree(children) }
+                } else {
+                    return { ...parent }
+                }
+            });
+        }
+        // 生成树形菜单
+        let tree_menu = parseToTree(menu_1st);
+        //成功
+        res.json({
+            status: true,
+            msg: "获取成功!",
+            data: tree_menu
         });
     }
-    // 生成树形菜单
-    let tree_menu = parseToTree(cate_1st);
-    //成功
-    res.json({
-        status: true,
-        msg: "获取成功!",
-        data: tree_menu
-    });
-});
-
-/**
- * @api {get} /role/menu/list 根据角色获取侧边栏菜单--扁平数组
- * @apiName RoleMenuList
- * @apiGroup Role
- * @apiPermission 后台系统
- *
- * @apiUse Authorization
- *
- * @apiQuery {Number} id 角色id.
- *
- * @apiSampleRequest /role/menu/list
- */
-
-router.get('/menu/list', async (req, res) => {
-    let { id } = req.query;
-    let sql = `SELECT m.*, i.name AS 'icon_name' FROM MENU m JOIN role_menu rm ON rm.menu_id = m.id LEFT JOIN ICON i ON m.icon_id = i.id WHERE rm.role_id = ? ORDER BY menu_order;`;
-    let [results] = await pool.query(sql, [id]);
-    //成功
-    res.json({
-        status: true,
-        msg: "获取成功!",
-        data: results
-    });
 });
 
 /**
@@ -265,7 +256,7 @@ router.post('/menu', async (req, res) => {
         //根据rest_exist_menus删除数据，数组为空,不需要删除数据
         if (rest_exist_menus.length) {
             let delete_sql = `DELETE FROM role_menu WHERE role_id = ? AND menu_id IN (${rest_exist_menus.toString()});`
-            let [{ affectedRows: menu_affected_rows }] = await pool.query(delete_sql, [id]);
+            let [{ affectedRows: menu_affected_rows }] = await connection.query(delete_sql, [id]);
             if (menu_affected_rows === 0) {
                 await connection.rollback();
                 res.json({ status: false, msg: "删除原有menu失败！" });
@@ -275,7 +266,7 @@ router.post('/menu', async (req, res) => {
         //根据rest_insert_menus插入数据，数组为空,不需要插入数据
         if (rest_insert_menus.length) {
             let insert_sql = `INSERT INTO role_menu (role_id, menu_id) VALUES ${rest_insert_menus.toString()}`;
-            let [{ affectedRows: menu_affected_rows }] = await pool.query(insert_sql);
+            let [{ affectedRows: menu_affected_rows }] = await connection.query(insert_sql);
             if (menu_affected_rows === 0) {
                 await connection.rollback();
                 res.json({ status: false, msg: "插入menu失败！" });
@@ -296,7 +287,6 @@ router.post('/menu', async (req, res) => {
             msg: error.message,
             error,
         });
-        throw error;
     }
 });
 

@@ -5,7 +5,7 @@ let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
  */
 
 /**
@@ -27,7 +27,7 @@ router.post("/reply/", async (req, res) => {
     let { id, reply } = req.body;
     const sql = 'UPDATE comment SET reply = ?,is_reply = 1,reply_date = CURRENT_TIMESTAMP() WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [reply, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "回复失败！"
@@ -60,14 +60,17 @@ router.get("/recent", async (req, res) => {
     // 计算偏移量
     pagesize = parseInt(pagesize);
     let offset = pagesize * (pageindex - 1);
-
-    let sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(c.reply_date,"%Y-%m-%d %T") AS reply_time, u.nickname AS user_nickname,a.title AS article_title FROM comment c LEFT JOIN user u ON c.user_id = u.id JOIN article a ON c.article_id = a.id ORDER BY c.create_date DESC LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM `comment`;';
-    let [results] = await pool.query(sql, [pagesize, offset]);
+    // 查询列表
+    let sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(c.reply_date,"%Y-%m-%d %T") AS reply_time, u.nickname AS user_nickname,a.title AS article_title FROM comment c LEFT JOIN user u ON c.user_id = u.id JOIN article a ON c.article_id = a.id ORDER BY c.create_date DESC LIMIT ? OFFSET ?';
+    let [comments] = await pool.query(sql, [pagesize, offset]);
+    // 计算总数
+    let total_sql = `SELECT COUNT(*) as total FROM comment`;
+    let [total] = await pool.query(total_sql, []);
     res.json({
         status: true,
         msg: "获取成功",
-        ...results[1][0],
-        data: results[0],
+        data: comments,
+        ...total[0],
     });
 });
 

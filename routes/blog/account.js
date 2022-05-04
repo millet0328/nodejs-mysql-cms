@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
  */
 
 /**
@@ -40,7 +40,7 @@ router.post('/register', async (req, res) => {
     // 无重名
     const insert_sql = 'INSERT INTO user (username,password,nickname,sex,tel) VALUES (?,?,?,?,?)';
     let [{ insertId, affectedRows }] = await pool.query(insert_sql, [username, password, nickname, sex, tel]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             msg: "注册失败！",
             status: false,
@@ -70,7 +70,7 @@ router.post('/register', async (req, res) => {
  */
 router.post('/login', async (req, res) => {
     let { username, password } = req.body;
-    let sql = 'SELECT id,username,nickname,sex,tel,status FROM user WHERE username = ? AND `password` = ?';
+    let sql = 'SELECT id,username,nickname,sex,tel,usable FROM user WHERE username = ? AND `password` = ?';
     let [results] = await pool.query(sql, [username, password]);
     // 判断账号密码
     if (results.length === 0) {
@@ -146,7 +146,7 @@ router.post('/info', async (req, res) => {
     let { nickname, sex, tel } = req.body;
     let sql = 'UPDATE user SET nickname = ?,sex = ?,tel = ? WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [nickname, sex, tel, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"

@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 11/04/2022 11:17:46
+ Date: 05/05/2022 00:25:23
 */
 
 SET NAMES utf8mb4;
@@ -57,7 +57,7 @@ CREATE TABLE `admin_role`  (
 -- ----------------------------
 INSERT INTO `admin_role` VALUES (1, 1, 1);
 INSERT INTO `admin_role` VALUES (2, 2, 2);
-INSERT INTO `admin_role` VALUES (3, 3, 2);
+INSERT INTO `admin_role` VALUES (3, 3, 4);
 INSERT INTO `admin_role` VALUES (4, 4, 3);
 
 -- ----------------------------
@@ -96,11 +96,18 @@ CREATE TABLE `article_tag`  (
   `article_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '博客ID',
   `tag_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '标签ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客to标签中间表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '博客to标签中间表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of article_tag
 -- ----------------------------
+INSERT INTO `article_tag` VALUES (3, 1, 1);
+INSERT INTO `article_tag` VALUES (6, 6, 4);
+INSERT INTO `article_tag` VALUES (7, 6, 5);
+INSERT INTO `article_tag` VALUES (8, 5, 6);
+INSERT INTO `article_tag` VALUES (9, 5, 1);
+INSERT INTO `article_tag` VALUES (10, 5, 2);
+INSERT INTO `article_tag` VALUES (11, 4, 4);
 
 -- ----------------------------
 -- Table structure for category
@@ -111,7 +118,7 @@ CREATE TABLE `category`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '分类名称',
   `parent_id` int NOT NULL COMMENT '父级id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of category
@@ -145,7 +152,7 @@ CREATE TABLE `comment`  (
   `create_date` timestamp NOT NULL COMMENT '创建时间',
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of comment
@@ -449,6 +456,28 @@ INSERT INTO `icon` VALUES (279, 'ice-cream-square');
 INSERT INTO `icon` VALUES (280, 'ice-cream-round');
 
 -- ----------------------------
+-- Table structure for link
+-- ----------------------------
+DROP TABLE IF EXISTS `link`;
+CREATE TABLE `link`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '标题',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '跳转的url',
+  `link_order` int NULL DEFAULT NULL COMMENT '排序',
+  `usable` tinyint NULL DEFAULT 1 COMMENT '状态,1-正常，-1-禁用',
+  `create_date` datetime NOT NULL COMMENT '创建日期',
+  `update_date` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改日期',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of link
+-- ----------------------------
+INSERT INTO `link` VALUES (1, '苦瓜甘甜', 'https://www.kuguagantian.com/', 1, 1, '2022-05-04 23:26:02', '2022-05-04 23:30:51');
+INSERT INTO `link` VALUES (2, '优设网', 'https://www.uisdc.com/', 2, 1, '2022-05-04 23:31:34', '2022-05-04 23:32:13');
+INSERT INTO `link` VALUES (3, '站酷', 'https://www.zcool.com.cn/', 3, 1, '2022-05-04 23:32:58', NULL);
+
+-- ----------------------------
 -- Table structure for menu
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
@@ -500,7 +529,7 @@ CREATE TABLE `notice`  (
   `update_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '编辑时间',
   `is_sticky` tinyint NOT NULL DEFAULT 0 COMMENT '是否置顶，1-置顶，0-正常',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of notice
@@ -618,13 +647,13 @@ CREATE TABLE `slide`  (
   `create_date` datetime NOT NULL COMMENT '创建日期',
   `update_date` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改日期',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of slide
 -- ----------------------------
 INSERT INTO `slide` VALUES (1, '1', 'http://localhost:3001/images/common/4cb37c20-b42a-11ec-9686-9534ec65c3ac.jpeg', 'http://www.test.com/', '_blank', 1, 1, '2022-04-04 23:36:36', '2022-04-07 01:59:22');
-INSERT INTO `slide` VALUES (2, '测试标题', 'http://localhost:3001/images/common/2647d170-b435-11ec-a1e0-9ff51000691e.jpeg', 'http://www.123.com', '_blank', 2, -1, '2022-04-05 00:35:14', '2022-04-07 17:02:56');
+INSERT INTO `slide` VALUES (2, '测试标题', 'http://localhost:3001/images/common/2647d170-b435-11ec-a1e0-9ff51000691e.jpeg', 'http://www.123.com', '_blank', 2, 1, '2022-04-05 00:35:14', '2022-05-04 13:02:09');
 INSERT INTO `slide` VALUES (3, 'test', 'http://localhost:3001/images/common/14858e90-b43b-11ec-8b84-0b17af77884d.jpeg', 'http://www.vote.com', '_self', 3, -1, '2022-04-05 01:18:03', '2022-04-07 17:02:52');
 
 -- ----------------------------
@@ -660,7 +689,7 @@ CREATE TABLE `user`  (
   `tel` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号码',
   `usable` tinyint NOT NULL DEFAULT 1 COMMENT '状态，1-正常，0-禁用',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user

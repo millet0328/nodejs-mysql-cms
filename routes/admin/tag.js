@@ -5,7 +5,7 @@ let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
  */
 
 /**
@@ -26,13 +26,16 @@ router.get('/list', async (req, res) => {
     // 计算偏移量
     pagesize = parseInt(pagesize);
     let offset = pagesize * (pageindex - 1);
-    // 查询
-    const sql = 'SELECT * FROM tag LIMIT ? OFFSET ?; SELECT COUNT(*) as total FROM tag';
-    let [results] = await pool.query(sql, [pagesize, offset]);
+    // 查询列表
+    const select_sql = 'SELECT * FROM tag LIMIT ? OFFSET ?';
+    let [tags] = await pool.query(select_sql, [pagesize, offset]);
+    // 计算总数
+    let total_sql = `SELECT COUNT(*) as total FROM tag`;
+    let [total] = await pool.query(total_sql, []);
     res.json({
         status: true,
-        ...results[1][0],
-        data: results[0],
+        data: tags,
+        ...total[0],
     });
 });
 
@@ -89,7 +92,7 @@ router.put('/:id', async (req, res) => {
     let { name } = req.body;
     let sql = 'UPDATE tag SET name = ? WHERE id = ?';
     let [{ affectedRows }] = await pool.query(sql, [name, id]);
-    if (!affectedRows) {
+    if (affectedRows === 0) {
         res.json({
             status: false,
             msg: "修改失败！"
@@ -116,7 +119,7 @@ router.put('/:id', async (req, res) => {
  * @apiExample {js} 参数示例:
  * /tag/3
  *
- * @apiSampleRequest /tag/remove
+ * @apiSampleRequest /tag/
  */
 router.delete('/:id', async (req, res) => {
     let { id } = req.params;
@@ -128,7 +131,7 @@ router.delete('/:id', async (req, res) => {
         await connection.beginTransaction();
         // 删除标签
         let delete_tag_sql = 'DELETE FROM tag WHERE id = ?';
-        let [{ affectedRows: tag_affected_rows }] = await pool.query(delete_tag_sql, [id]);
+        let [{ affectedRows: tag_affected_rows }] = await connection.query(delete_tag_sql, [id]);
         if (tag_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "标签tag删除失败！" });
@@ -150,7 +153,6 @@ router.delete('/:id', async (req, res) => {
             msg: error.message,
             error,
         });
-        throw error;
     }
 });
 

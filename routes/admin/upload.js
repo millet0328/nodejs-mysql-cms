@@ -9,11 +9,11 @@ const upload = multer();
 //图片处理
 const sharp = require('sharp');
 //uuid
-const uuidv1 = require('uuid/v1');
+const { v4: uuidv4 } = require('uuid');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 登录或者注册之后返回的token，请在头部headers中设置Authorization: `Bearer ${token}`.
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
  */
 
 /**
@@ -40,7 +40,7 @@ router.post("/editor", upload.single('file'), async function (req, res) {
     if (!flag) {
         res.json({
             errno: 1,
-            msg: "格式错误，请选择一张图片!"
+            message: "格式错误，请选择一张图片!"
         });
         return;
     }
@@ -48,14 +48,14 @@ router.post("/editor", upload.single('file'), async function (req, res) {
     if (size >= 2 * 1024 * 1024) {
         res.json({
             errno: 1,
-            msg: "图片体积太大，请压缩图片!"
+            message: "图片体积太大，请压缩图片!"
         });
         return;
     }
     //扩展名
     let { format } = await sharp(req.file.buffer).metadata();
     // 生成文件名
-    let filename = uuidv1();
+    let filename = uuidv4();
     //储存文件夹
     let fileFolder = `/images/details/`;
     //处理图片
@@ -72,7 +72,7 @@ router.post("/editor", upload.single('file'), async function (req, res) {
     } catch (error) {
         res.json({
             errno: 1,
-            msg: error,
+            message: error,
         });
     }
 });

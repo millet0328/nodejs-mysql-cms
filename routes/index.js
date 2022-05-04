@@ -5,9 +5,5 @@ const router = express.Router();
 router.get('/', function (req, res) {
     res.redirect('/api/');
 });
-// admin后台转向
-router.get('/admin/', function (req, res) {
-    res.redirect('/admin/login.html');
-});
 
 module.exports = router;
