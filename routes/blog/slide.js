@@ -11,7 +11,7 @@ let pool = require('../../config/mysql');
  *
  * @apiQuery { Number } [pagesize=10] 每一页幻灯片数量.
  * @apiQuery { Number } [pageindex=1] 第几页.
- * @apiQuery { Number=1,-1 } [usable=1] 是否启用。1-启用，-1-禁用。
+ * @apiQuery { Number=1,-1 } [usable] 是否启用。1-启用，-1-禁用。
  *
  * @apiSuccess {Object[]} data 幻灯片数组.
  *

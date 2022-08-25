@@ -62,24 +62,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 * */
 app.use(session({ name: 'session_id', secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 // 设置跨域资源分享CORS
-app.use(cors({ credentials: true, origin: /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/ }));
+// app.use(cors({ credentials: true, origin: /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/ }));
 
 //使用中间件验证token合法性
 //除了这些地址，其他的URL都需要验证
-app.use(expressJwt({ secret: 'secret', algorithms: ['HS256'] }).unless({
-    path: [
-        '/',
-        /\/images\/*/,
-        /^\/admin\/(login|register|check\/username)$/,
-        /^\/account\/(login|register)$/,
-        /^\/article\/(list|detail)$/,
-        /^\/category\/(list|sub)$/,
-        /^\/notice\/(list|detail)$/,
-        '/comment/list',
-        '/slide/list',
-        '/link/list',
-    ]
-}));
+// app.use(expressJwt({ secret: 'secret', algorithms: ['HS256'] }).unless({
+//     path: [
+//         '/',
+//         /\/images\/*/,
+//         /^\/admin\/(login|register|check\/username)$/,
+//         /^\/account\/(login|register)$/,
+//         /^\/article\/(list|detail)$/,
+//         /^\/category\/(list|sub)$/,
+//         /^\/notice\/(list|detail)$/,
+//         '/comment/list',
+//         '/slide/list',
+//         '/link/list',
+//     ]
+// }));
 
 app.use('/', index);
 //后台
