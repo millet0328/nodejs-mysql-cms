@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+	<title>登录</title>
+</head>
+
+<body class="login">
+	<div class="container">
+		<div class="card login-card position-fixed top-50 start-50 translate-middle">
+			<div class="card-header bg-dark text-white">
+				登录
+			</div>
+			<div class="card-body">
+				<form action="/user/login" method="post">
+					<div class="mb-3 row">
+						<label class="col-3 col-form-label">账号：</label>
+						<div class="col-9">
+							<input name="username" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label class="col-3 col-form-label">密码：</label>
+						<div class="col-9">
+							<input name="password" type="password" class="form-control">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<div class="col-9 offset-3">
+							<div class="form-check">
+								<input type="checkbox" checked class="form-check-input">
+								<label class="form-check-label">同意本网站的用户协议</label>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<div class="col-9 offset-3">
+							<button type="submit" class="btn btn-primary">登 录</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="card-footer d-flex justify-content-between">
+				<a href="register.html" class="link-primary text-decoration-none">注册账户</a>
+				<a href="#" class="link-primary text-decoration-none">忘记密码？</a>
+			</div>
+		</div>
+	</div>
+	<script src="assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+	<!-- Option 1: Bootstrap Bundle with Popper -->
+	<script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

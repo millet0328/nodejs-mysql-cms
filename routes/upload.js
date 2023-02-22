@@ -23,7 +23,7 @@ var uuidv1 = require('uuid/v1');
  * 
  * @apiSuccess {String[]} data 返回图片地址.
  */
-router.post("/editor", upload.single('file'), async function (req, res) {
+router.post("/editor", upload.single('file'), async function(req, res) {
 	//文件类型
 	let { mimetype, size } = req.file;
 	//判断是否为图片
@@ -80,7 +80,7 @@ router.post("/editor", upload.single('file'), async function (req, res) {
  * 
  * @apiSuccess {String} src 返回图片地址.
  */
-router.post("/common", upload.single('file'), async function (req, res) {
+router.post("/common", upload.single('file'), async function(req, res) {
 	//上传类型
 	let { type } = req.body;
 	//文件类型
@@ -146,11 +146,20 @@ router.post("/common", upload.single('file'), async function (req, res) {
  * @apiSampleRequest /upload/remove
  */
 
-router.post('/remove', function (req, res) {
+router.post('/remove', function(req, res) {
 	let { src } = req.body;
+	// 判断是否是默认头像
+	let isDefault = src.includes('/avatar/default.jpg');
+	if (isDefault) {
+		res.json({
+			status: false,
+			msg: "默认头像不可删除!"
+		});
+		return;
+	}
 	src = src.replace(/.+\/images/, "./images");
 	let realPath = path.resolve(__dirname, '../public/', src);
-	fs.unlink(realPath, function (err) {
+	fs.unlink(realPath, function(err) {
 		if (err) throw err;
 		res.json({
 			status: true,

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="assets/lib/bootstrap-icons/bootstrap-icons.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+	<title>用户中心</title>
+</head>
+
+<body>
+	<!-- 页头 -->
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container">
+				<a class="navbar-brand" href="./index.html">听雨轩</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+					data-bs-target="#navbarSupportedContent">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+					<ul class="navbar-nav left me-auto mb-2 mb-lg-0">
+						<li class="nav-item">
+							<a class="nav-link active" href="./index.html">主页</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="./article-list.html">分类一</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="./article-list.html">分类二</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="./article-list.html">分类三</a>
+						</li>
+					</ul>
+					<ul class="navbar-nav right mb-2 mb-lg-0">
+						<li class="nav-item">
+							<a class="nav-link" href="login.html">登录</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="register.html">注册</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<!-- 内容 -->
+	<div class="container">
+		<!-- 面包屑导航 -->
+		<nav class="mt-3">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="index.html">主页</a></li>
+				<li class="breadcrumb-item active">用户中心</li>
+			</ol>
+		</nav>
+		<div class="row">
+			<!-- 侧边栏 -->
+			<div class="col-2 p-0">
+				<div class="card">
+					<div class="card-header">
+						用户中心
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item">
+							<a href="./user-center.html" class="text-decoration-none">
+								<svg class="bi mr-1" width="16" height="16" fill="currentColor">
+									<use xlink:href="./assets/lib/bootstrap-icons/bootstrap-icons.svg#file-person" />
+								</svg>
+								账户资料
+							</a>
+						</li>
+						<li class="list-group-item">
+							<a href="#" class="text-decoration-none">
+								<svg class="bi mr-1" width="16" height="16" fill="currentColor">
+									<use xlink:href="./assets/lib/bootstrap-icons/bootstrap-icons.svg#key" />
+								</svg>
+								修改密码
+							</a>
+						</li>
+						<li class="list-group-item">
+							<a href="#" class="text-decoration-none">
+								<svg class="bi mr-1" width="16" height="16" fill="currentColor">
+									<use xlink:href="./assets/lib/bootstrap-icons/bootstrap-icons.svg#chat-left-text" />
+								</svg>
+								我的消息
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- 内容 -->
+			<div class="col-10">
+				<div class="card">
+					<div class="card-header">
+						用户中心
+					</div>
+					<div class="card-body">
+						<form>
+							<div class="my-4 text-center">
+								<img src="assets/img/avatar.jpg" width="150" class="img-thumbnail rounded-circle"
+									alt="...">
+							</div>
+							<div class="mb-3 row">
+								<label class="col-3 col-form-label text-end">账号：</label>
+								<div class="col-7">
+									<input type="text" class="form-control" readonly>
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<label class="col-3 col-form-label text-end">昵称：</label>
+								<div class="col-7">
+									<input type="text" class="form-control">
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<label class="col-3 col-form-label text-end">性别：</label>
+								<div class="col-7">
+									<div class="form-check mt-1 form-check-inline">
+										<input class="form-check-input" name="sex" type="radio" value="男">
+										<label class="form-check-label">男</label>
+									</div>
+									<div class="form-check mt-1 form-check-inline">
+										<input class="form-check-input" name="sex" type="radio" value="女">
+										<label class="form-check-label">女</label>
+									</div>
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<label class="col-3 col-form-label text-end">手机：</label>
+								<div class="col-7">
+									<input type="text" class="form-control">
+								</div>
+							</div>
+							<div class="mb-5 row">
+								<div class="col-7 offset-3">
+									<button type="submit" class="btn btn-primary">保存修改</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 页尾 -->
+	<footer>
+		<div class="py-3 my-4">
+			<div class="text-center text-muted">© 2022 Company, Inc</div>
+		</div>
+	</footer>
+	<script src="assets/lib/jQuery/jquery-3.6.0.min.js"></script>
+	<!-- Option 1: Bootstrap Bundle with Popper -->
+	<script src="assets/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

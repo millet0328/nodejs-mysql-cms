@@ -56,30 +56,30 @@ router.post('/register', async (req, res) => {
 		});
 		return;
 	}
-	pool.getConnection(function(err, connection) {
+	pool.getConnection(function (err, connection) {
 		if (err) throw err; // not connected!
-		connection.beginTransaction(function(err) {
+		connection.beginTransaction(function (err) {
 			if (err) throw err;
 			let sql =
 				`INSERT INTO admin (username,password,fullname,sex,tel,email) VALUES (?,?,?,?,?,?)`;
-			connection.query(sql, [username, password, fullname, sex, tel, email], function(
+			connection.query(sql, [username, password, fullname, sex, tel, email], function (
 				error, results, fields) {
 				let { insertId, affectedRows } = results;
 				if (error || affectedRows <= 0) {
-					return connection.rollback(function() {
+					return connection.rollback(function () {
 						throw error || `${affectedRows} rows changed!`;
 					});
 				}
 				let sql = `INSERT INTO admin_role (admin_id,role_id) VALUES (?,3)`;
-				connection.query(sql, [insertId], function(error, results, fields) {
+				connection.query(sql, [insertId], function (error, results, fields) {
 					if (error) {
-						return connection.rollback(function() {
+						return connection.rollback(function () {
 							throw error;
 						});
 					}
-					connection.commit(function(err) {
+					connection.commit(function (err) {
 						if (err) {
-							return connection.rollback(function() {
+							return connection.rollback(function () {
 								throw err;
 							});
 						}
@@ -200,8 +200,7 @@ router.post('/info', async (req, res) => {
 	let { id, username, fullname, role, sex, tel, email, avatar } = req.body;
 	let sql = `UPDATE admin SET username = ?,fullname = ?,sex = ?,tel = ?,email = ?, avatar = ? WHERE id = ?;
 	UPDATE admin_role SET role_id = ? WHERE admin_id = ?`;
-	let [{ affectedRows }] = await db.query(sql, [username, fullname, sex, tel, email, avatar, id, role,
-		id]);
+	let [{ affectedRows }] = await db.query(sql, [username, fullname, sex, tel, email, avatar, id, role, id]);
 	if (!affectedRows) {
 		res.json({
 			status: false,
@@ -231,25 +230,23 @@ router.post('/info', async (req, res) => {
  *
  * @apiSampleRequest /admin/account
  */
- router.post("/account/", function (req, res) {
-    let { id } = req.user;
-    let { fullname, sex, avatar, tel, email } = req.body;
-    let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE id = ?`;
-    db.query(sql, [fullname, sex, avatar, tel, email, id], function (results) {
-        if (!results.affectedRows) {
-            res.json({
-                status: false,
-                msg: "修改失败！"
-            });
-            return;
-        }
-        res.json({
-            status: true,
-            msg: "修改成功！"
-        });
-    });
+router.post("/account/", async (req, res) => {
+	let { id } = req.user;
+	let { fullname, sex, avatar, tel, email } = req.body;
+	let sql = `UPDATE admin SET fullname = ?,sex = ?,avatar = ?,tel = ?,email = ? WHERE id = ?`;
+	let { affectedRows } = await db.query(sql, [fullname, sex, avatar, tel, email, id]);
+	if (!affectedRows) {
+		res.json({
+			status: false,
+			msg: "修改失败！"
+		});
+		return;
+	}
+	res.json({
+		status: true,
+		msg: "修改成功！"
+	});
 });
-
 
 /**
  * @api {post} /admin/remove 删除账户
