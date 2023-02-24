@@ -9,14 +9,14 @@ let pool = require('../../config/mysql');
  * @apiPermission 后台系统、前台
  * @apiGroup Notice
  *
- * @apiQuery { Number } id 公告id
+ * @apiQuery { Number } notice_id 公告id
  *
  * @apiSampleRequest /notice/detail
  */
 router.get('/detail', async (req, res) => {
-    let { id } = req.query;
-    const sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM notice WHERE id = ?';
-    let [results] = await pool.query(sql, [id]);
+    let { notice_id } = req.query;
+    const sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM `cms_notice` WHERE notice_id = ?';
+    let [results] = await pool.query(sql, [notice_id]);
     res.json({
         status: true,
         msg: "获取成功",
@@ -50,7 +50,7 @@ router.get("/list", async (req, res) => {
     let { pagesize = 10, pageindex = 1 } = req.query;
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
-    const sql = '(SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM notice WHERE is_sticky = 1 ORDER BY update_date DESC LIMIT 9999999) UNION ALL SELECT * FROM (SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM notice WHERE is_sticky = 0 ORDER BY create_date DESC LIMIT 9999999) AS temp LIMIT ? OFFSET ?';
+    const sql = '(SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM `cms_notice` WHERE is_sticky = 1 ORDER BY update_date DESC LIMIT 9999999) UNION ALL SELECT * FROM (SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM `cms_notice` WHERE is_sticky = 0 ORDER BY create_date DESC LIMIT 9999999) AS temp LIMIT ? OFFSET ?';
     let [results] = await pool.query(sql, [pagesize, offset, pagesize, offset]);
     res.json({
         status: true,

@@ -5,7 +5,7 @@ let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${access_token}`，登录成功返回的access_token。
  */
 
 /**
@@ -16,15 +16,15 @@ let pool = require('../../config/mysql');
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 用户id.
+ * @apiBody { Number } user_id 用户id.
  *
  * @apiSampleRequest /user/remove
  */
 
 router.post('/remove', async (req, res) => {
-    let { id } = req.body;
-    let sql = 'DELETE FROM user WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(sql, [id]);
+    let { user_id } = req.body;
+    let sql = 'DELETE FROM `cms_user` WHERE user_id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [user_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,
@@ -56,10 +56,10 @@ router.get('/list', async (req, res) => {
     pagesize = parseInt(pagesize);
     let offset = pagesize * (pageindex - 1);
     // 查询列表
-    const select_sql = 'SELECT id,username,nickname,sex,tel,usable FROM user LIMIT ? OFFSET ?';
+    const select_sql = 'SELECT user_id,username,nickname,sex,tel,email,avatar,usable FROM `cms_user` LIMIT ? OFFSET ?';
     let [users] = await pool.query(select_sql, [pagesize, offset]);
     // 计算总数
-    let total_sql = `SELECT COUNT(*) as total FROM user`;
+    let total_sql = 'SELECT COUNT(*) as total FROM `cms_user`';
     let [total] = await pool.query(total_sql, []);
     res.json({
         status: true,
@@ -76,16 +76,16 @@ router.get('/list', async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 用户id.
- * @apiBody { Number=1,0 } usable 状态，1-启用，0-禁用.
+ * @apiBody { Number } user_id 用户id.
+ * @apiBody { Number=1,-1 } usable 状态，1-启用，-1-禁用.
  *
  * @apiSampleRequest /user/usable
  */
 
 router.post('/usable', async (req, res) => {
-    let { id, usable } = req.body;
-    let sql = 'UPDATE user SET usable = ? WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(sql, [usable, id]);
+    let { user_id, usable } = req.body;
+    let sql = 'UPDATE `cms_user` SET usable = ? WHERE user_id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [usable, user_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,

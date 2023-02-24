@@ -9,11 +9,11 @@ const upload = multer();
 //图片处理
 const sharp = require('sharp');
 //uuid
-const { v4: uuidv4 } = require('uuid');
+const uuid = require('../../plugins/uuid');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${access_token}`，登录成功返回的access_token。
  */
 
 /**
@@ -65,7 +65,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
         return;
     }
     // 生成文件名
-    const filename = uuidv4()
+    const filename = uuid()
     //储存文件夹
     const fileFolder = `/images/${type}/`
     //处理图片
@@ -78,7 +78,7 @@ router.post("/common", upload.single('file'), async function (req, res) {
             src: process.env.server + fileFolder + filename + '.' + format
         });
     } catch (error) {
-        res.json({
+        res.status(500).json({
             status: false,
             msg: error.message,
             ...error,
@@ -123,7 +123,7 @@ router.post('/remove', async function (req, res) {
             msg: "删除成功"
         });
     } catch (error) {
-        res.json({
+        res.status(500).json({
             status: false,
             msg: error.message,
             ...error,

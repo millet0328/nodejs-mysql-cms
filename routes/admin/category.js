@@ -5,7 +5,7 @@ let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${access_token}`，登录成功返回的access_token。
  */
 
 /**
@@ -17,22 +17,20 @@ let pool = require('../../config/mysql');
  *
  * @apiUse Authorization
  *
- * @apiBody { String } name 分类名称.
- * @apiBody { Number } parent_id 父级分类id.一级分类的parent_id=0
+ * @apiBody { String } cate_name 分类名称。
+ * @apiBody { Number } parent_id 父级分类id。如果一级分类则 parent_id = 0
  *
  * @apiSampleRequest /category/add
  */
 
 router.post("/add", async (req, res) => {
-    let { name, parent_id } = req.body;
-    const sql = 'INSERT INTO category (`name`,parent_id) VALUES (?,?);'
-    let [{ insertId }] = await pool.query(sql, [name, parent_id]);
+    let { cate_name, parent_id } = req.body;
+    const sql = 'INSERT INTO `cms_category` (cate_name,parent_id) VALUES (?,?);'
+    let [{ insertId: cate_id }] = await pool.query(sql, [cate_name, parent_id]);
     res.json({
         status: true,
         msg: "添加成功！",
-        data: {
-            id: insertId
-        }
+        data: { cate_id }
     });
 });
 /**
@@ -44,15 +42,15 @@ router.post("/add", async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 分类id
+ * @apiBody { Number } cate_id 分类id
  *
  * @apiSampleRequest /category/remove
  */
 
 router.post("/remove", async (req, res) => {
-    let { id } = req.body;
-    let select_sql = 'SELECT * FROM category WHERE parent_id = ?';
-    let [results] = await pool.query(select_sql, [id]);
+    let { cate_id } = req.body;
+    let select_sql = 'SELECT * FROM `cms_category` WHERE parent_id = ?';
+    let [results] = await pool.query(select_sql, [cate_id]);
     if (results.length) {
         res.json({
             status: false,
@@ -60,8 +58,8 @@ router.post("/remove", async (req, res) => {
         });
         return;
     }
-    let delete_sql = 'DELETE FROM category WHERE id = ?'
-    let [{ affectedRows }] = await pool.query(delete_sql, [id]);
+    let delete_sql = 'DELETE FROM `cms_category` WHERE cate_id = ?'
+    let [{ affectedRows }] = await pool.query(delete_sql, [cate_id]);
     if (affectedRows) {
         res.json({
             status: true,
@@ -77,14 +75,14 @@ router.post("/remove", async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiQuery { Number } id 分类id
+ * @apiQuery { Number } cate_id 分类id
  *
  * @apiSampleRequest /category/detail
  */
 router.get("/detail", async (req, res) => {
-    let { id } = req.query;
-    const sql = 'SELECT * FROM category WHERE id = ?';
-    let [results] = await pool.query(sql, [id]);
+    let { cate_id } = req.query;
+    const sql = 'SELECT * FROM `cms_category` WHERE cate_id = ?';
+    let [results] = await pool.query(sql, [cate_id]);
     res.json({
         status: true,
         data: results[0]
@@ -99,16 +97,16 @@ router.get("/detail", async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 分类id
- * @apiBody { String } name 分类名称.
- * @apiBody { Number } parent_id 父级分类id.一级分类的parent_id=0
+ * @apiBody { Number } cate_id 分类id
+ * @apiBody { String } cate_name 分类名称.
+ * @apiBody { Number } parent_id 父级分类id。如果一级分类则 parent_id = 0
  *
  * @apiSampleRequest /category/edit
  */
 router.post('/edit', async (req, res) => {
-    const sql = 'UPDATE category SET name = ?,parent_id = ? WHERE id = ?';
-    let { id, name, parent_id } = req.body;
-    let [{ affectedRows }] = await pool.query(sql, [name, parent_id, id]);
+    const sql = 'UPDATE `cms_category` SET cate_name = ?, parent_id = ? WHERE cate_id = ?';
+    let { cate_id, cate_name, parent_id } = req.body;
+    let [{ affectedRows }] = await pool.query(sql, [cate_name, parent_id, cate_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,

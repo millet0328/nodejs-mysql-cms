@@ -11,7 +11,7 @@ let pool = require('../../config/mysql');
  *
  * @apiQuery { Number } [pagesize=10] 每一页数量.
  * @apiQuery { Number } [pageindex=1] 第几页.
- * @apiQuery { Number=1,-1 } [usable=1] 是否启用。1-启用，-1-禁用。
+ * @apiQuery { Number=1,-1 } [usable] 是否启用。1-启用，-1-禁用。
  *
  * @apiSuccess {Object[]} data 友情链接数组.
  *
@@ -24,14 +24,14 @@ router.get("/list", async (req, res) => {
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
     // 获取友情链接
-    let select_sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time FROM link WHERE 1 = 1';
+    let select_sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time FROM `cms_link` WHERE 1 = 1';
     if (usable) {
         select_sql += ` AND usable = ${usable}`
     }
     select_sql += ' ORDER BY `link_order` ASC LIMIT ? OFFSET ?';
     let [links] = await pool.query(select_sql, [pagesize, offset]);
     // 计算总数
-    let total_sql = 'SELECT COUNT(id) as total FROM link WHERE 1 = 1';
+    let total_sql = 'SELECT COUNT(link_id) as total FROM `cms_link` WHERE 1 = 1';
     if (usable) {
         total_sql += ` AND usable = ${usable}`
     }

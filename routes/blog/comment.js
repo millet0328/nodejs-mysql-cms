@@ -5,7 +5,7 @@ let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${access_token}`，登录成功返回的access_token。
  */
 
 /**
@@ -23,23 +23,18 @@ let pool = require('../../config/mysql');
  */
 
 router.post("/release/", async (req, res) => {
-    let { id } = req.user;
+    let { user_id } = req.auth;
     let { article_id, content } = req.body;
-    const sql = 'INSERT INTO comment ( user_id , article_id , content , create_date ) VALUES (?, ? , ? ,CURRENT_TIMESTAMP() )';
-    let [{ insertId, affectedRows }] = await pool.query(sql, [id, article_id, content]);
+    const sql = 'INSERT INTO `cms_comment` ( user_id , article_id , content , create_date ) VALUES (?, ? , ? ,CURRENT_TIMESTAMP() )';
+    let [{ insertId: comment_id, affectedRows }] = await pool.query(sql, [user_id, article_id, content]);
     if (affectedRows === 0) {
-        res.json({
-            status: false,
-            msg: "添加失败！"
-        });
+        res.json({ status: false, msg: "添加失败！" });
         return;
     }
     res.json({
         status: true,
         msg: "添加成功",
-        data: {
-            id: insertId,
-        }
+        data: { comment_id }
     });
 });
 
@@ -52,16 +47,16 @@ router.post("/release/", async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 评论id
+ * @apiBody { Number } comment_id 评论id
  *
  * @apiSampleRequest /comment/remove
  */
 
 router.post('/remove', async (req, res) => {
-    let { id: user_id } = req.user;
-    let { id } = req.body;
-    const select_sql = 'SELECT * FROM comment WHERE id = ? AND user_id = ?';
-    let [results] = await pool.query(select_sql, [id, user_id]);
+    let { user_id } = req.auth;
+    let { comment_id } = req.body;
+    const select_sql = 'SELECT * FROM `cms_comment` WHERE comment_id = ? AND user_id = ?';
+    let [results] = await pool.query(select_sql, [comment_id, user_id]);
     if (!results.length) {
         res.json({
             status: false,
@@ -69,8 +64,8 @@ router.post('/remove', async (req, res) => {
         });
         return;
     }
-    const delete_sql = 'DELETE FROM comment WHERE id = ? AND user_id = ?';
-    let [{ affectedRows }] = await pool.query(delete_sql, [id, user_id]);
+    const delete_sql = 'DELETE FROM `cms_comment` WHERE comment_id = ? AND user_id = ?';
+    let [{ affectedRows }] = await pool.query(delete_sql, [comment_id, user_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,
@@ -90,14 +85,16 @@ router.post('/remove', async (req, res) => {
  * @apiPermission 后台系统、前台
  * @apiGroup Comment
  *
- * @apiQuery { Number } id 评论id
+ * @apiUse Authorization
+ *
+ * @apiQuery { Number } comment_id 评论id
  *
  * @apiSampleRequest /comment/detail
  */
 router.get('/detail', async (req, res) => {
-    let { id } = req.query;
-    const sql = 'SELECT * FROM comment WHERE id = ?';
-    let [results] = await pool.query(sql, [id]);
+    let { comment_id } = req.query;
+    const sql = 'SELECT * FROM `cms_comment` WHERE comment_id = ?';
+    let [results] = await pool.query(sql, [comment_id]);
     res.json({
         status: true,
         msg: "获取成功",
@@ -114,17 +111,17 @@ router.get('/detail', async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 评论id.
+ * @apiBody { Number } comment_id 评论id.
  * @apiBody { String } content 评论内容.
  *
  * @apiSampleRequest /comment/edit
  */
 
 router.post('/edit', async (req, res) => {
-    let { id: user_id } = req.user;
-    let { id, content } = req.body;
-    const select_sql = 'SELECT * FROM comment WHERE id = ? AND user_id = ?';
-    let [results] = await pool.query(select_sql, [id, user_id]);
+    let { user_id } = req.auth;
+    let { comment_id, content } = req.body;
+    const select_sql = 'SELECT * FROM `cms_comment` WHERE comment_id = ? AND user_id = ?';
+    let [results] = await pool.query(select_sql, [comment_id, user_id]);
     if (!results.length) {
         res.json({
             status: false,
@@ -132,8 +129,8 @@ router.post('/edit', async (req, res) => {
         });
         return;
     }
-    const update_sql = 'UPDATE comment SET content = ? WHERE id = ? AND user_id = ?';
-    let [{ affectedRows }] = await pool.query(update_sql, [content, id, user_id]);
+    const update_sql = 'UPDATE `cms_comment` SET content = ? WHERE comment_id = ? AND user_id = ?';
+    let [{ affectedRows }] = await pool.query(update_sql, [content, comment_id, user_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,
@@ -153,7 +150,7 @@ router.post('/edit', async (req, res) => {
  * @apiPermission 前台
  * @apiGroup Comment
  *
- * @apiQuery { Number } id 文章id
+ * @apiQuery { Number } article_id 文章id
  * @apiQuery { Number } [pagesize=10] 每一页评论数量.
  * @apiQuery { Number } [pageindex=1] 第几页.
  *
@@ -161,15 +158,15 @@ router.post('/edit', async (req, res) => {
  */
 
 router.get("/list", async (req, res) => {
-    let { id, pagesize = 10, pageindex = 1 } = req.query;
+    let { article_id, pagesize = 10, pageindex = 1 } = req.query;
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
     // 查询列表
-    const select_sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, u.nickname AS user_nickname,a.title AS article_title FROM comment c JOIN user u ON c.user_id = u.id JOIN article a ON c.article_id = a.id WHERE c.article_id = ? ORDER BY c.create_date DESC LIMIT ? OFFSET ?';
-    let [comments] = await pool.query(select_sql, [id, pagesize, offset]);
+    const select_sql = 'SELECT c.*, DATE_FORMAT(c.create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(c.reply_date,"%Y-%m-%d %T") AS reply_time, u.nickname AS user_nickname, a.title AS article_title FROM `cms_comment` c JOIN `cms_user` u ON c.user_id = u.user_id JOIN `cms_article` a ON c.article_id = a.article_id WHERE c.article_id = ? AND c.is_visible = 1 ORDER BY c.create_date DESC LIMIT ? OFFSET ?';
+    let [comments] = await pool.query(select_sql, [article_id, pagesize, offset]);
     // 计算总数
-    let total_sql = `SELECT COUNT(*) as total FROM comment WHERE article_id = ?`;
-    let [total] = await pool.query(total_sql, [id]);
+    let total_sql = 'SELECT COUNT(*) as total FROM `cms_comment` WHERE article_id = ? AND is_visible = 1';
+    let [total] = await pool.query(total_sql, [article_id]);
     res.json({
         status: true,
         msg: "获取成功",

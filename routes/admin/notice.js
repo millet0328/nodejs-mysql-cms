@@ -5,7 +5,7 @@ let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${access_token}`，登录成功返回的access_token。
  */
 
 /**
@@ -25,8 +25,8 @@ let pool = require('../../config/mysql');
 
 router.post("/release/", async (req, res) => {
     let { title, content, is_sticky = 0 } = req.body;
-    const sql = 'INSERT INTO notice ( title , content , create_date , update_date , is_sticky ) VALUES (?, ? , CURRENT_TIMESTAMP() ,CURRENT_TIMESTAMP(), ?)';
-    let [{ insertId, affectedRows }] = await pool.query(sql, [title, content, is_sticky]);
+    const sql = 'INSERT INTO `cms_notice` ( title , content , create_date , update_date , is_sticky ) VALUES (?, ? , CURRENT_TIMESTAMP() ,CURRENT_TIMESTAMP(), ?)';
+    let [{ insertId: notice_id, affectedRows }] = await pool.query(sql, [title, content, is_sticky]);
     if (affectedRows === 0) {
         res.json({
             status: false,
@@ -37,9 +37,7 @@ router.post("/release/", async (req, res) => {
     res.json({
         status: true,
         msg: "添加成功",
-        data: {
-            id: insertId
-        }
+        data: { notice_id }
     });
 });
 
@@ -51,15 +49,15 @@ router.post("/release/", async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 公告id
+ * @apiBody { Number } notice_id 公告id
  *
  * @apiSampleRequest /notice/remove
  */
 
 router.post('/remove', async (req, res) => {
-    let { id } = req.body;
-    const sql = 'DELETE FROM notice WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(sql, [id]);
+    let { notice_id } = req.body;
+    const sql = 'DELETE FROM `cms_notice` WHERE notice_id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [notice_id]);
     if (affectedRows === 0) {
         res.json({
             status: true,
@@ -81,7 +79,7 @@ router.post('/remove', async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 公告id.
+ * @apiBody { Number } notice_id 公告id.
  * @apiBody { String } title 公告标题.
  * @apiBody { String } content 公告内容.
  * @apiBody { Number=1,0 } is_sticky=0 是否置顶。1-置顶，0-正常。
@@ -89,9 +87,9 @@ router.post('/remove', async (req, res) => {
  * @apiSampleRequest /notice/edit
  */
 router.post('/edit', async (req, res) => {
-    let { id, title, content, is_sticky } = req.body;
-    const sql = 'UPDATE notice SET  title = ? , content = ? , is_sticky = ? WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(sql, [title, content, is_sticky, id]);
+    let { notice_id, title, content, is_sticky } = req.body;
+    const sql = 'UPDATE `cms_notice` SET  title = ? , content = ? , is_sticky = ? WHERE notice_id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [title, content, is_sticky, notice_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,
@@ -114,15 +112,15 @@ router.post('/edit', async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 公告id.
+ * @apiBody { Number } notice_id 公告id.
  * @apiBody { Number=1,0 } is_sticky 是否置顶。1-置顶，0-正常。
  *
  * @apiSampleRequest /notice/stick
  */
 router.post('/stick', async (req, res) => {
-    let { id, is_sticky } = req.body;
-    const sql = 'UPDATE notice SET is_sticky = ? WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(sql, [is_sticky, id]);
+    let { notice_id, is_sticky } = req.body;
+    const sql = 'UPDATE `cms_notice` SET is_sticky = ? WHERE notice_id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [is_sticky, notice_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,

@@ -1,19 +1,16 @@
 const express = require('express');
 const router = express.Router();
-// 文件模块
-const fs = require('fs');
-const path = require('path');
 //文件传输
 const multer = require('multer');
 const upload = multer();
 //图片处理
 const sharp = require('sharp');
 //uuid
-const { v4: uuidv4 } = require('uuid');
+const uuid = require('../../plugins/uuid');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${access_token}`，登录成功返回的access_token。
  */
 
 /**
@@ -55,7 +52,7 @@ router.post("/editor", upload.single('file'), async function (req, res) {
     //扩展名
     let { format } = await sharp(req.file.buffer).metadata();
     // 生成文件名
-    let filename = uuidv4();
+    let filename = uuid();
     //储存文件夹
     let fileFolder = `/images/details/`;
     //处理图片

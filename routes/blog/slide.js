@@ -23,7 +23,7 @@ router.get("/list", async (req, res) => {
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
     // 根据参数，拼接SQL
-    let select_sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time FROM slide WHERE 1 = 1';
+    let select_sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time FROM `cms_slide` WHERE 1 = 1';
     if (usable) {
         select_sql += ` AND usable = ${usable}`
     }
@@ -31,7 +31,7 @@ router.get("/list", async (req, res) => {
     // 判断启用/禁用状态
     let [slides] = await pool.query(select_sql, [pagesize, offset]);
     // 计算总数
-    let total_sql = `SELECT COUNT(*) as total FROM slide WHERE 1 = 1`;
+    let total_sql = 'SELECT COUNT(*) as total FROM `cms_slide` WHERE 1 = 1';
     if (usable) {
         total_sql += ` AND usable = ${usable}`
     }

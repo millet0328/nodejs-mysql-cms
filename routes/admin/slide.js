@@ -8,7 +8,7 @@ const fs = require('fs/promises');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${access_token}`，登录成功返回的access_token。
  */
 
 /**
@@ -30,21 +30,16 @@ const fs = require('fs/promises');
 
 router.post("/add/", async (req, res) => {
     let { title, picture, url, target = '_blank', slide_order } = req.body;
-    const sql = 'INSERT INTO slide ( title, picture, url, target, slide_order, create_date ) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP() )';
-    let [{ insertId, affectedRows }] = await pool.query(sql, [title, picture, url, target, slide_order]);
+    const sql = 'INSERT INTO `cms_slide` ( title, picture, url, target, slide_order, create_date ) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP() )';
+    let [{ insertId: slide_id, affectedRows }] = await pool.query(sql, [title, picture, url, target, slide_order]);
     if (affectedRows === 0) {
-        res.json({
-            status: false,
-            msg: "添加失败！"
-        });
+        res.json({ status: false, msg: "添加失败！" });
         return;
     }
     res.json({
         status: true,
         msg: "添加成功",
-        data: {
-            id: insertId
-        }
+        data: { slide_id }
     });
 });
 
@@ -56,16 +51,16 @@ router.post("/add/", async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 幻灯片id
+ * @apiBody { Number } slide_id 幻灯片id
  *
  * @apiSampleRequest /slide/remove
  */
 
 router.post('/remove', async (req, res) => {
-    let { id } = req.body;
+    let { slide_id } = req.body;
     // 查询幻灯片的图片地址
-    const select_sql = 'SELECT * FROM slide WHERE id = ?';
-    let [results] = await pool.query(select_sql, [id]);
+    const select_sql = 'SELECT * FROM `cms_slide` WHERE slide_id = ?';
+    let [results] = await pool.query(select_sql, [slide_id]);
     let { picture } = results[0];
     // 计算真实地址
     let src = picture.replace(/.+\/images/, "./images");
@@ -74,8 +69,8 @@ router.post('/remove', async (req, res) => {
         // 物理删除幻灯片
         await fs.unlink(realPath);
         // 删除slide表数据
-        const delete_sql = 'DELETE FROM slide WHERE id = ?';
-        let [{ affectedRows }] = await pool.query(delete_sql, [id]);
+        const delete_sql = 'DELETE FROM `cms_slide` WHERE slide_id = ?';
+        let [{ affectedRows }] = await pool.query(delete_sql, [slide_id]);
         if (affectedRows === 0) {
             res.json({
                 status: false,
@@ -88,7 +83,7 @@ router.post('/remove', async (req, res) => {
             msg: "删除成功!"
         });
     } catch (error) {
-        res.json({
+        res.status(500).json({
             status: false,
             msg: "幻灯片删除失败!",
             error: error.message,
@@ -104,7 +99,7 @@ router.post('/remove', async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 幻灯片id.
+ * @apiBody { Number } slide_id 幻灯片id.
  * @apiBody { String } title 幻灯片标题文字.
  * @apiBody { String } picture 图片地址.
  * @apiBody { String } url 跳转的url地址.
@@ -114,9 +109,9 @@ router.post('/remove', async (req, res) => {
  * @apiSampleRequest /slide/edit
  */
 router.post('/edit', async (req, res) => {
-    let { id, title, picture, url, target = '_blank', slide_order } = req.body;
-    const sql = 'UPDATE slide SET title = ?, picture = ?, url = ?, target = ?, slide_order = ? WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(sql, [title, picture, url, target, slide_order, id]);
+    let { slide_id, title, picture, url, target = '_blank', slide_order } = req.body;
+    const sql = 'UPDATE `cms_slide` SET title = ?, picture = ?, url = ?, target = ?, slide_order = ? WHERE slide_id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [title, picture, url, target, slide_order, slide_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,
@@ -138,15 +133,15 @@ router.post('/edit', async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 幻灯片id.
+ * @apiBody { Number } slide_id 幻灯片id.
  * @apiBody { Number=1,-1 } usable 是否启用。1-启用，-1-禁用。
  *
  * @apiSampleRequest /slide/usable
  */
 router.post('/usable', async (req, res) => {
-    let { id, usable } = req.body;
-    const sql = 'UPDATE slide SET usable = ? WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(sql, [usable, id]);
+    let { slide_id, usable } = req.body;
+    const sql = 'UPDATE `cms_slide` SET usable = ? WHERE slide_id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [usable, slide_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,

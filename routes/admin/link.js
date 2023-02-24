@@ -5,7 +5,7 @@ let pool = require('../../config/mysql');
 
 /**
  * @apiDefine Authorization
- * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${token}`，登录/注册成功返回的token。
+ * @apiHeader {String} Authorization 需在请求headers中设置Authorization: `Bearer ${access_token}`，登录成功返回的access_token。
  */
 
 /**
@@ -25,40 +25,37 @@ let pool = require('../../config/mysql');
 
 router.post("/", async (req, res) => {
     let { title, url, link_order } = req.body;
-    const sql = 'INSERT INTO link ( title, url, link_order, create_date ) VALUES (?, ?, ?, CURRENT_TIMESTAMP() )';
-    let [{ insertId, affectedRows }] = await pool.query(sql, [title, url, link_order]);
+    const sql = 'INSERT INTO `cms_link` ( title, url, link_order, create_date ) VALUES (?, ?, ?, CURRENT_TIMESTAMP() )';
+    let [{ insertId: link_id, affectedRows }] = await pool.query(sql, [title, url, link_order]);
     if (affectedRows === 0) {
-        res.json({
-            status: false,
-            msg: "添加失败！"
-        });
+        res.json({ status: false, msg: "添加失败！" });
         return;
     }
     res.json({
         status: true,
         msg: "添加成功",
-        data: { id: insertId }
+        data: { link_id }
     });
 });
 
 /**
- * @api {delete} /link/:id 删除指定id的友情链接
+ * @api {delete} /link/:link_id 删除指定id的友情链接
  * @apiName RemoveLink
  * @apiPermission 后台系统
  * @apiGroup Link
  *
  * @apiUse Authorization
  *
- * @apiParam { Number } id 友情链接id
+ * @apiParam { Number } link_id 友情链接id
  *
  * @apiSampleRequest /link/
  */
 
-router.delete('/:id', async (req, res) => {
-    let { id } = req.params;
+router.delete('/:link_id', async (req, res) => {
+    let { link_id } = req.params;
     // 删除标签
-    let delete_sql = 'DELETE FROM link WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(delete_sql, [id]);
+    let delete_sql = 'DELETE FROM `cms_link` WHERE link_id = ?';
+    let [{ affectedRows }] = await pool.query(delete_sql, [link_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,
@@ -73,14 +70,14 @@ router.delete('/:id', async (req, res) => {
 });
 
 /**
- * @api {put} /link/:id 编辑友情链接
+ * @api {put} /link/:link_id 编辑友情链接
  * @apiName UpdateLink
  * @apiPermission 后台系统
  * @apiGroup Link
  *
  * @apiUse Authorization
  *
- * @apiParam { Number } id 友情链接id
+ * @apiParam { Number } link_id 友情链接id
  * @apiBody { String } title 链接标题.
  * @apiBody { String } url 链接的url地址.
  * @apiBody { Number } link_order 排序数字，数字越小越靠前.
@@ -91,11 +88,11 @@ router.delete('/:id', async (req, res) => {
  * @apiSampleRequest /link/
  */
 
-router.put('/:id', async (req, res) => {
-    let { id } = req.params;
+router.put('/:link_id', async (req, res) => {
+    let { link_id } = req.params;
     let { title, url, link_order } = req.body;
-    let sql = `UPDATE link SET title = ?, url = ?, link_order = ? WHERE id = ?`;
-    let [{ affectedRows }] = await pool.query(sql, [title, url, link_order, id]);
+    let sql = 'UPDATE `cms_link` SET title = ?, url = ?, link_order = ? WHERE link_id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [title, url, link_order, link_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,
@@ -117,15 +114,15 @@ router.put('/:id', async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiBody { Number } id 幻灯片id.
+ * @apiBody { Number } link_id 友情链接id.
  * @apiBody { Number=1,-1 } usable 是否启用。1-启用，-1-禁用。
  *
  * @apiSampleRequest /link/usable
  */
 router.post('/usable', async (req, res) => {
-    let { id, usable } = req.body;
-    const sql = 'UPDATE link SET usable = ? WHERE id = ?';
-    let [{ affectedRows }] = await pool.query(sql, [usable, id]);
+    let { link_id, usable } = req.body;
+    const sql = 'UPDATE `cms_link` SET usable = ? WHERE link_id = ?';
+    let [{ affectedRows }] = await pool.query(sql, [usable, link_id]);
     if (affectedRows === 0) {
         res.json({
             status: false,
