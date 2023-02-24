@@ -17,7 +17,7 @@
     "express-async-errors": "^3.1.1",
     "express-jwt": "^7.7.5",
     "http-errors": "^2.0.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",
