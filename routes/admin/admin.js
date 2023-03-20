@@ -73,7 +73,7 @@ router.post('/register', async (req, res) => {
         // 开启事务
         await connection.beginTransaction();
         // 创建新账户
-        let insert_admin_sql = 'INSERT INTO `sys_user` (username, password, fullname, tel, avatar, create_date) VALUES (?,?,?,?,?,?,?,CURRENT_TIMESTAMP())';
+        let insert_admin_sql = 'INSERT INTO `sys_user` (username, password, fullname, tel, avatar, create_date) VALUES (?,?,?,?,?,CURRENT_TIMESTAMP())';
         let [{ insertId: user_id, affectedRows: admin_affected_rows }] = await connection.query(insert_admin_sql, [username, password, fullname, tel, defaultAvatar]);
         if (admin_affected_rows === 0) {
             await connection.rollback();

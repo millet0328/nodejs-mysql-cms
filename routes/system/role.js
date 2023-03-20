@@ -144,7 +144,9 @@ router.delete('/:role_id', async (req, res) => {
  *
  * @apiParamExample {json} body参数:
  * {
- *   "name": '库管',
+ *   "role_name": '设计',
+ *   "role_code": 'DESIGNER',
+ *   "role_description": '设计师，具有文章、轮播图等权限',
  * }
  * @apiSampleRequest /role
  */

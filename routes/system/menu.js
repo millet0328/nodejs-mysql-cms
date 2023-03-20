@@ -9,7 +9,7 @@ let pool = require('../../config/mysql');
  */
 
 /**
- * @api {post} /menu 添加菜单
+ * @api {post} /menu 添加子级菜单
  * @apiName MenuInsert
  * @apiGroup Menu
  * @apiPermission 后台系统
@@ -258,7 +258,7 @@ router.put("/icon/:menu_id", async (req, res) => {
  */
 router.get("/sub", async (req, res) => {
     let { parent_id } = req.query;
-    let sql = 'SELECT * FROM `role_menu_view` WHERE parent_id = ? ORDER BY menu_order';
+    let sql = 'SELECT * FROM `role_menu_view` WHERE parent_id = ? AND role_id = 1 ORDER BY menu_order';
     let [results] = await pool.query(sql, [parent_id]);
     res.json({
         status: true,

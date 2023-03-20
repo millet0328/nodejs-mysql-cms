@@ -9,7 +9,7 @@ let pool = require('../../config/mysql');
  */
 
 /**
- * @api {post} /user/remove 删除账户
+ * @api {post} /user/remove 删除普通用户
  * @apiName UserRemove
  * @apiPermission 后台系统
  * @apiGroup User
@@ -39,7 +39,7 @@ router.post('/remove', async (req, res) => {
 })
 
 /**
- * @api {get} /user/list 获取用户列表
+ * @api {get} /user/list 获取普通用户列表
  * @apiName UserList
  * @apiPermission 后台系统
  * @apiGroup User
@@ -69,7 +69,7 @@ router.get('/list', async (req, res) => {
 });
 
 /**
- * @api {post} /user/usable 启用/禁用账户
+ * @api {post} /user/usable 启用/禁用普通用户
  * @apiName UserUsable
  * @apiPermission 后台系统
  * @apiGroup User

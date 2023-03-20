@@ -97,7 +97,7 @@ router.post("/", async (req, res) => {
  * @apiBody {String} component_path 路由组件路径。
  * @apiBody {Number} parent_id 父级路由权限的 permission_id，如果一级路由则 parent_id = 0。
  * @apiBody {String} [route_alias] 路由别名。
- * @apiBody {String=0,1} require_auth 是否需要登录认证，需要：1，不需要：0。
+ * @apiBody {String=0,1} require_auth 是否需要认证登录状态，需要认证：1，对外公开：0。
  * @apiBody {String} permission_remark 备注。
  *
  * @apiExample {js} 参数示例:
@@ -237,7 +237,8 @@ router.delete("/:route_id", async (req, res) => {
  */
 router.get("/sub", async (req, res) => {
     let { parent_id } = req.query;
-    let sql = 'SELECT * FROM `role_route_view` WHERE parent_id = ?';
+    // TODO 精简字段
+    let sql = 'SELECT route_id, route_name, route_path, route_alias, route_title, route_full_path, component_name, component_path, parent_id, permission_id, permission_remark, permission_code, require_auth FROM `role_route_view` WHERE parent_id = ? AND role_id = 1';
     let [results] = await pool.query(sql, [parent_id]);
     res.json({
         status: true,
@@ -261,7 +262,7 @@ router.get("/sub", async (req, res) => {
 router.get('/all', async (req, res) => {
     let { type = 'flat' } = req.query;
     // 查询路由
-    let select_route_sql = 'SELECT * FROM `role_route_view` WHERE role_id = 1';
+    let select_route_sql = 'SELECT route_id, route_name, route_path, route_alias, route_title, route_full_path, component_name, component_path, parent_id, permission_id, permission_remark, permission_code, require_auth FROM `role_route_view` WHERE role_id = 1';
     let [routes] = await pool.query(select_route_sql, []);
     // 扁平数组
     if (type === 'flat') {

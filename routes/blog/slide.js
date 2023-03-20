@@ -23,7 +23,7 @@ router.get("/list", async (req, res) => {
     pagesize = parseInt(pagesize);
     const offset = pagesize * (pageindex - 1);
     // 根据参数，拼接SQL
-    let select_sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time FROM `cms_slide` WHERE 1 = 1';
+    let select_sql = 'SELECT *, DATE_FORMAT(create_date,"%Y-%m-%d %T") AS create_time, DATE_FORMAT(update_date,"%Y-%m-%d %T") AS update_time FROM `cms_slide` WHERE 1 = 1';
     if (usable) {
         select_sql += ` AND usable = ${usable}`
     }
