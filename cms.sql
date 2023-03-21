@@ -11,7 +11,7 @@
  Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 27/02/2023 10:19:05
+ Date: 12/03/2023 00:01:05
 */
 
 SET NAMES utf8mb4;
@@ -165,14 +165,15 @@ CREATE TABLE `cms_notice`  (
   `update_date` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '编辑时间',
   `is_sticky` tinyint NOT NULL DEFAULT 0 COMMENT '是否置顶，1-置顶，0-正常',
   PRIMARY KEY (`notice_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '公告表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '公告表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of cms_notice
 -- ----------------------------
 INSERT INTO `cms_notice` VALUES (1, '桃花诗', '<p style=\"text-align:center;\">《桃花诗》</p><p style=\"text-align:center;\">&nbsp;明.唐寅</p><p style=\"text-align:center;\">桃花坞里桃花庵，桃花庵下桃花仙。</p><p style=\"text-align:center;\">桃花仙人种桃树，又折花枝当酒钱。</p><p style=\"text-align:center;\">酒醒只在花前坐，酒醉还须花下眠。</p><p style=\"text-align:center;\">花前花后日复日，酒醉酒醒年复年。</p><p style=\"text-align:center;\">不愿鞠躬车马前，但愿老死花酒间。</p><p style=\"text-align:center;\">&nbsp;车尘马足贵者趣，酒盏花枝贫者缘。</p><p style=\"text-align:center;\">若将富贵比贫贱，一在平地一在天。</p><p style=\"text-align:center;\">若将贫贱比车马，他得驱驰我得闲。</p><p style=\"text-align:center;\">世人笑我忒疯癫，我笑世人看不穿。</p><p style=\"text-align:center;\">记得五陵豪杰墓，无酒无花锄作田。</p>', '2022-03-06 16:37:01', '2022-10-23 09:19:45', 1);
 INSERT INTO `cms_notice` VALUES (2, '登鹳雀楼', '<p>白日依山尽，黄河入海流。<br>欲穷千里目，更上一层楼。</p>', '2022-03-06 16:38:59', '2022-10-23 09:19:43', 0);
-INSERT INTO `cms_notice` VALUES (3, '江雪', '<p style=\"text-align: center;\">千山鸟飞绝，万径人踪灭。<br></p><p style=\"text-align: center;\">孤舟蓑笠翁，独钓寒江雪。</p>', '2022-03-06 16:39:48', '2023-02-27 01:45:38', 1);
+INSERT INTO `cms_notice` VALUES (3, '江雪', '<p style=\"text-align: center;\">千山鸟飞绝，万径人踪灭。<br></p><p style=\"text-align: center;\">孤舟蓑笠翁，独钓寒江雪。</p>', '2022-03-06 16:39:48', '2023-03-02 00:24:36', 0);
+INSERT INTO `cms_notice` VALUES (4, '大淘宝技术2022技术年货来了！《2022技术人的百宝黑皮书》电子书公开下载', '<p style=\"text-align: start;\">新年好！岁末年初，温故而知新。<br>过去一年，我们尝试在分享的过程中，对自己做过的工作进行系统性的总结和提炼，升华自己对技术深度的理解；更希望能够与同行交流互动，共同关注业务的差异性、技术思考的不同路径、技术的困难挑战以及对未来的思考，彼此成就，共同成长。<br>基于此，我们将一整年的精华内容梳理合并，重磅推出大淘宝技术年货《2022技术人的百宝黑皮书》。<br>在2022年的技术年货中，你将看到以下内容——<br>一、大淘宝各技术栈工程师重新定义和解决问题，分享消费点滴改变背后的技术深意<br>二、大淘宝技术工程师们的成长经验沉淀，从幼稚到成熟，就是从不负责任到承担责任的过程<br>三、50 余位工程师推荐学习的GitHub项目，入门级经典库or框架，勤学勤练共同成长<br>四、2022大淘宝技术顶会 paper 全文，窥见相关领域下一步最新方向</p><p style=\"text-align: start;\">电子书目录内容展示（部分）</p><p style=\"text-align: start;\">第一部分 年度精选技术栈内容<br>终端技术篇<br>● 技术经典总结：<br>○ 内存优化: 纹理压缩技术<br>○ 移动域全链路可观测架构和关键技术<br>○ 性能优化之接口优化<br>○ APM 页面加载耗时校准<br>○ 19条跨端cpp开发有效经验总结<br>○ 下一代响应式Web设计：组件驱动式Web设计<br>○ Flutter 新一代图形渲染器 Impeller<br>○ HTTPS的原理浅析与本地开发实践<br>○ 无代码生产新模式探索<br>○ HTTP3 RFC标准正式发布，QUIC会成为传输技术的新一代颠覆者吗？<br>● 相关业务实践：<br>○ 淘宝购物车5年客户端技术升级与沉淀<br>○ 淘宝长辈模式客户端技术实践万字总结<br>○ 打造淘宝极简包的轻量化框架<br>○ 我在淘宝做弹窗，2022 年初的回顾与展望<br>● 年度经典专题：<br>○ 跨全端SDK技术演进<br>○ 跨桌面端Web容器演进<br>○ 跨桌面端之组件化实践</p><p style=\"text-align: start;\">服务端技术篇<br>● 技术经典总结：<br>○ 合理使用线程池以及线程变量<br>○ mysql锁机制的再研究<br>○ 数据库存储选型经验总结<br>○ 开发规约的意义与细则<br>○ 如何避免写重复代码：善用抽象和组合<br>○ MapStruct，降低无用代码的神器<br>○ 一个搞定责任链的注解<br>○ stream的实用方法和注意事项<br>○ 响应式编程的复杂度和简化<br>○ 一种可灰度的接口迁移方案<br>● 相关业务实践：<br>○ 谈一谈凑单页的那些优雅系统设计<br>○ 大淘宝用户平台技术团队单元测试建设<br>○ 淘宝扫一扫架构升级 - 设计模式的应用</p><p style=\"text-align: start;\">另还有【3DXR技术篇】【数据算法篇】【音视频与图像技术篇】【技术质量篇】等篇章内容待你下载全本内容解锁。</p><p style=\"text-align: start;\"><img src=\"https://segmentfault.com/img/bVc5LCW\" alt=\"\" data-href=\"\" style=\"\"></p><p style=\"text-align: start;\">——如何下载——<br>点击【报名参加】进入《2022技术人的百宝黑皮书》下载页面，即可获得电子书全本内容</p>', '2023-03-02 00:23:56', '2023-03-02 00:23:56', 1);
 
 -- ----------------------------
 -- Table structure for cms_slide
@@ -195,7 +196,7 @@ CREATE TABLE `cms_slide`  (
 -- Records of cms_slide
 -- ----------------------------
 INSERT INTO `cms_slide` VALUES (1, '1', 'http://localhost:3001/images/common/4cb37c20-b42a-11ec-9686-9534ec65c3ac.jpeg', 'http://www.test.com/', '_blank', 1, 1, '2022-04-04 23:36:36', '2022-04-07 01:59:22');
-INSERT INTO `cms_slide` VALUES (2, '测试标题', 'http://localhost:3001/images/common/2647d170-b435-11ec-a1e0-9ff51000691e.jpeg', 'http://www.123.com', '_blank', 2, -1, '2022-04-05 00:35:14', '2022-10-11 15:15:32');
+INSERT INTO `cms_slide` VALUES (2, '测试标题', 'http://localhost:3001/images/common/2647d170-b435-11ec-a1e0-9ff51000691e.jpeg', 'http://www.123.com', '_blank', 2, -1, '2022-04-05 00:35:14', '2023-03-02 00:52:52');
 INSERT INTO `cms_slide` VALUES (3, 'test', 'http://localhost:3001/images/common/14858e90-b43b-11ec-8b84-0b17af77884d.jpeg', 'http://www.vote.com', '_self', 3, 1, '2022-04-05 01:18:03', '2022-10-23 09:30:23');
 
 -- ----------------------------
@@ -244,11 +245,11 @@ CREATE TABLE `cms_user`  (
 -- ----------------------------
 -- Records of cms_user
 -- ----------------------------
-INSERT INTO `cms_user` VALUES (1, 'papi', '123', 'papi酱', '女', '13475829262', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, '5aa55fca-c7e2-4233-ab2f-2a12cc2bf941', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3NzA1MzkyOCwiZXhwIjoxNjc5NjQ1OTI4LCJqdGkiOiI1YWE1NWZjYS1jN2UyLTQyMzMtYWIyZi0yYTEyY2MyYmY5NDEifQ.HnqRh8OLzfoHiTj-_JBfkLNlr6P7Gl8Wa4g_T9qmXdA', '2016-06-25 23:15:13', '2023-02-22 16:18:48');
-INSERT INTO `cms_user` VALUES (2, 'moz', '123', '夏目友人帐', '女', '13475829262', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, NULL, NULL, '2019-11-08 23:15:38', '2022-10-11 15:26:48');
+INSERT INTO `cms_user` VALUES (1, 'papi', '123', 'papi酱', '女', '13475829262', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 'c0d09f86-bced-4495-ae22-8163ea17639a', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3NzcyMzU1MywiZXhwIjoxNjgwMzE1NTUzLCJqdGkiOiJjMGQwOWY4Ni1iY2VkLTQ0OTUtYWUyMi04MTYzZWExNzYzOWEifQ.AvJBLo5HDN-7H06K4SOb8VILKGSWivU5tXxK2I9xrcQ', '2016-06-25 23:15:13', '2023-03-02 10:19:13');
+INSERT INTO `cms_user` VALUES (2, 'moz', '123', '夏目友人帐', '女', '13475829262', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, '676c3639-dfe9-4859-bf2d-bd1fe14d8557', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3NzcyNDIzMiwiZXhwIjoxNjgwMzE2MjMyLCJqdGkiOiI2NzZjMzYzOS1kZmU5LTQ4NTktYmYyZC1iZDFmZTE0ZDg1NTcifQ.U47dH7tYN6-NdIUOyTQsthGcuLBX7boYxy3dI2m0jFk', '2019-11-08 23:15:38', '2023-03-02 10:30:32');
 INSERT INTO `cms_user` VALUES (3, 'sky', '123', '乌鸦校尉', '男', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', -1, NULL, NULL, '2020-06-22 12:58:58', '2022-10-11 16:20:03');
-INSERT INTO `cms_user` VALUES (4, 'orz', '123', '咸鱼', '男', '13475829262', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 0, NULL, NULL, '2022-07-07 23:16:39', '2022-10-23 09:27:03');
-INSERT INTO `cms_user` VALUES (5, 'test', '123', 'test', '男', '13475829262', NULL, 'http://localhost:3001/images/avatar/default.jpg', 1, 'ef3b19fd-7977-4dda-bc00-3c2adf17b45f', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY2NTQ3NjU2OCwiZXhwIjoxNjY1NTYyOTY4LCJqdGkiOiJlZjNiMTlmZC03OTc3LTRkZGEtYmMwMC0zYzJhZGYxN2I0NWYifQ.rUMpHUtuphP0RTkVyLKPMRtnxfPPJUkrddgNk-IBIBw', '2022-10-11 16:16:57', '2022-10-11 16:22:48');
+INSERT INTO `cms_user` VALUES (4, 'orz', '123', '咸鱼', '男', '13475829262', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 0, 'be808ed3-88e1-439f-ae47-576767fb9335', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3NzcyNDI1MSwiZXhwIjoxNjgwMzE2MjUxLCJqdGkiOiJiZTgwOGVkMy04OGUxLTQzOWYtYWU0Ny01NzY3NjdmYjkzMzUifQ.xsAgSnCtT21jmXBc_hZMxXR3kBqKX19kLUMZmk3eCjA', '2022-07-07 23:16:39', '2023-03-02 10:30:52');
+INSERT INTO `cms_user` VALUES (5, 'test', '123', 'test', '男', '13475829262', NULL, 'http://localhost:3001/images/avatar/default.jpg', 1, '12b8299b-c82e-4c35-a7cf-bb189291c0f4', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3NzcyNDIyMCwiZXhwIjoxNjgwMzE2MjIwLCJqdGkiOiIxMmI4Mjk5Yi1jODJlLTRjMzUtYTdjZi1iYjE4OTI5MWMwZjQifQ.gqoPln8v4Fsz1vw-pryHgpz3sMzkjKILoxLZZ-4d5-Q', '2022-10-11 16:16:57', '2023-03-02 10:30:20');
 
 -- ----------------------------
 -- Table structure for sys_element
@@ -776,7 +777,7 @@ CREATE TABLE `sys_role`  (
   `role_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '角色名称',
   `role_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '角色代码',
   `role_description` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '角色描述',
-  `editable` tinyint NULL DEFAULT NULL COMMENT '可编辑状态，1-编辑，0-锁定',
+  `editable` tinyint NULL DEFAULT 1 COMMENT '可编辑状态，1-编辑，0-锁定',
   PRIMARY KEY (`role_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '角色表' ROW_FORMAT = DYNAMIC;
 
@@ -936,7 +937,7 @@ INSERT INTO `sys_route` VALUES (18, NULL, 'SlideList', 'list', '/slide/list', 'L
 INSERT INTO `sys_route` VALUES (19, NULL, 'Link', '/link', '/link', 'Layout', '@/components/Layout.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (20, NULL, 'LinkList', 'list', '/link/list', 'List', '@/views/Link/List.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (21, NULL, 'Account', '/account', '/account', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (22, NULL, 'AccountInfo', 'info', '/account/', 'Info', '@/views/Account/Info.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (22, NULL, 'AccountInfo', 'info', '/account/info', 'Info', '@/views/Account/Info.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (23, NULL, 'AccountEdit', 'edit', '/account/edit', 'Edit', '@/views/Account/Edit.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (24, NULL, 'AccountBoard', 'board', '/account/board', 'Board', '@/views/Account/Board.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (25, NULL, 'System', '/system', '/system/', 'Layout', '@/components/Layout.vue', NULL, 1);
@@ -973,7 +974,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '123', 'papi酱', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 0, '29ba0d23-b73a-4140-b2de-e721f9c2251b', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3NzQzMjM1MSwiZXhwIjoxNjgwMDI0MzUxLCJqdGkiOiIyOWJhMGQyMy1iNzNhLTQxNDAtYjJkZS1lNzIxZjljMjI1MWIifQ.mS_JmmUVwh1-5_5UUEa_v3pOagcb5Fi1nbNIJrgLvCE', '2020-01-11 10:31:49', '2023-02-27 01:25:51');
+INSERT INTO `sys_user` VALUES (1, 'admin', '123', 'papi酱', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 0, '5de2482e-dd31-44c0-b58a-a22de58f84d4', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3ODU1MDMyOSwiZXhwIjoxNjgxMTQyMzI5LCJqdGkiOiI1ZGUyNDgyZS1kZDMxLTQ0YzAtYjU4YS1hMjJkZTU4Zjg0ZDQifQ.CoVNpdyHWLk-uC9CCQgPxYjRuweQbWPpWMAqFZXNbi4', '2020-01-11 10:31:49', '2023-03-11 23:58:49');
 INSERT INTO `sys_user` VALUES (2, 'moz', '123', '夏目友人帐', '孙红雷', '女', '13475829262', '715623617@qq.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 1, NULL, NULL, '2022-10-11 10:31:59', '2022-10-20 12:12:53');
 INSERT INTO `sys_user` VALUES (3, 'orz', '123', '乌鸦校尉', '鹿晗', '男', '13485956526', 'love@163.com', 'http://localhost:3001/images/avatar/default.jpg', -2, 1, NULL, NULL, '2022-10-11 10:32:02', '2022-10-20 12:12:54');
 INSERT INTO `sys_user` VALUES (4, 'god', '123', '咸鱼', '黄渤', '男', '13475829262', 'godisgreed@126.com', 'http://localhost:3001/images/avatar/default.jpg', -1, 1, NULL, '', '2022-10-10 10:54:56', '2022-10-20 12:12:57');

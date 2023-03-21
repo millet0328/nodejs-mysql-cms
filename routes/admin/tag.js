@@ -53,7 +53,7 @@ router.get('/list', async (req, res) => {
  */
 router.post('/', async (req, res) => {
     let { tag_name } = req.body;
-    const sql = 'INSERT INTO `cms_tag` (tag_name) values (?)';
+    const sql = 'INSERT INTO `cms_tag` (tag_name, create_date) VALUES (?, CURRENT_TIMESTAMP())';
     let [{ insertId: tag_id, affectedRows }] = await pool.query(sql, [tag_name]);
     if (affectedRows) {
         res.json({
