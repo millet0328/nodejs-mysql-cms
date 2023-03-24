@@ -11,7 +11,7 @@
  Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 12/03/2023 00:01:05
+ Date: 24/03/2023 15:05:23
 */
 
 SET NAMES utf8mb4;
@@ -568,36 +568,36 @@ CREATE TABLE `sys_menu`  (
   `menu_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '菜单名称',
   `route_id` int UNSIGNED NULL DEFAULT NULL COMMENT '路由id',
   `menu_order` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '显示顺序',
-  `icon_id` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '图标id',
+  `icon_id` int NULL DEFAULT NULL COMMENT '图标id',
   PRIMARY KEY (`menu_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '菜单表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
-INSERT INTO `sys_menu` VALUES (1, '信息面板', NULL, '2000', '139');
-INSERT INTO `sys_menu` VALUES (2, '文章管理', NULL, '3000', '172');
-INSERT INTO `sys_menu` VALUES (3, '发布文章', 2, '3001', '121');
-INSERT INTO `sys_menu` VALUES (4, '文章列表', 3, '3002', '149');
-INSERT INTO `sys_menu` VALUES (5, '标签管理', 6, '3003', '171');
-INSERT INTO `sys_menu` VALUES (6, '评论管理', 8, '3004', '188');
-INSERT INTO `sys_menu` VALUES (7, '分类管理', 10, '4000', '140');
-INSERT INTO `sys_menu` VALUES (8, '公告管理', NULL, '5000', '138');
-INSERT INTO `sys_menu` VALUES (9, '发布公告', 13, '5001', '106');
-INSERT INTO `sys_menu` VALUES (10, '公告列表', 12, '5002', '140');
-INSERT INTO `sys_menu` VALUES (11, '用户管理', NULL, '6000', '151');
-INSERT INTO `sys_menu` VALUES (12, '用户列表', 16, '6001', '8');
-INSERT INTO `sys_menu` VALUES (13, '推广管理', NULL, '7000', '182');
-INSERT INTO `sys_menu` VALUES (14, '轮播图管理', 18, '7001', '38');
-INSERT INTO `sys_menu` VALUES (15, '友情链接', 20, '7002', '178');
-INSERT INTO `sys_menu` VALUES (16, '账户设置', NULL, '8000', '190');
-INSERT INTO `sys_menu` VALUES (17, '个人信息', 22, '8001', NULL);
-INSERT INTO `sys_menu` VALUES (18, '系统管理', NULL, '9000', '6');
-INSERT INTO `sys_menu` VALUES (19, '管理员', 26, '9001', '206');
-INSERT INTO `sys_menu` VALUES (20, '角色管理', 28, '9002', '180');
-INSERT INTO `sys_menu` VALUES (21, '路由管理', 29, '9003', '182');
-INSERT INTO `sys_menu` VALUES (22, '菜单管理', 30, '9004', NULL);
-INSERT INTO `sys_menu` VALUES (23, '操作按钮', 31, '9005', NULL);
+INSERT INTO `sys_menu` VALUES (1, '信息面板', NULL, '2000', 139);
+INSERT INTO `sys_menu` VALUES (2, '文章管理', NULL, '3000', 172);
+INSERT INTO `sys_menu` VALUES (3, '发布文章', 2, '3001', 121);
+INSERT INTO `sys_menu` VALUES (4, '文章列表', 3, '3002', 149);
+INSERT INTO `sys_menu` VALUES (5, '标签管理', 6, '3003', 171);
+INSERT INTO `sys_menu` VALUES (6, '评论管理', 8, '3004', 188);
+INSERT INTO `sys_menu` VALUES (7, '分类管理', 10, '4000', 140);
+INSERT INTO `sys_menu` VALUES (8, '公告管理', NULL, '5000', 138);
+INSERT INTO `sys_menu` VALUES (9, '发布公告', 13, '5001', 106);
+INSERT INTO `sys_menu` VALUES (10, '公告列表', 12, '5002', 140);
+INSERT INTO `sys_menu` VALUES (11, '用户管理', NULL, '6000', 151);
+INSERT INTO `sys_menu` VALUES (12, '用户列表', 16, '6001', 8);
+INSERT INTO `sys_menu` VALUES (13, '推广管理', NULL, '7000', 182);
+INSERT INTO `sys_menu` VALUES (14, '轮播图管理', 18, '7001', 38);
+INSERT INTO `sys_menu` VALUES (15, '友情链接', 20, '7002', 178);
+INSERT INTO `sys_menu` VALUES (16, '账户设置', NULL, '8000', 190);
+INSERT INTO `sys_menu` VALUES (17, '个人信息', 22, '8001', 190);
+INSERT INTO `sys_menu` VALUES (18, '系统管理', NULL, '9000', 6);
+INSERT INTO `sys_menu` VALUES (19, '管理员', 26, '9001', 206);
+INSERT INTO `sys_menu` VALUES (20, '角色管理', 28, '9002', 180);
+INSERT INTO `sys_menu` VALUES (21, '路由管理', 29, '9003', 182);
+INSERT INTO `sys_menu` VALUES (22, '菜单管理', 30, '9004', 180);
+INSERT INTO `sys_menu` VALUES (23, '操作按钮', 31, '9005', 180);
 
 -- ----------------------------
 -- Table structure for sys_module
@@ -919,7 +919,7 @@ CREATE TABLE `sys_route`  (
 INSERT INTO `sys_route` VALUES (1, NULL, 'Article', '/article', '/article', 'Layout', '@/components/Layout.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (2, NULL, 'ArticleRelease', 'release', '/article/release', 'Release', '@/views/Article/Release.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (3, NULL, 'ArticleList', 'list', '/article/list', 'List', '@/views/Article/List.vue', '\'\'', 1);
-INSERT INTO `sys_route` VALUES (4, NULL, 'ArticleEdit', 'edit/:id', '/article/edit/', 'Edit', '@/views/Article/Edit.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (4, NULL, 'ArticleEdit', 'edit/:id', '/article/edit', 'Edit', '@/views/Article/Edit.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (5, NULL, 'Tag', '/tag', '/tag', 'Layout', '@/components/Layout.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (6, NULL, 'TagList', 'list', '/tag/list', 'List', '@/views/Tag/List.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (7, NULL, 'Comment', '/comment', '/comment', 'Layout', '@/components/Layout.vue', NULL, 1);
@@ -929,7 +929,7 @@ INSERT INTO `sys_route` VALUES (10, NULL, 'CategoryList', 'list', '/category/lis
 INSERT INTO `sys_route` VALUES (11, NULL, 'Notice', '/notice', '/notice', 'Layout', '@/components/Layout.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (12, NULL, 'NoticeList', 'list', '/notice/list', 'List', '@/views/Notice/List.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (13, NULL, 'NoticeRelease', 'release', '/notice/release', 'Release', '@/views/Notice/Release.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (14, NULL, 'NoticeEdit', 'edit/:id', '/notice/edit/', 'Edit', '@/views/Notice/Edit.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (14, NULL, 'NoticeEdit', 'edit/:id', '/notice/edit', 'Edit', '@/views/Notice/Edit.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (15, NULL, 'User', '/user', '/user', 'Layout', '@/components/Layout.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (16, NULL, 'UserList', 'list', '/user/list', 'List', '@/views/User/List.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (17, NULL, 'Slide', '/slide', '/slide', 'Layout', '@/components/Layout.vue', NULL, 1);
@@ -940,9 +940,9 @@ INSERT INTO `sys_route` VALUES (21, NULL, 'Account', '/account', '/account', 'La
 INSERT INTO `sys_route` VALUES (22, NULL, 'AccountInfo', 'info', '/account/info', 'Info', '@/views/Account/Info.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (23, NULL, 'AccountEdit', 'edit', '/account/edit', 'Edit', '@/views/Account/Edit.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (24, NULL, 'AccountBoard', 'board', '/account/board', 'Board', '@/views/Account/Board.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (25, NULL, 'System', '/system', '/system/', 'Layout', '@/components/Layout.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (25, NULL, 'System', '/system', '/system', 'Layout', '@/components/Layout.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (26, NULL, 'AdminList', 'admin/list', '/system/admin/list', 'List', '@/views/Admin/List.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (27, NULL, 'AdminEdit', 'admin/edit/:id', '/system/admin/edit/', 'Edit', '@/views/Admin/Edit.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (27, NULL, 'AdminEdit', 'admin/edit/:id', '/system/admin/edit', 'Edit', '@/views/Admin/Edit.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (28, NULL, 'AuthRole', 'role', '/system/role', 'Role', '@/views/Auth/Role.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (29, NULL, 'AuthRoute', 'route', '/system/route', 'Route', '@/views/Auth/Route.vue', NULL, NULL);
 INSERT INTO `sys_route` VALUES (30, NULL, 'AuthMenu', 'menu', '/system/menu', 'Menu', '@/views/Auth/Menu.vue', NULL, 1);
@@ -974,7 +974,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '123', 'papi酱', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 0, '5de2482e-dd31-44c0-b58a-a22de58f84d4', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3ODU1MDMyOSwiZXhwIjoxNjgxMTQyMzI5LCJqdGkiOiI1ZGUyNDgyZS1kZDMxLTQ0YzAtYjU4YS1hMjJkZTU4Zjg0ZDQifQ.CoVNpdyHWLk-uC9CCQgPxYjRuweQbWPpWMAqFZXNbi4', '2020-01-11 10:31:49', '2023-03-11 23:58:49');
+INSERT INTO `sys_user` VALUES (1, 'admin', '123', 'papi酱', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 0, 'cb758dce-22de-495b-85ff-a660dde1aa42', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3OTY0MDI3NSwiZXhwIjoxNjgyMjMyMjc1LCJqdGkiOiJjYjc1OGRjZS0yMmRlLTQ5NWItODVmZi1hNjYwZGRlMWFhNDIifQ.8xe3IcPfA_cNkEa-IFmtZRj2FnfbLptqR3YKOjrS1ms', '2020-01-11 10:31:49', '2023-03-24 14:44:35');
 INSERT INTO `sys_user` VALUES (2, 'moz', '123', '夏目友人帐', '孙红雷', '女', '13475829262', '715623617@qq.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 1, NULL, NULL, '2022-10-11 10:31:59', '2022-10-20 12:12:53');
 INSERT INTO `sys_user` VALUES (3, 'orz', '123', '乌鸦校尉', '鹿晗', '男', '13485956526', 'love@163.com', 'http://localhost:3001/images/avatar/default.jpg', -2, 1, NULL, NULL, '2022-10-11 10:32:02', '2022-10-20 12:12:54');
 INSERT INTO `sys_user` VALUES (4, 'god', '123', '咸鱼', '黄渤', '男', '13475829262', 'godisgreed@126.com', 'http://localhost:3001/images/avatar/default.jpg', -1, 1, NULL, '', '2022-10-10 10:54:56', '2022-10-20 12:12:57');
@@ -1047,7 +1047,7 @@ INSERT INTO `sys_user_role` VALUES (4, 4, 4);
 -- View structure for role_menu_view
 -- ----------------------------
 DROP VIEW IF EXISTS `role_menu_view`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `role_menu_view` AS select `p`.`permission_id` AS `permission_id`,`p`.`parent_id` AS `parent_id`,`p`.`permission_code` AS `permission_code`,`p`.`permission_remark` AS `permission_remark`,`m`.`menu_id` AS `menu_id`,`m`.`menu_name` AS `menu_name`,`m`.`menu_order` AS `menu_order`,`m`.`icon_id` AS `icon_id`,`r`.`role_id` AS `role_id`,`r`.`role_name` AS `role_name`,`r`.`role_code` AS `role_code`,`r`.`role_description` AS `role_description`,`t`.`resource_type_name` AS `resource_type_name`,`t`.`resource_type_code` AS `resource_type_code`,`t`.`resource_type_id` AS `resource_type_id`,`rt`.`route_title` AS `route_title`,`rt`.`route_name` AS `route_name`,`rt`.`route_path` AS `route_path`,`rt`.`route_full_path` AS `route_full_path`,`rt`.`component_name` AS `component_name`,`rt`.`component_path` AS `component_path`,`rt`.`route_alias` AS `route_alias`,`rt`.`require_auth` AS `require_auth`,`rt`.`route_id` AS `route_id` from (((((`sys_permission` `p` join `sys_role_permission` `rp` on((`p`.`permission_id` = `rp`.`permission_id`))) join `sys_role` `r` on((`r`.`role_id` = `rp`.`role_id`))) join `sys_menu` `m` on((`p`.`resource_id` = `m`.`menu_id`))) join `sys_resource_type` `t` on((`p`.`resource_type_id` = `t`.`resource_type_id`))) left join `sys_route` `rt` on((`m`.`route_id` = `rt`.`route_id`))) where (`p`.`resource_type_id` = 2);
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `role_menu_view` AS select `p`.`permission_id` AS `permission_id`,`p`.`parent_id` AS `parent_id`,`p`.`permission_code` AS `permission_code`,`p`.`permission_remark` AS `permission_remark`,`m`.`menu_id` AS `menu_id`,`m`.`menu_name` AS `menu_name`,`m`.`menu_order` AS `menu_order`,`m`.`icon_id` AS `icon_id`,`r`.`role_id` AS `role_id`,`r`.`role_name` AS `role_name`,`r`.`role_code` AS `role_code`,`r`.`role_description` AS `role_description`,`t`.`resource_type_name` AS `resource_type_name`,`t`.`resource_type_code` AS `resource_type_code`,`t`.`resource_type_id` AS `resource_type_id`,`rt`.`route_title` AS `route_title`,`rt`.`route_name` AS `route_name`,`rt`.`route_path` AS `route_path`,`rt`.`route_full_path` AS `route_full_path`,`rt`.`component_name` AS `component_name`,`rt`.`component_path` AS `component_path`,`rt`.`route_alias` AS `route_alias`,`rt`.`require_auth` AS `require_auth`,`rt`.`route_id` AS `route_id`,`sys_icon`.`icon_name` AS `icon_name` from ((((((`sys_permission` `p` join `sys_role_permission` `rp` on((`p`.`permission_id` = `rp`.`permission_id`))) join `sys_role` `r` on((`r`.`role_id` = `rp`.`role_id`))) join `sys_menu` `m` on((`p`.`resource_id` = `m`.`menu_id`))) join `sys_resource_type` `t` on((`p`.`resource_type_id` = `t`.`resource_type_id`))) left join `sys_route` `rt` on((`m`.`route_id` = `rt`.`route_id`))) join `sys_icon` on((`m`.`icon_id` = `sys_icon`.`icon_id`))) where (`p`.`resource_type_id` = 2);
 
 -- ----------------------------
 -- View structure for role_operation_view
