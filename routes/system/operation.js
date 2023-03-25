@@ -52,16 +52,16 @@ router.get('/list', async (req, res) => {
  *
  * @apiBody {String} operation_name 操作名称。
  * @apiBody {String} operation_code 操作代码。
- * @apiBody {String} component_description 操作描述。
+ * @apiBody {String} operation_description 操作描述。
  *
  * @apiSampleRequest /operation
  */
 
 router.post("/", async (req, res) => {
-    let { operation_name, operation_code, component_description } = req.body;
+    let { operation_name, operation_code, operation_description } = req.body;
     // 创建新 operation
-    let insert_operation_sql = 'INSERT INTO `sys_operation` (operation_name, operation_code, component_description) VALUES (?,?,?)';
-    let [{ insertId: operation_id, affectedRows: operation_affected_rows }] = await pool.query(insert_operation_sql, [operation_name, operation_code, component_description]);
+    let insert_operation_sql = 'INSERT INTO `sys_operation` (operation_name, operation_code, operation_description) VALUES (?,?,?)';
+    let [{ insertId: operation_id, affectedRows: operation_affected_rows }] = await pool.query(insert_operation_sql, [operation_name, operation_code, operation_description]);
     if (operation_affected_rows === 0) {
         res.json({ status: false, msg: "添加 operation 失败！" });
         return;
