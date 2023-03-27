@@ -25,7 +25,7 @@ let pool = require('../../config/mysql');
 
 router.post("/add", async (req, res) => {
     let { cate_name, parent_id } = req.body;
-    const sql = 'INSERT INTO `cms_category` (cate_name,parent_id) VALUES (?,?);'
+    const sql = 'INSERT INTO `cms_category` (cate_name, parent_id, create_date) VALUES (?, ?, CURRENT_TIMESTAMP() );'
     let [{ insertId: cate_id }] = await pool.query(sql, [cate_name, parent_id]);
     res.json({
         status: true,
