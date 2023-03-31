@@ -17,17 +17,16 @@ let pool = require('../../config/mysql');
  * @apiUse Authorization
  *
  * @apiBody {String} menu_name 菜单名称.
- * @apiBody {Number} [route_id] 关联路由id.
- * @apiBody {Number} [route_full_path] 路由完整路径.
+ * @apiBody {Number} [route_id=null] 关联路由id，无关联路由则为null.
  * @apiBody {String} menu_order 菜单显示顺序，按照数字从小到大排序，如2001，3002。
  * @apiBody {Number} parent_id 父级菜单权限的 permission_id，一级菜单的 parent_id = 0。
- * @apiBody {Number} [icon_id] 菜单图标id。
- * @apiBody {Number} permission_remark 菜单备注。
+ * @apiBody {String} permission_code 权限代码，例如：link:edit。
+ * @apiBody {String} permission_remark 权限备注。
  *
  * @apiSampleRequest /menu
  */
 router.post("/", async (req, res) => {
-    let { menu_name, route_id, route_full_path, menu_order, parent_id, icon_id, permission_remark } = req.body;
+    let { menu_name, route_id = null, menu_order, parent_id, permission_code, permission_remark } = req.body;
     // 获取一个连接
     const connection = await pool.getConnection();
 
@@ -35,8 +34,8 @@ router.post("/", async (req, res) => {
         // 开启事务
         await connection.beginTransaction();
         // 创建新菜单 menu
-        let insert_menu_sql = 'INSERT INTO `sys_menu` (menu_name, route_id, menu_order, icon_id) VALUES (?,?,?,?,?)';
-        let [{ insertId: menu_id, affectedRows: menu_affected_rows }] = await connection.query(insert_menu_sql, [menu_name, route_id, menu_order, icon_id]);
+        let insert_menu_sql = 'INSERT INTO `sys_menu` (menu_name, route_id, menu_order) VALUES (?,?,?)';
+        let [{ insertId: menu_id, affectedRows: menu_affected_rows }] = await connection.query(insert_menu_sql, [menu_name, route_id, menu_order]);
         if (menu_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "菜单 menu 创建失败！" });
@@ -44,7 +43,7 @@ router.post("/", async (req, res) => {
         }
         // 创建新菜单权限 permission
         let insert_permission_sql = 'INSERT INTO `sys_permission` (parent_id, resource_id, resource_type_id, permission_code, permission_remark) VALUES (?,?,?,?,?)';
-        let [{ insertId: permission_id, affectedRows: permission_affected_rows }] = await connection.query(insert_permission_sql, [parent_id, menu_id, 2, route_full_path, permission_remark]);
+        let [{ insertId: permission_id, affectedRows: permission_affected_rows }] = await connection.query(insert_permission_sql, [parent_id, menu_id, 2, permission_code, permission_remark]);
         if (permission_affected_rows === 0) {
             await connection.rollback();
             res.json({ status: false, msg: "菜单权限 permission 创建失败！" });
@@ -282,7 +281,7 @@ router.get("/sub", async (req, res) => {
  */
 
 router.get('/all', async (req, res) => {
-    let { type = 'flat' } = req.query;
+    let { type = "flat" } = req.query;
     // 查询 menu 菜单
     let select_menu_sql = 'SELECT * FROM `role_menu_view` WHERE role_id = 1 ORDER BY menu_order';
     let [menus] = await pool.query(select_menu_sql, []);
@@ -344,19 +343,42 @@ router.get('/all', async (req, res) => {
 
 router.post("/operation", async (req, res) => {
     let { operation_id, parent_id, permission_code, permission_remark } = req.body;
-    // 创建新操作权限 permission
-    let insert_permission_sql = 'INSERT INTO `sys_permission` (parent_id, resource_id, resource_type_id, permission_code, permission_remark) VALUES (?,?,?,?,?)';
-    let [{ insertId: permission_id, affectedRows: permission_affected_rows }] = await pool.query(insert_permission_sql, [parent_id, operation_id, 3, permission_code, permission_remark]);
-    if (permission_affected_rows === 0) {
-        res.json({ status: false, msg: "操作权限 permission 创建失败！" });
-        return;
+    // 获取一个连接
+    const connection = await pool.getConnection();
+    try {
+        // 开启事务
+        await connection.beginTransaction();
+        // 创建新操作权限 permission
+        let insert_permission_sql = 'INSERT INTO `sys_permission` (parent_id, resource_id, resource_type_id, permission_code, permission_remark) VALUES (?,?,?,?,?)';
+        let [{ insertId: permission_id, affectedRows: permission_affected_rows }] = await pool.query(insert_permission_sql, [parent_id, operation_id, 3, permission_code, permission_remark]);
+        if (permission_affected_rows === 0) {
+            res.json({ status: false, msg: "操作权限 permission 创建失败！" });
+            return;
+        }
+        // 创建 role_permission 关联，超级管理员默认拥有此权限。
+        let insert_role_permission_sql = 'INSERT INTO `sys_role_permission` (role_id, permission_id) VALUES (?,?)';
+        let [{ affectedRows: role_permission_affected_rows }] = await connection.query(insert_role_permission_sql, [1, permission_id]);
+        if (role_permission_affected_rows === 0) {
+            await connection.rollback();
+            res.json({ status: false, msg: "role_permission 关联，创建失败！" });
+            return;
+        }
+        // 一切顺利，提交事务
+        await connection.commit();
+        // 创建成功
+        res.json({
+            status: true,
+            msg: "创建成功!",
+            data: { permission_id }
+        });
+    } catch (error) {
+        await connection.rollback();
+        res.status(500).json({
+            status: false,
+            msg: error.message,
+            error,
+        });
     }
-    // 创建成功
-    res.json({
-        status: true,
-        msg: "创建成功!",
-        data: { permission_id }
-    });
 });
 
 module.exports = router;
