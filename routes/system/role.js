@@ -76,7 +76,7 @@ router.post('/', async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiParam {String} role_id 角色id.
+ * @apiParam {Number} role_id 角色id.
  *
  * @apiExample {js} 参数示例:
  * /role/3
@@ -134,7 +134,7 @@ router.delete('/:role_id', async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiParam {String} role_id 角色id.
+ * @apiParam {Number} role_id 角色id.
  * @apiBody {String} role_name 角色名称。
  * @apiBody {String} role_code 角色代码。
  * @apiBody {String} role_description 角色描述。

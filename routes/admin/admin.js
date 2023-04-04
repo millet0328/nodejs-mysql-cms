@@ -19,8 +19,8 @@ const uuid = require('../../plugins/uuid')
  * @apiSuccess { Object } data 请求数据信息.
  * @apiSuccess { String } data.access_token 成功之后返回的access_token，每次请求携带。
  * @apiSuccess { String } data.refresh_token access_token超时之后，使用refresh_token换取新的access_token。
- * @apiSuccess { String } data.user_id 用户id.
- * @apiSuccess { String } data.role_id 用户角色id.
+ * @apiSuccess { Number } data.user_id 用户id.
+ * @apiSuccess { Number } data.role_id 用户角色id.
  *
  * @apiSuccessExample { json } 200返回的JSON:
  *  HTTP / 1.1 200 OK

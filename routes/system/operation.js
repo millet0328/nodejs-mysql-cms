@@ -82,7 +82,7 @@ router.post("/", async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiParam {String} operation_id 操作id.
+ * @apiParam { Number } operation_id 操作id.
  *
  * @apiExample {js} 参数示例:
  * /operation/3
@@ -114,7 +114,7 @@ router.delete('/:operation_id', async (req, res) => {
  *
  * @apiUse Authorization
  *
- * @apiParam {String} operation_id 操作id.
+ * @apiParam { Number } operation_id 操作id.
  * @apiBody {String} operation_name 操作名称。
  * @apiBody {String} operation_code 操作代码。
  * @apiBody {String} operation_description 操作描述。

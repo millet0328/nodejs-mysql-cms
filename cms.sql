@@ -11,7 +11,7 @@
  Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 24/03/2023 15:05:23
+ Date: 04/04/2023 18:38:58
 */
 
 SET NAMES utf8mb4;
@@ -575,29 +575,29 @@ CREATE TABLE `sys_menu`  (
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
-INSERT INTO `sys_menu` VALUES (1, '信息面板', NULL, '2000', 139);
-INSERT INTO `sys_menu` VALUES (2, '文章管理', NULL, '3000', 172);
+INSERT INTO `sys_menu` VALUES (1, '信息面板', 24, '2000', 139);
+INSERT INTO `sys_menu` VALUES (2, '文章管理', 1, '3000', 172);
 INSERT INTO `sys_menu` VALUES (3, '发布文章', 2, '3001', 121);
-INSERT INTO `sys_menu` VALUES (4, '文章列表', 3, '3002', 149);
+INSERT INTO `sys_menu` VALUES (4, '文章列表', 3, '3002', 120);
 INSERT INTO `sys_menu` VALUES (5, '标签管理', 6, '3003', 171);
 INSERT INTO `sys_menu` VALUES (6, '评论管理', 8, '3004', 188);
 INSERT INTO `sys_menu` VALUES (7, '分类管理', 10, '4000', 140);
-INSERT INTO `sys_menu` VALUES (8, '公告管理', NULL, '5000', 138);
+INSERT INTO `sys_menu` VALUES (8, '公告管理', 11, '5000', 138);
 INSERT INTO `sys_menu` VALUES (9, '发布公告', 13, '5001', 106);
 INSERT INTO `sys_menu` VALUES (10, '公告列表', 12, '5002', 140);
-INSERT INTO `sys_menu` VALUES (11, '用户管理', NULL, '6000', 151);
+INSERT INTO `sys_menu` VALUES (11, '用户管理', 15, '6000', 151);
 INSERT INTO `sys_menu` VALUES (12, '用户列表', 16, '6001', 8);
-INSERT INTO `sys_menu` VALUES (13, '推广管理', NULL, '7000', 182);
+INSERT INTO `sys_menu` VALUES (13, '推广管理', 17, '7000', 182);
 INSERT INTO `sys_menu` VALUES (14, '轮播图管理', 18, '7001', 38);
-INSERT INTO `sys_menu` VALUES (15, '友情链接', 20, '7002', 178);
-INSERT INTO `sys_menu` VALUES (16, '账户设置', NULL, '8000', 190);
+INSERT INTO `sys_menu` VALUES (15, '友情链接', 19, '7002', 178);
+INSERT INTO `sys_menu` VALUES (16, '账户设置', 21, '8000', 190);
 INSERT INTO `sys_menu` VALUES (17, '个人信息', 22, '8001', 190);
-INSERT INTO `sys_menu` VALUES (18, '系统管理', NULL, '9000', 6);
+INSERT INTO `sys_menu` VALUES (18, '系统管理', 25, '9000', 6);
 INSERT INTO `sys_menu` VALUES (19, '管理员', 26, '9001', 206);
-INSERT INTO `sys_menu` VALUES (20, '角色管理', 28, '9002', 180);
-INSERT INTO `sys_menu` VALUES (21, '路由管理', 29, '9003', 182);
-INSERT INTO `sys_menu` VALUES (22, '菜单管理', 30, '9004', 180);
-INSERT INTO `sys_menu` VALUES (23, '操作按钮', 31, '9005', 180);
+INSERT INTO `sys_menu` VALUES (20, '操作按钮', 28, '9002', 54);
+INSERT INTO `sys_menu` VALUES (21, '路由管理', 29, '9003', 179);
+INSERT INTO `sys_menu` VALUES (22, '菜单管理', 30, '9004', 149);
+INSERT INTO `sys_menu` VALUES (23, '角色管理', 31, '9005', 208);
 
 -- ----------------------------
 -- Table structure for sys_module
@@ -655,7 +655,7 @@ CREATE TABLE `sys_permission`  (
   `permission_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '权限代码',
   `permission_remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '权限备注',
   PRIMARY KEY (`permission_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 88 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '权限表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '权限表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_permission
@@ -676,10 +676,10 @@ INSERT INTO `sys_permission` VALUES (13, 11, 13, 1, '/notice/release', '发布�
 INSERT INTO `sys_permission` VALUES (14, 11, 14, 1, '/notice/edit/:id', '编辑公告');
 INSERT INTO `sys_permission` VALUES (15, 0, 15, 1, NULL, '用户');
 INSERT INTO `sys_permission` VALUES (16, 15, 16, 1, '/user/list', '用户列表');
-INSERT INTO `sys_permission` VALUES (17, 0, 17, 1, NULL, '轮播图');
-INSERT INTO `sys_permission` VALUES (18, 17, 18, 1, '/slide/list', '轮播图列表');
-INSERT INTO `sys_permission` VALUES (19, 0, 19, 1, NULL, '友情链接');
-INSERT INTO `sys_permission` VALUES (20, 19, 20, 1, '/link/list', '链接列表');
+INSERT INTO `sys_permission` VALUES (17, 0, 17, 1, '/promotion', '推广');
+INSERT INTO `sys_permission` VALUES (18, 17, 18, 1, '/promotion/slide', '轮播图管理');
+INSERT INTO `sys_permission` VALUES (19, 17, 19, 1, '/promotion/link', '友情链接');
+INSERT INTO `sys_permission` VALUES (20, 17, 20, 1, '/promotion/temp', '临时');
 INSERT INTO `sys_permission` VALUES (21, 0, 21, 1, NULL, '账户');
 INSERT INTO `sys_permission` VALUES (22, 21, 22, 1, '/account/info', '账户信息');
 INSERT INTO `sys_permission` VALUES (23, 21, 23, 1, '/account/edit', '账户编辑');
@@ -687,7 +687,7 @@ INSERT INTO `sys_permission` VALUES (24, 21, 24, 1, '/account/board', '信息面
 INSERT INTO `sys_permission` VALUES (25, 0, 25, 1, NULL, '系统');
 INSERT INTO `sys_permission` VALUES (26, 25, 26, 1, '/admin/list', '管理员列表');
 INSERT INTO `sys_permission` VALUES (27, 25, 27, 1, '/admin/edit/:id', '管理员编辑');
-INSERT INTO `sys_permission` VALUES (28, 25, 28, 1, '/auth/role', '角色管理');
+INSERT INTO `sys_permission` VALUES (28, 25, 28, 1, '/system/role', '角色管理');
 INSERT INTO `sys_permission` VALUES (29, 25, 29, 1, NULL, '路由管理');
 INSERT INTO `sys_permission` VALUES (30, 25, 30, 1, '/auth/menu', '菜单管理');
 INSERT INTO `sys_permission` VALUES (31, 25, 31, 1, NULL, '操作按钮');
@@ -697,7 +697,7 @@ INSERT INTO `sys_permission` VALUES (34, 33, 3, 2, 'article:release', '发布文
 INSERT INTO `sys_permission` VALUES (35, 33, 4, 2, 'article:list', '文章列表');
 INSERT INTO `sys_permission` VALUES (36, 33, 5, 2, 'article:tag', '标签管理');
 INSERT INTO `sys_permission` VALUES (37, 33, 6, 2, 'article:comment', '评论管理');
-INSERT INTO `sys_permission` VALUES (38, 0, 7, 2, 'category:list', '分类管理');
+INSERT INTO `sys_permission` VALUES (38, 33, 7, 2, 'category:list', '分类管理');
 INSERT INTO `sys_permission` VALUES (39, 0, 8, 2, 'notice', '公告管理');
 INSERT INTO `sys_permission` VALUES (40, 39, 9, 2, 'notice:release', '发布公告');
 INSERT INTO `sys_permission` VALUES (41, 39, 10, 2, 'notice:list', '公告列表');
@@ -706,14 +706,14 @@ INSERT INTO `sys_permission` VALUES (43, 42, 12, 2, 'user:list', '用户列表')
 INSERT INTO `sys_permission` VALUES (44, 0, 13, 2, 'promotion', '推广管理');
 INSERT INTO `sys_permission` VALUES (45, 44, 14, 2, 'promotion:slide', '轮播图管理');
 INSERT INTO `sys_permission` VALUES (46, 44, 15, 2, 'promotion:link', '友情链接');
-INSERT INTO `sys_permission` VALUES (47, 0, 16, 2, 'account:info', '账户设置');
-INSERT INTO `sys_permission` VALUES (48, 47, 17, 2, NULL, '个人信息');
+INSERT INTO `sys_permission` VALUES (47, 0, 16, 2, 'account', '账户设置');
+INSERT INTO `sys_permission` VALUES (48, 47, 17, 2, 'account:info', '个人信息');
 INSERT INTO `sys_permission` VALUES (49, 0, 18, 2, 'system', '系统管理');
 INSERT INTO `sys_permission` VALUES (50, 49, 19, 2, 'system:admin', '管理员');
-INSERT INTO `sys_permission` VALUES (51, 49, 20, 2, 'system:role', '角色管理');
-INSERT INTO `sys_permission` VALUES (52, 49, 21, 2, NULL, '路由管理');
+INSERT INTO `sys_permission` VALUES (51, 49, 20, 2, 'system:operation', '操作按钮');
+INSERT INTO `sys_permission` VALUES (52, 49, 21, 2, 'system:route', '路由管理');
 INSERT INTO `sys_permission` VALUES (53, 49, 22, 2, 'system:menu', '菜单管理');
-INSERT INTO `sys_permission` VALUES (54, 49, 23, 2, NULL, '操作按钮');
+INSERT INTO `sys_permission` VALUES (54, 49, 23, 2, 'system:role', '角色管理');
 INSERT INTO `sys_permission` VALUES (55, 35, 2, 3, 'article:list:edit', '编辑文章');
 INSERT INTO `sys_permission` VALUES (56, 35, 6, 3, 'article:list:audit', '审核文章');
 INSERT INTO `sys_permission` VALUES (57, 35, 10, 3, 'article:list:tag', '标记文章');
@@ -721,32 +721,43 @@ INSERT INTO `sys_permission` VALUES (58, 35, 3, 3, 'article:list:remove', '删�
 INSERT INTO `sys_permission` VALUES (59, 36, 1, 3, 'article:tag:create', '创建标签');
 INSERT INTO `sys_permission` VALUES (60, 36, 2, 3, 'article:tag:edit', '编辑标签');
 INSERT INTO `sys_permission` VALUES (61, 36, 3, 3, 'article:tag:remove', '删除标签');
-INSERT INTO `sys_permission` VALUES (62, 37, 8, 3, 'comment:reply', '回复评论');
-INSERT INTO `sys_permission` VALUES (63, 37, 9, 3, 'comment:switch', '隐藏/显示评论');
+INSERT INTO `sys_permission` VALUES (62, 37, 8, 3, 'article:comment:reply', '回复评论');
+INSERT INTO `sys_permission` VALUES (63, 37, 9, 3, 'article:comment:switch', '隐藏/显示评论');
 INSERT INTO `sys_permission` VALUES (64, 38, 2, 3, 'category:edit', '编辑分类');
 INSERT INTO `sys_permission` VALUES (65, 38, 1, 3, 'category:create', '创建子分类');
 INSERT INTO `sys_permission` VALUES (66, 38, 3, 3, 'category:remove', '删除分类');
-INSERT INTO `sys_permission` VALUES (67, 41, 2, 3, 'notice:edit', '编辑公告');
-INSERT INTO `sys_permission` VALUES (68, 41, 9, 3, 'notice:switch', '置顶/取消公告');
-INSERT INTO `sys_permission` VALUES (69, 41, 3, 3, 'notice:remove', '删除公告');
-INSERT INTO `sys_permission` VALUES (70, 43, 9, 3, 'user:switch', '禁用/启用用户');
-INSERT INTO `sys_permission` VALUES (71, 43, 3, 3, 'user:remove', '删除用户');
-INSERT INTO `sys_permission` VALUES (72, 45, 1, 3, 'slide:create', '添加轮播图');
-INSERT INTO `sys_permission` VALUES (73, 45, 2, 3, 'slide:edit', '编辑轮播图');
-INSERT INTO `sys_permission` VALUES (74, 45, 9, 3, 'slide:switch', '禁用/启用轮播图');
-INSERT INTO `sys_permission` VALUES (75, 45, 3, 3, 'slide:remove', '删除轮播图');
-INSERT INTO `sys_permission` VALUES (76, 46, 1, 3, 'link:create', '添加友情链接');
-INSERT INTO `sys_permission` VALUES (77, 46, 2, 3, 'link:edit', '编辑友情链接');
-INSERT INTO `sys_permission` VALUES (78, 46, 9, 3, 'link:switch', '禁用/启用友情链接');
-INSERT INTO `sys_permission` VALUES (79, 46, 3, 3, 'link:remove', '删除友情链接');
+INSERT INTO `sys_permission` VALUES (67, 41, 2, 3, 'notice:list:edit', '编辑公告');
+INSERT INTO `sys_permission` VALUES (68, 41, 9, 3, 'notice:list:switch', '置顶/取消公告');
+INSERT INTO `sys_permission` VALUES (69, 41, 3, 3, 'notice:list:remove', '删除公告');
+INSERT INTO `sys_permission` VALUES (70, 43, 9, 3, 'user:list:switch', '禁用/启用用户');
+INSERT INTO `sys_permission` VALUES (71, 43, 3, 3, 'user:list:remove', '删除用户');
+INSERT INTO `sys_permission` VALUES (72, 45, 1, 3, 'promotion:slide:create', '添加轮播图');
+INSERT INTO `sys_permission` VALUES (73, 45, 2, 3, 'promotion:slide:edit', '编辑轮播图');
+INSERT INTO `sys_permission` VALUES (74, 45, 9, 3, 'promotion:slide:switch', '禁用/启用轮播图');
+INSERT INTO `sys_permission` VALUES (75, 45, 3, 3, 'promotion:slide:remove', '删除轮播图');
+INSERT INTO `sys_permission` VALUES (76, 46, 1, 3, 'promotion:link:create', '添加友情链接');
+INSERT INTO `sys_permission` VALUES (77, 46, 2, 3, 'promotion:link:edit', '编辑友情链接');
+INSERT INTO `sys_permission` VALUES (78, 46, 9, 3, 'promotion:link:switch', '禁用/启用友情链接');
+INSERT INTO `sys_permission` VALUES (79, 46, 3, 3, 'promotion:link:remove', '删除友情链接');
 INSERT INTO `sys_permission` VALUES (80, 50, 2, 3, 'admin:edit', '编辑管理员');
-INSERT INTO `sys_permission` VALUES (81, 50, 6, 3, 'admin:audit', '审核管理员');
-INSERT INTO `sys_permission` VALUES (82, 50, 9, 3, 'admin:switch', '禁用/启用管理员');
-INSERT INTO `sys_permission` VALUES (83, 50, 3, 3, 'admin:remove', '删除管理员');
-INSERT INTO `sys_permission` VALUES (84, 51, 1, 3, 'role:create', '创建角色');
-INSERT INTO `sys_permission` VALUES (85, 51, 2, 3, 'role:edit', '编辑角色');
-INSERT INTO `sys_permission` VALUES (86, 51, 3, 3, 'role:remove', '删除角色');
-INSERT INTO `sys_permission` VALUES (87, 51, 7, 3, 'auth:setting', '分配权限');
+INSERT INTO `sys_permission` VALUES (81, 50, 6, 3, 'system:admin:audit', '审核管理员');
+INSERT INTO `sys_permission` VALUES (82, 50, 9, 3, 'system:admin:switch', '禁用/启用管理员');
+INSERT INTO `sys_permission` VALUES (83, 50, 3, 3, 'system:admin:remove', '删除管理员');
+INSERT INTO `sys_permission` VALUES (84, 54, 1, 3, 'system:role:create', '创建角色');
+INSERT INTO `sys_permission` VALUES (85, 54, 2, 3, 'system:role:edit', '编辑角色');
+INSERT INTO `sys_permission` VALUES (86, 54, 3, 3, 'system:role:remove', '删除角色');
+INSERT INTO `sys_permission` VALUES (87, 54, 7, 3, 'system:role:auth', '分配权限');
+INSERT INTO `sys_permission` VALUES (88, 51, 1, 3, 'system:operation:create', '创建操作按钮');
+INSERT INTO `sys_permission` VALUES (89, 51, 2, 3, 'system:operation:edit', '编辑操作按钮');
+INSERT INTO `sys_permission` VALUES (90, 51, 3, 3, 'system:operation:remove', '删除操作按钮');
+INSERT INTO `sys_permission` VALUES (91, 52, 2, 3, 'system:route:edit', '编辑路由');
+INSERT INTO `sys_permission` VALUES (92, 52, 1, 3, 'system:route:create', '添加路由');
+INSERT INTO `sys_permission` VALUES (93, 52, 3, 3, 'system:route:remove', '删除路由');
+INSERT INTO `sys_permission` VALUES (94, 53, 2, 3, 'system:menu:edit', '编辑菜单/操作按钮');
+INSERT INTO `sys_permission` VALUES (95, 53, 1, 3, 'system:menu:create', '创建菜单/操作按钮');
+INSERT INTO `sys_permission` VALUES (96, 53, 7, 3, 'system:menu:setting', '设置菜单图标');
+INSERT INTO `sys_permission` VALUES (97, 53, 3, 3, 'system:menu:remove', '删除菜单/操作按钮');
+INSERT INTO `sys_permission` VALUES (98, 25, 32, 1, '/system/role/edit', '配置角色权限');
 
 -- ----------------------------
 -- Table structure for sys_resource_type
@@ -798,7 +809,7 @@ CREATE TABLE `sys_role_permission`  (
   `role_id` int NOT NULL COMMENT '	角色id',
   `permission_id` int NOT NULL COMMENT '权限id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 93 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色-权限中间表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 104 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色-权限中间表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role_permission
@@ -895,6 +906,17 @@ INSERT INTO `sys_role_permission` VALUES (89, 2, 2);
 INSERT INTO `sys_role_permission` VALUES (90, 2, 3);
 INSERT INTO `sys_role_permission` VALUES (91, 2, 4);
 INSERT INTO `sys_role_permission` VALUES (92, 2, 5);
+INSERT INTO `sys_role_permission` VALUES (93, 1, 88);
+INSERT INTO `sys_role_permission` VALUES (94, 1, 89);
+INSERT INTO `sys_role_permission` VALUES (95, 1, 90);
+INSERT INTO `sys_role_permission` VALUES (96, 1, 91);
+INSERT INTO `sys_role_permission` VALUES (97, 1, 92);
+INSERT INTO `sys_role_permission` VALUES (98, 1, 93);
+INSERT INTO `sys_role_permission` VALUES (99, 1, 94);
+INSERT INTO `sys_role_permission` VALUES (100, 1, 95);
+INSERT INTO `sys_role_permission` VALUES (101, 1, 96);
+INSERT INTO `sys_role_permission` VALUES (102, 1, 97);
+INSERT INTO `sys_role_permission` VALUES (103, 1, 98);
 
 -- ----------------------------
 -- Table structure for sys_route
@@ -911,7 +933,7 @@ CREATE TABLE `sys_route`  (
   `route_alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '路由别名',
   `require_auth` tinyint NULL DEFAULT NULL COMMENT '是否需要登录认证，需要：1，不需要：0',
   PRIMARY KEY (`route_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '路由配置表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '路由配置表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_route
@@ -932,10 +954,10 @@ INSERT INTO `sys_route` VALUES (13, NULL, 'NoticeRelease', 'release', '/notice/r
 INSERT INTO `sys_route` VALUES (14, NULL, 'NoticeEdit', 'edit/:id', '/notice/edit', 'Edit', '@/views/Notice/Edit.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (15, NULL, 'User', '/user', '/user', 'Layout', '@/components/Layout.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (16, NULL, 'UserList', 'list', '/user/list', 'List', '@/views/User/List.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (17, NULL, 'Slide', '/slide', '/slide', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (18, NULL, 'SlideList', 'list', '/slide/list', 'List', '@/views/Slide/List.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (19, NULL, 'Link', '/link', '/link', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (20, NULL, 'LinkList', 'list', '/link/list', 'List', '@/views/Link/List.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (17, NULL, 'Promotion', '/promotion', '/promotion', 'Layout', '@/components/Layout.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (18, NULL, 'PromotionSlide', 'slide', '/promotion/slide', 'Slide', '@/views/Promotion/Slide.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (19, NULL, 'PromotionLink', 'link', '/promotion/link', 'List', '@/views/Promotion/Link.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (20, NULL, 'Temp', 'temp', '/promotion/temp', 'Temp', '@/views/Promotion/Temp.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (21, NULL, 'Account', '/account', '/account', 'Layout', '@/components/Layout.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (22, NULL, 'AccountInfo', 'info', '/account/info', 'Info', '@/views/Account/Info.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (23, NULL, 'AccountEdit', 'edit', '/account/edit', 'Edit', '@/views/Account/Edit.vue', NULL, 1);
@@ -943,10 +965,11 @@ INSERT INTO `sys_route` VALUES (24, NULL, 'AccountBoard', 'board', '/account/boa
 INSERT INTO `sys_route` VALUES (25, NULL, 'System', '/system', '/system', 'Layout', '@/components/Layout.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (26, NULL, 'AdminList', 'admin/list', '/system/admin/list', 'List', '@/views/Admin/List.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (27, NULL, 'AdminEdit', 'admin/edit/:id', '/system/admin/edit', 'Edit', '@/views/Admin/Edit.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (28, NULL, 'AuthRole', 'role', '/system/role', 'Role', '@/views/Auth/Role.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (29, NULL, 'AuthRoute', 'route', '/system/route', 'Route', '@/views/Auth/Route.vue', NULL, NULL);
+INSERT INTO `sys_route` VALUES (28, NULL, 'AuthOperation', 'operation', '/system/operation', 'Operation', '@/views/Auth/Operation.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (29, NULL, 'AuthRoute', 'route', '/system/route', 'Route', '@/views/Auth/Route.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (30, NULL, 'AuthMenu', 'menu', '/system/menu', 'Menu', '@/views/Auth/Menu.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (31, NULL, 'AuthOperation', 'operation', '/system/operation', 'Operation', '@/views/Auth/Operation.vue', NULL, NULL);
+INSERT INTO `sys_route` VALUES (31, NULL, 'AuthRole', 'role', '/system/role', 'Role', '@/views/Role/List.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (32, '配置角色权限', 'AuthRoleEdit', 'role/edit/:role_id', '/system/role/edit', 'Edit', '@/views/Role/Edit.vue', '', 1);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -974,10 +997,10 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '123', 'papi酱', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 0, 'cb758dce-22de-495b-85ff-a660dde1aa42', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3OTY0MDI3NSwiZXhwIjoxNjgyMjMyMjc1LCJqdGkiOiJjYjc1OGRjZS0yMmRlLTQ5NWItODVmZi1hNjYwZGRlMWFhNDIifQ.8xe3IcPfA_cNkEa-IFmtZRj2FnfbLptqR3YKOjrS1ms', '2020-01-11 10:31:49', '2023-03-24 14:44:35');
+INSERT INTO `sys_user` VALUES (1, 'admin', '123', 'papi酱', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 0, 'f325e5bb-7230-4c32-ba8f-d13d526e309e', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY4MDYwMzM1NiwiZXhwIjoxNjgzMTk1MzU2LCJqdGkiOiJmMzI1ZTViYi03MjMwLTRjMzItYmE4Zi1kMTNkNTI2ZTMwOWUifQ.wEPPdtoKWb7P0tN-xniuKqHD6RWtIHBNRYUa6_MI5L0', '2020-01-11 10:31:49', '2023-04-04 18:15:56');
 INSERT INTO `sys_user` VALUES (2, 'moz', '123', '夏目友人帐', '孙红雷', '女', '13475829262', '715623617@qq.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 1, NULL, NULL, '2022-10-11 10:31:59', '2022-10-20 12:12:53');
 INSERT INTO `sys_user` VALUES (3, 'orz', '123', '乌鸦校尉', '鹿晗', '男', '13485956526', 'love@163.com', 'http://localhost:3001/images/avatar/default.jpg', -2, 1, NULL, NULL, '2022-10-11 10:32:02', '2022-10-20 12:12:54');
-INSERT INTO `sys_user` VALUES (4, 'god', '123', '咸鱼', '黄渤', '男', '13475829262', 'godisgreed@126.com', 'http://localhost:3001/images/avatar/default.jpg', -1, 1, NULL, '', '2022-10-10 10:54:56', '2022-10-20 12:12:57');
+INSERT INTO `sys_user` VALUES (4, 'god', '123', '咸鱼', '黄渤', '男', '13475829262', 'godisgreed@126.com', 'http://localhost:3001/images/avatar/default.jpg', -1, 1, NULL, '', '2022-10-10 10:54:56', '2023-04-03 17:12:24');
 
 -- ----------------------------
 -- Table structure for sys_user_group
@@ -1047,7 +1070,7 @@ INSERT INTO `sys_user_role` VALUES (4, 4, 4);
 -- View structure for role_menu_view
 -- ----------------------------
 DROP VIEW IF EXISTS `role_menu_view`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `role_menu_view` AS select `p`.`permission_id` AS `permission_id`,`p`.`parent_id` AS `parent_id`,`p`.`permission_code` AS `permission_code`,`p`.`permission_remark` AS `permission_remark`,`m`.`menu_id` AS `menu_id`,`m`.`menu_name` AS `menu_name`,`m`.`menu_order` AS `menu_order`,`m`.`icon_id` AS `icon_id`,`r`.`role_id` AS `role_id`,`r`.`role_name` AS `role_name`,`r`.`role_code` AS `role_code`,`r`.`role_description` AS `role_description`,`t`.`resource_type_name` AS `resource_type_name`,`t`.`resource_type_code` AS `resource_type_code`,`t`.`resource_type_id` AS `resource_type_id`,`rt`.`route_title` AS `route_title`,`rt`.`route_name` AS `route_name`,`rt`.`route_path` AS `route_path`,`rt`.`route_full_path` AS `route_full_path`,`rt`.`component_name` AS `component_name`,`rt`.`component_path` AS `component_path`,`rt`.`route_alias` AS `route_alias`,`rt`.`require_auth` AS `require_auth`,`rt`.`route_id` AS `route_id`,`sys_icon`.`icon_name` AS `icon_name` from ((((((`sys_permission` `p` join `sys_role_permission` `rp` on((`p`.`permission_id` = `rp`.`permission_id`))) join `sys_role` `r` on((`r`.`role_id` = `rp`.`role_id`))) join `sys_menu` `m` on((`p`.`resource_id` = `m`.`menu_id`))) join `sys_resource_type` `t` on((`p`.`resource_type_id` = `t`.`resource_type_id`))) left join `sys_route` `rt` on((`m`.`route_id` = `rt`.`route_id`))) join `sys_icon` on((`m`.`icon_id` = `sys_icon`.`icon_id`))) where (`p`.`resource_type_id` = 2);
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `role_menu_view` AS select `p`.`permission_id` AS `permission_id`,`p`.`parent_id` AS `parent_id`,`p`.`permission_code` AS `permission_code`,`p`.`permission_remark` AS `permission_remark`,`m`.`menu_id` AS `menu_id`,`m`.`menu_name` AS `menu_name`,`m`.`menu_order` AS `menu_order`,`m`.`icon_id` AS `icon_id`,`r`.`role_id` AS `role_id`,`r`.`role_name` AS `role_name`,`r`.`role_code` AS `role_code`,`r`.`role_description` AS `role_description`,`t`.`resource_type_name` AS `resource_type_name`,`t`.`resource_type_code` AS `resource_type_code`,`t`.`resource_type_id` AS `resource_type_id`,`rt`.`route_title` AS `route_title`,`rt`.`route_name` AS `route_name`,`rt`.`route_path` AS `route_path`,`rt`.`route_full_path` AS `route_full_path`,`rt`.`component_name` AS `component_name`,`rt`.`component_path` AS `component_path`,`rt`.`route_alias` AS `route_alias`,`rt`.`require_auth` AS `require_auth`,`rt`.`route_id` AS `route_id`,`sys_icon`.`icon_name` AS `icon_name` from ((((((`sys_permission` `p` join `sys_role_permission` `rp` on((`p`.`permission_id` = `rp`.`permission_id`))) join `sys_role` `r` on((`r`.`role_id` = `rp`.`role_id`))) join `sys_menu` `m` on((`p`.`resource_id` = `m`.`menu_id`))) join `sys_resource_type` `t` on((`p`.`resource_type_id` = `t`.`resource_type_id`))) left join `sys_route` `rt` on((`m`.`route_id` = `rt`.`route_id`))) left join `sys_icon` on((`m`.`icon_id` = `sys_icon`.`icon_id`))) where (`p`.`resource_type_id` = 2);
 
 -- ----------------------------
 -- View structure for role_operation_view
