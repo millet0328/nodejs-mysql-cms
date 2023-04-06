@@ -342,7 +342,7 @@ router.post('/route', async (req, res) => {
         // 设置成功
         res.json({
             status: true,
-            msg: "设置成功"
+            msg: "路由权限设置成功！"
         });
     } catch (error) {
         await connection.rollback();
@@ -371,7 +371,7 @@ router.post('/route', async (req, res) => {
 router.post('/menu', async (req, res) => {
     let { role_id, permissions: insert_permissions } = req.body;
     // 获取已存在的权限id
-    const select_permission_sql = 'SELECT p.* FROM `sys_role_permission` rp JOIN `sys_permission` p ON rp.permission_id = p.permission_id WHERE rp.role_id = ? AND p.resource_type_id = 2 OR p.resource_type_id = 3';
+    const select_permission_sql = 'SELECT p.* FROM `sys_role_permission` rp JOIN `sys_permission` p ON rp.permission_id = p.permission_id WHERE rp.role_id = ? AND p.resource_type_id IN (2,3)';
     let [exist_permissions] = await pool.query(select_permission_sql, [role_id]);
     exist_permissions = exist_permissions.map((item) => item.permission_id);
     // exist_permissions 数组中有这些id，而 insert_permissions 数组中没有这些id，筛选出来这部分id，将会删除它们
@@ -416,7 +416,7 @@ router.post('/menu', async (req, res) => {
         // 设置成功
         res.json({
             status: true,
-            msg: "设置成功"
+            msg: "菜单/操作按钮权限设置成功！"
         });
     } catch (error) {
         await connection.rollback();

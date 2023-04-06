@@ -11,7 +11,7 @@
  Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 04/04/2023 18:38:58
+ Date: 06/04/2023 14:11:47
 */
 
 SET NAMES utf8mb4;
@@ -579,9 +579,9 @@ INSERT INTO `sys_menu` VALUES (1, '信息面板', 24, '2000', 139);
 INSERT INTO `sys_menu` VALUES (2, '文章管理', 1, '3000', 172);
 INSERT INTO `sys_menu` VALUES (3, '发布文章', 2, '3001', 121);
 INSERT INTO `sys_menu` VALUES (4, '文章列表', 3, '3002', 120);
-INSERT INTO `sys_menu` VALUES (5, '标签管理', 6, '3003', 171);
-INSERT INTO `sys_menu` VALUES (6, '评论管理', 8, '3004', 188);
-INSERT INTO `sys_menu` VALUES (7, '分类管理', 10, '4000', 140);
+INSERT INTO `sys_menu` VALUES (5, '标签管理', 5, '3003', 171);
+INSERT INTO `sys_menu` VALUES (6, '评论管理', 6, '3004', 188);
+INSERT INTO `sys_menu` VALUES (7, '分类管理', 7, '4000', 140);
 INSERT INTO `sys_menu` VALUES (8, '公告管理', 11, '5000', 138);
 INSERT INTO `sys_menu` VALUES (9, '发布公告', 13, '5001', 106);
 INSERT INTO `sys_menu` VALUES (10, '公告列表', 12, '5002', 140);
@@ -660,16 +660,16 @@ CREATE TABLE `sys_permission`  (
 -- ----------------------------
 -- Records of sys_permission
 -- ----------------------------
-INSERT INTO `sys_permission` VALUES (1, 0, 1, 1, 'article', '文章');
-INSERT INTO `sys_permission` VALUES (2, 1, 2, 1, 'article:release', '发布文章');
-INSERT INTO `sys_permission` VALUES (3, 1, 3, 1, 'article:list', '文章列表');
-INSERT INTO `sys_permission` VALUES (4, 1, 4, 1, 'article:edit', '编辑文章');
-INSERT INTO `sys_permission` VALUES (5, 0, 5, 1, NULL, '标签');
-INSERT INTO `sys_permission` VALUES (6, 5, 6, 1, '/tag/list', '标签列表');
-INSERT INTO `sys_permission` VALUES (7, 0, 7, 1, NULL, '评论');
-INSERT INTO `sys_permission` VALUES (8, 7, 8, 1, '/comment/list', '评论列表');
-INSERT INTO `sys_permission` VALUES (9, 0, 9, 1, NULL, '分类');
-INSERT INTO `sys_permission` VALUES (10, 9, 10, 1, '/category/list', '文章分类');
+INSERT INTO `sys_permission` VALUES (1, 0, 1, 1, '/article', '文章');
+INSERT INTO `sys_permission` VALUES (2, 1, 2, 1, '/article/release', '发布文章');
+INSERT INTO `sys_permission` VALUES (3, 1, 3, 1, '/article:list', '文章列表');
+INSERT INTO `sys_permission` VALUES (4, 1, 4, 1, '/article:edit', '编辑文章');
+INSERT INTO `sys_permission` VALUES (5, 1, 5, 1, '/article/tag', '标签管理');
+INSERT INTO `sys_permission` VALUES (6, 1, 6, 1, '/article/comment', '评论列表');
+INSERT INTO `sys_permission` VALUES (7, 1, 7, 1, '/article/category', '文章分类');
+INSERT INTO `sys_permission` VALUES (8, 0, 8, 1, 'Temp', 'Temp');
+INSERT INTO `sys_permission` VALUES (9, 0, 9, 1, 'Temp', 'Temp');
+INSERT INTO `sys_permission` VALUES (10, 0, 10, 1, 'Temp', 'Temp');
 INSERT INTO `sys_permission` VALUES (11, 0, 11, 1, NULL, '公告');
 INSERT INTO `sys_permission` VALUES (12, 11, 12, 1, '/notice/list', '公告列表');
 INSERT INTO `sys_permission` VALUES (13, 11, 13, 1, '/notice/release', '发布公告');
@@ -697,7 +697,7 @@ INSERT INTO `sys_permission` VALUES (34, 33, 3, 2, 'article:release', '发布文
 INSERT INTO `sys_permission` VALUES (35, 33, 4, 2, 'article:list', '文章列表');
 INSERT INTO `sys_permission` VALUES (36, 33, 5, 2, 'article:tag', '标签管理');
 INSERT INTO `sys_permission` VALUES (37, 33, 6, 2, 'article:comment', '评论管理');
-INSERT INTO `sys_permission` VALUES (38, 33, 7, 2, 'category:list', '分类管理');
+INSERT INTO `sys_permission` VALUES (38, 33, 7, 2, 'article:category', '分类管理');
 INSERT INTO `sys_permission` VALUES (39, 0, 8, 2, 'notice', '公告管理');
 INSERT INTO `sys_permission` VALUES (40, 39, 9, 2, 'notice:release', '发布公告');
 INSERT INTO `sys_permission` VALUES (41, 39, 10, 2, 'notice:list', '公告列表');
@@ -757,7 +757,7 @@ INSERT INTO `sys_permission` VALUES (94, 53, 2, 3, 'system:menu:edit', '编辑�
 INSERT INTO `sys_permission` VALUES (95, 53, 1, 3, 'system:menu:create', '创建菜单/操作按钮');
 INSERT INTO `sys_permission` VALUES (96, 53, 7, 3, 'system:menu:setting', '设置菜单图标');
 INSERT INTO `sys_permission` VALUES (97, 53, 3, 3, 'system:menu:remove', '删除菜单/操作按钮');
-INSERT INTO `sys_permission` VALUES (98, 25, 32, 1, '/system/role/edit', '配置角色权限');
+INSERT INTO `sys_permission` VALUES (98, 25, 32, 1, '/system/role/:role_id', '配置角色权限');
 
 -- ----------------------------
 -- Table structure for sys_resource_type
@@ -809,7 +809,7 @@ CREATE TABLE `sys_role_permission`  (
   `role_id` int NOT NULL COMMENT '	角色id',
   `permission_id` int NOT NULL COMMENT '权限id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 104 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色-权限中间表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 226 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色-权限中间表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role_permission
@@ -917,6 +917,127 @@ INSERT INTO `sys_role_permission` VALUES (100, 1, 95);
 INSERT INTO `sys_role_permission` VALUES (101, 1, 96);
 INSERT INTO `sys_role_permission` VALUES (102, 1, 97);
 INSERT INTO `sys_role_permission` VALUES (103, 1, 98);
+INSERT INTO `sys_role_permission` VALUES (104, 2, 6);
+INSERT INTO `sys_role_permission` VALUES (105, 2, 7);
+INSERT INTO `sys_role_permission` VALUES (106, 2, 11);
+INSERT INTO `sys_role_permission` VALUES (107, 2, 12);
+INSERT INTO `sys_role_permission` VALUES (108, 2, 13);
+INSERT INTO `sys_role_permission` VALUES (109, 2, 14);
+INSERT INTO `sys_role_permission` VALUES (110, 2, 15);
+INSERT INTO `sys_role_permission` VALUES (111, 2, 16);
+INSERT INTO `sys_role_permission` VALUES (112, 2, 17);
+INSERT INTO `sys_role_permission` VALUES (113, 2, 18);
+INSERT INTO `sys_role_permission` VALUES (114, 2, 19);
+INSERT INTO `sys_role_permission` VALUES (116, 2, 21);
+INSERT INTO `sys_role_permission` VALUES (117, 2, 22);
+INSERT INTO `sys_role_permission` VALUES (118, 2, 23);
+INSERT INTO `sys_role_permission` VALUES (119, 2, 24);
+INSERT INTO `sys_role_permission` VALUES (120, 2, 32);
+INSERT INTO `sys_role_permission` VALUES (121, 2, 33);
+INSERT INTO `sys_role_permission` VALUES (122, 2, 34);
+INSERT INTO `sys_role_permission` VALUES (123, 2, 35);
+INSERT INTO `sys_role_permission` VALUES (124, 2, 55);
+INSERT INTO `sys_role_permission` VALUES (125, 2, 56);
+INSERT INTO `sys_role_permission` VALUES (126, 2, 57);
+INSERT INTO `sys_role_permission` VALUES (127, 2, 58);
+INSERT INTO `sys_role_permission` VALUES (128, 2, 36);
+INSERT INTO `sys_role_permission` VALUES (129, 2, 59);
+INSERT INTO `sys_role_permission` VALUES (130, 2, 60);
+INSERT INTO `sys_role_permission` VALUES (131, 2, 61);
+INSERT INTO `sys_role_permission` VALUES (132, 2, 37);
+INSERT INTO `sys_role_permission` VALUES (133, 2, 62);
+INSERT INTO `sys_role_permission` VALUES (134, 2, 63);
+INSERT INTO `sys_role_permission` VALUES (135, 2, 38);
+INSERT INTO `sys_role_permission` VALUES (136, 2, 64);
+INSERT INTO `sys_role_permission` VALUES (137, 2, 65);
+INSERT INTO `sys_role_permission` VALUES (138, 2, 66);
+INSERT INTO `sys_role_permission` VALUES (139, 2, 39);
+INSERT INTO `sys_role_permission` VALUES (140, 2, 40);
+INSERT INTO `sys_role_permission` VALUES (141, 2, 41);
+INSERT INTO `sys_role_permission` VALUES (142, 2, 67);
+INSERT INTO `sys_role_permission` VALUES (143, 2, 68);
+INSERT INTO `sys_role_permission` VALUES (144, 2, 69);
+INSERT INTO `sys_role_permission` VALUES (145, 2, 42);
+INSERT INTO `sys_role_permission` VALUES (146, 2, 43);
+INSERT INTO `sys_role_permission` VALUES (147, 2, 70);
+INSERT INTO `sys_role_permission` VALUES (148, 2, 71);
+INSERT INTO `sys_role_permission` VALUES (149, 2, 44);
+INSERT INTO `sys_role_permission` VALUES (150, 2, 45);
+INSERT INTO `sys_role_permission` VALUES (151, 2, 72);
+INSERT INTO `sys_role_permission` VALUES (152, 2, 73);
+INSERT INTO `sys_role_permission` VALUES (153, 2, 74);
+INSERT INTO `sys_role_permission` VALUES (154, 2, 75);
+INSERT INTO `sys_role_permission` VALUES (155, 2, 46);
+INSERT INTO `sys_role_permission` VALUES (156, 2, 76);
+INSERT INTO `sys_role_permission` VALUES (157, 2, 77);
+INSERT INTO `sys_role_permission` VALUES (158, 2, 78);
+INSERT INTO `sys_role_permission` VALUES (159, 2, 79);
+INSERT INTO `sys_role_permission` VALUES (160, 2, 47);
+INSERT INTO `sys_role_permission` VALUES (161, 2, 48);
+INSERT INTO `sys_role_permission` VALUES (162, 3, 1);
+INSERT INTO `sys_role_permission` VALUES (163, 3, 2);
+INSERT INTO `sys_role_permission` VALUES (164, 3, 3);
+INSERT INTO `sys_role_permission` VALUES (165, 3, 4);
+INSERT INTO `sys_role_permission` VALUES (166, 3, 5);
+INSERT INTO `sys_role_permission` VALUES (167, 3, 6);
+INSERT INTO `sys_role_permission` VALUES (168, 3, 7);
+INSERT INTO `sys_role_permission` VALUES (169, 3, 11);
+INSERT INTO `sys_role_permission` VALUES (170, 3, 12);
+INSERT INTO `sys_role_permission` VALUES (171, 3, 13);
+INSERT INTO `sys_role_permission` VALUES (172, 3, 14);
+INSERT INTO `sys_role_permission` VALUES (173, 3, 17);
+INSERT INTO `sys_role_permission` VALUES (174, 3, 18);
+INSERT INTO `sys_role_permission` VALUES (175, 3, 21);
+INSERT INTO `sys_role_permission` VALUES (176, 3, 22);
+INSERT INTO `sys_role_permission` VALUES (177, 3, 23);
+INSERT INTO `sys_role_permission` VALUES (178, 3, 24);
+INSERT INTO `sys_role_permission` VALUES (179, 3, 32);
+INSERT INTO `sys_role_permission` VALUES (180, 3, 34);
+INSERT INTO `sys_role_permission` VALUES (181, 3, 55);
+INSERT INTO `sys_role_permission` VALUES (182, 3, 57);
+INSERT INTO `sys_role_permission` VALUES (183, 3, 58);
+INSERT INTO `sys_role_permission` VALUES (184, 3, 36);
+INSERT INTO `sys_role_permission` VALUES (185, 3, 59);
+INSERT INTO `sys_role_permission` VALUES (186, 3, 60);
+INSERT INTO `sys_role_permission` VALUES (187, 3, 61);
+INSERT INTO `sys_role_permission` VALUES (188, 3, 37);
+INSERT INTO `sys_role_permission` VALUES (189, 3, 62);
+INSERT INTO `sys_role_permission` VALUES (190, 3, 63);
+INSERT INTO `sys_role_permission` VALUES (191, 3, 38);
+INSERT INTO `sys_role_permission` VALUES (192, 3, 64);
+INSERT INTO `sys_role_permission` VALUES (193, 3, 65);
+INSERT INTO `sys_role_permission` VALUES (194, 3, 66);
+INSERT INTO `sys_role_permission` VALUES (195, 3, 39);
+INSERT INTO `sys_role_permission` VALUES (196, 3, 40);
+INSERT INTO `sys_role_permission` VALUES (197, 3, 41);
+INSERT INTO `sys_role_permission` VALUES (198, 3, 67);
+INSERT INTO `sys_role_permission` VALUES (199, 3, 68);
+INSERT INTO `sys_role_permission` VALUES (200, 3, 69);
+INSERT INTO `sys_role_permission` VALUES (201, 3, 45);
+INSERT INTO `sys_role_permission` VALUES (202, 3, 72);
+INSERT INTO `sys_role_permission` VALUES (203, 3, 73);
+INSERT INTO `sys_role_permission` VALUES (204, 3, 74);
+INSERT INTO `sys_role_permission` VALUES (205, 3, 75);
+INSERT INTO `sys_role_permission` VALUES (206, 3, 47);
+INSERT INTO `sys_role_permission` VALUES (207, 3, 48);
+INSERT INTO `sys_role_permission` VALUES (208, 3, 33);
+INSERT INTO `sys_role_permission` VALUES (209, 3, 35);
+INSERT INTO `sys_role_permission` VALUES (210, 3, 44);
+INSERT INTO `sys_role_permission` VALUES (211, 4, 17);
+INSERT INTO `sys_role_permission` VALUES (212, 4, 18);
+INSERT INTO `sys_role_permission` VALUES (213, 4, 21);
+INSERT INTO `sys_role_permission` VALUES (214, 4, 22);
+INSERT INTO `sys_role_permission` VALUES (215, 4, 23);
+INSERT INTO `sys_role_permission` VALUES (216, 4, 24);
+INSERT INTO `sys_role_permission` VALUES (217, 4, 32);
+INSERT INTO `sys_role_permission` VALUES (218, 4, 45);
+INSERT INTO `sys_role_permission` VALUES (219, 4, 72);
+INSERT INTO `sys_role_permission` VALUES (220, 4, 73);
+INSERT INTO `sys_role_permission` VALUES (221, 4, 74);
+INSERT INTO `sys_role_permission` VALUES (222, 4, 75);
+INSERT INTO `sys_role_permission` VALUES (223, 4, 47);
+INSERT INTO `sys_role_permission` VALUES (224, 4, 48);
+INSERT INTO `sys_role_permission` VALUES (225, 4, 44);
 
 -- ----------------------------
 -- Table structure for sys_route
@@ -942,12 +1063,12 @@ INSERT INTO `sys_route` VALUES (1, NULL, 'Article', '/article', '/article', 'Lay
 INSERT INTO `sys_route` VALUES (2, NULL, 'ArticleRelease', 'release', '/article/release', 'Release', '@/views/Article/Release.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (3, NULL, 'ArticleList', 'list', '/article/list', 'List', '@/views/Article/List.vue', '\'\'', 1);
 INSERT INTO `sys_route` VALUES (4, NULL, 'ArticleEdit', 'edit/:id', '/article/edit', 'Edit', '@/views/Article/Edit.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (5, NULL, 'Tag', '/tag', '/tag', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (6, NULL, 'TagList', 'list', '/tag/list', 'List', '@/views/Tag/List.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (7, NULL, 'Comment', '/comment', '/comment', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (8, NULL, 'CommentList', 'list', '/comment/list', 'List', '@/views/Comment/List.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (9, NULL, 'Category', '/category', '/category', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (10, NULL, 'CategoryList', 'list', '/category/list', 'List', '@/views/Category/List.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (5, NULL, 'ArticleTag', 'tag', '/article/tag', 'Tag', '@/views/Article/Tag.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (6, NULL, 'ArticleComment', 'comment', '/article/comment', 'Comment', '@/views/Article/Comment.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (7, NULL, 'ArticleCategory', 'category', '/article/category', 'Category', '@/views/Article/Category.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (8, NULL, 'Temp', 'Temp', 'Temp', 'Temp', '@/views/Temp.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (9, NULL, 'Temp', 'Temp', 'Temp', 'Temp', '@/views/Temp.vue', NULL, 1);
+INSERT INTO `sys_route` VALUES (10, NULL, 'Temp', 'Temp', 'Temp', 'Temp', '@/views/Temp.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (11, NULL, 'Notice', '/notice', '/notice', 'Layout', '@/components/Layout.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (12, NULL, 'NoticeList', 'list', '/notice/list', 'List', '@/views/Notice/List.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (13, NULL, 'NoticeRelease', 'release', '/notice/release', 'Release', '@/views/Notice/Release.vue', NULL, 1);
@@ -969,7 +1090,7 @@ INSERT INTO `sys_route` VALUES (28, NULL, 'AuthOperation', 'operation', '/system
 INSERT INTO `sys_route` VALUES (29, NULL, 'AuthRoute', 'route', '/system/route', 'Route', '@/views/Auth/Route.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (30, NULL, 'AuthMenu', 'menu', '/system/menu', 'Menu', '@/views/Auth/Menu.vue', NULL, 1);
 INSERT INTO `sys_route` VALUES (31, NULL, 'AuthRole', 'role', '/system/role', 'Role', '@/views/Role/List.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (32, '配置角色权限', 'AuthRoleEdit', 'role/edit/:role_id', '/system/role/edit', 'Edit', '@/views/Role/Edit.vue', '', 1);
+INSERT INTO `sys_route` VALUES (32, '配置角色权限', 'AuthRoleEdit', 'role/:role_id', '/system/role/:role_id', 'Edit', '@/views/Role/Edit.vue', '', 1);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -997,8 +1118,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '123', 'papi酱', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 0, 'f325e5bb-7230-4c32-ba8f-d13d526e309e', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY4MDYwMzM1NiwiZXhwIjoxNjgzMTk1MzU2LCJqdGkiOiJmMzI1ZTViYi03MjMwLTRjMzItYmE4Zi1kMTNkNTI2ZTMwOWUifQ.wEPPdtoKWb7P0tN-xniuKqHD6RWtIHBNRYUa6_MI5L0', '2020-01-11 10:31:49', '2023-04-04 18:15:56');
-INSERT INTO `sys_user` VALUES (2, 'moz', '123', '夏目友人帐', '孙红雷', '女', '13475829262', '715623617@qq.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 1, NULL, NULL, '2022-10-11 10:31:59', '2022-10-20 12:12:53');
+INSERT INTO `sys_user` VALUES (1, 'admin', '123', 'papi酱', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 0, '6c10bcb1-fd15-48b9-a006-764a4906752d', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY4MDc2MTExNSwiZXhwIjoxNjgzMzUzMTE1LCJqdGkiOiI2YzEwYmNiMS1mZDE1LTQ4YjktYTAwNi03NjRhNDkwNjc1MmQifQ.KMaeE5YkRb-EXcR48QVy_xqMD0Dh9ZxukQsi6jlTkZY', '2020-01-11 10:31:49', '2023-04-06 14:05:15');
+INSERT INTO `sys_user` VALUES (2, 'moz', '123', '夏目友人帐', '孙红雷', '女', '13475829262', '715623617@qq.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 1, 'e6c11e9a-e213-4b11-a18d-319f9ed251dc', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY4MDc2MTA3MiwiZXhwIjoxNjgzMzUzMDcyLCJqdGkiOiJlNmMxMWU5YS1lMjEzLTRiMTEtYTE4ZC0zMTlmOWVkMjUxZGMifQ.pEmJnokz68R8iAIhRx9gxnw8YaNiuLD_FEnIflkiFts', '2022-10-11 10:31:59', '2023-04-06 14:04:32');
 INSERT INTO `sys_user` VALUES (3, 'orz', '123', '乌鸦校尉', '鹿晗', '男', '13485956526', 'love@163.com', 'http://localhost:3001/images/avatar/default.jpg', -2, 1, NULL, NULL, '2022-10-11 10:32:02', '2022-10-20 12:12:54');
 INSERT INTO `sys_user` VALUES (4, 'god', '123', '咸鱼', '黄渤', '男', '13475829262', 'godisgreed@126.com', 'http://localhost:3001/images/avatar/default.jpg', -1, 1, NULL, '', '2022-10-10 10:54:56', '2023-04-03 17:12:24');
 

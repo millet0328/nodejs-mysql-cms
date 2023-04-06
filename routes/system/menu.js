@@ -16,8 +16,8 @@ let pool = require('../../config/mysql');
  *
  * @apiUse Authorization
  *
- * @apiBody {String} menu_name 菜单名称.
- * @apiBody {Number} [route_id=null] 关联路由id，无关联路由则为null.
+ * @apiBody {String} menu_name 菜单名称。
+ * @apiBody {Number} route_id 关联路由id。
  * @apiBody {String} menu_order 菜单显示顺序，按照数字从小到大排序，如2001，3002。
  * @apiBody {Number} parent_id 父级菜单权限的 permission_id，一级菜单的 parent_id = 0。
  * @apiBody {String} permission_code 权限代码，例如：link:edit。
@@ -159,7 +159,7 @@ router.delete("/:menu_id", async (req, res) => {
  *
  * @apiParam {Number} menu_id 菜单id.
  * @apiBody {String} menu_name 菜单名称.
- * @apiBody {Number} [route_id] 关联路由id.
+ * @apiBody {Number} route_id 关联路由id.
  * @apiBody {String} menu_order 菜单显示顺序，按照数字从小到大排序，如2001，3002。
  * @apiBody {Number} parent_id 父级菜单权限的 permission_id，一级菜单的 parent_id = 0。
  * @apiBody {Number} permission_id 权限id。
