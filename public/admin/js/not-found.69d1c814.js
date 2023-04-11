@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunkvue_cms_admin"]=self["webpackChunkvue_cms_admin"]||[]).push([[942],{9765:function(e,t,n){n.r(t),n.d(t,{default:function(){return a}});var s=function(){var e=this,t=e._self._c;return t("el-empty",{attrs:{description:"404：抱歉，您来到了一片荒无人烟的沙漠！","image-size":200}},[t("el-link",{attrs:{href:"#/",underline:!1}},[t("el-button",{attrs:{type:"success"}},[e._v("返回")])],1)],1)},u=[],r={name:"NotFonud"},c=r,i=n(1001),l=(0,i.Z)(c,s,u,!1,null,"4552c186",null),a=l.exports}}]);
-//# sourceMappingURL=not-found.69d1c814.js.map

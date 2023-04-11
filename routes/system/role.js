@@ -223,7 +223,7 @@ router.get('/route/', async (req, res) => {
 });
 
 /**
- * @api {get} /role/menu/ 根据角色id，获取菜单权限
+ * @api {get} /role/menu/ 根据角色id，获取菜单权限 + 操作权限
  * @apiName RoleMenu
  * @apiGroup Role
  * @apiPermission 后台系统
@@ -232,17 +232,26 @@ router.get('/route/', async (req, res) => {
  *
  * @apiQuery {Number} role_id 角色id.
  * @apiQuery { String="flat","tree" } [type="flat"] 返回数据格式。flat--扁平数组；tree--树形结构
+ * @apiQuery { Number=0,2,3 } [resource_type=0] 资源类型。0 -- 菜单+操作按钮；2 -- 菜单；3 -- 操作按钮
  *
  * @apiSampleRequest /role/menu/
  */
 router.get('/menu/', async (req, res) => {
-    let { role_id, type = 'flat' } = req.query;
+    let { role_id, type = 'flat', resource_type = 0 } = req.query;
+    let menus = [];
+    let operations = [];
     // 查询 menu 菜单
-    let select_menu_sql = 'SELECT * FROM `role_menu_view` WHERE role_id = ? ORDER BY menu_order';
-    let [menus] = await pool.query(select_menu_sql, [role_id]);
+    if (resource_type == 2 || resource_type == 0) {
+        let select_menu_sql = 'SELECT * FROM `role_menu_view` WHERE role_id = ? ORDER BY menu_order';
+        let [results] = await pool.query(select_menu_sql, [role_id]);
+        menus = results;
+    }
     // 查询 operation 操作按钮
-    let select_operation_sql = 'SELECT * FROM `role_operation_view` WHERE role_id = ?';
-    let [operations] = await pool.query(select_operation_sql, [role_id]);
+    if (resource_type == 3 || resource_type == 0) {
+        let select_operation_sql = 'SELECT * FROM `role_operation_view` WHERE role_id = ?';
+        let [results] = await pool.query(select_operation_sql, [role_id]);
+        operations = results;
+    }
     // 将两部分合并成一个数组
     let all_menu = [...menus, ...operations];
     // 扁平数组
@@ -279,6 +288,8 @@ router.get('/menu/', async (req, res) => {
         });
     }
 });
+
+// TODO 根据角色id，获取操作按钮权限
 
 /**
  * @api {post} /role/route 配置角色--路由权限
