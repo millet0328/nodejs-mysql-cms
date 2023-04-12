@@ -11,7 +11,7 @@
  Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 11/04/2023 09:08:50
+ Date: 12/04/2023 09:09:36
 */
 
 SET NAMES utf8mb4;
@@ -259,7 +259,7 @@ CREATE TABLE `sys_element`  (
   `element_id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `element_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '页面元素编码',
   PRIMARY KEY (`element_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '页面元素表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '页面元素表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_element
@@ -609,7 +609,7 @@ CREATE TABLE `sys_module`  (
   `module_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '模块代码',
   `module_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '模块描述',
   PRIMARY KEY (`module_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '模块表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '模块表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_module
@@ -1109,6 +1109,8 @@ CREATE TABLE `sys_route`  (
   `route_full_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '路由完整路径',
   `component_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '组件名称',
   `component_path` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '组件路径',
+  `route_params` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '组件params传参',
+  `route_props` tinyint NULL DEFAULT 0 COMMENT '组件props属性',
   `route_alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '路由别名',
   `require_auth` tinyint NULL DEFAULT NULL COMMENT '是否需要登录认证，需要：1，不需要：0',
   PRIMARY KEY (`route_id`) USING BTREE
@@ -1117,38 +1119,38 @@ CREATE TABLE `sys_route`  (
 -- ----------------------------
 -- Records of sys_route
 -- ----------------------------
-INSERT INTO `sys_route` VALUES (1, NULL, 'Article', '/article', '/article', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (2, NULL, 'ArticleRelease', 'release', '/article/release', 'Release', '@/views/Article/Release.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (3, NULL, 'ArticleList', 'list', '/article/list', 'List', '@/views/Article/List.vue', '\'\'', 1);
-INSERT INTO `sys_route` VALUES (4, NULL, 'ArticleEdit', 'edit/:id', '/article/edit', 'Edit', '@/views/Article/Edit.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (5, NULL, 'ArticleTag', 'tag', '/article/tag', 'Tag', '@/views/Article/Tag.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (6, NULL, 'ArticleComment', 'comment', '/article/comment', 'Comment', '@/views/Article/Comment.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (7, NULL, 'ArticleCategory', 'category', '/article/category', 'Category', '@/views/Article/Category.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (8, NULL, 'Temp', 'Temp', 'Temp', 'Temp', '@/views/Temp.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (9, NULL, 'Temp', 'Temp', 'Temp', 'Temp', '@/views/Temp.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (10, NULL, 'Temp', 'Temp', 'Temp', 'Temp', '@/views/Temp.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (11, NULL, 'Notice', '/notice', '/notice', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (12, NULL, 'NoticeList', 'list', '/notice/list', 'List', '@/views/Notice/List.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (13, NULL, 'NoticeRelease', 'release', '/notice/release', 'Release', '@/views/Notice/Release.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (14, NULL, 'NoticeEdit', 'edit/:id', '/notice/edit', 'Edit', '@/views/Notice/Edit.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (15, NULL, 'User', '/user', '/user', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (16, NULL, 'UserList', 'list', '/user/list', 'List', '@/views/User/List.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (17, NULL, 'Promotion', '/promotion', '/promotion', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (18, NULL, 'PromotionSlide', 'slide', '/promotion/slide', 'Slide', '@/views/Promotion/Slide.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (19, NULL, 'PromotionLink', 'link', '/promotion/link', 'List', '@/views/Promotion/Link.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (20, NULL, 'Temp', 'temp', '/promotion/temp', 'Temp', '@/views/Promotion/Temp.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (21, NULL, 'Account', '/account', '/account', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (22, NULL, 'AccountInfo', 'info', '/account/info', 'Info', '@/views/Account/Info.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (23, NULL, 'AccountEdit', 'edit', '/account/edit', 'Edit', '@/views/Account/Edit.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (24, NULL, 'AccountBoard', 'board', '/account/board', 'Board', '@/views/Account/Board.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (25, NULL, 'System', '/system', '/system', 'Layout', '@/components/Layout.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (26, NULL, 'AdminList', 'admin/list', '/system/admin/list', 'List', '@/views/Admin/List.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (27, NULL, 'AdminEdit', 'admin/edit/:id', '/system/admin/edit', 'Edit', '@/views/Admin/Edit.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (28, '操作按钮', 'AuthOperation', 'operation', '/system/operation', 'Operation', '@/views/Auth/Operation.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (29, NULL, 'AuthRoute', 'route', '/system/route', 'Route', '@/views/Auth/Route.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (30, NULL, 'AuthMenu', 'menu', '/system/menu', 'Menu', '@/views/Auth/Menu.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (31, NULL, 'AuthRole', 'role', '/system/role', 'Role', '@/views/Role/List.vue', NULL, 1);
-INSERT INTO `sys_route` VALUES (32, '配置角色权限', 'AuthRoleEdit', 'role/:role_id', '/system/role/:role_id', 'Edit', '@/views/Role/Edit.vue', '', 1);
+INSERT INTO `sys_route` VALUES (1, '文章管理', 'Article', '/article', '/article', 'Layout', '@/components/Layout.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (2, '发布文章', 'ArticleRelease', 'release', '/article/release', 'Release', '/Article/Release.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (3, '文章列表', 'ArticleList', 'list', '/article/list', 'List', '/Article/List.vue', NULL, 0, '\'\'', 1);
+INSERT INTO `sys_route` VALUES (4, '编辑文章', 'ArticleEdit', 'edit/:article_id', '/article/edit', 'Edit', '/Article/Edit.vue', 'article_id', 1, NULL, 1);
+INSERT INTO `sys_route` VALUES (5, '标签管理', 'ArticleTag', 'tag', '/article/tag', 'Tag', '/Article/Tag.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (6, '评论管理', 'ArticleComment', 'comment', '/article/comment', 'Comment', '/Article/Comment.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (7, '文章分类', 'ArticleCategory', 'category', '/article/category', 'Category', '/Article/Category.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (8, NULL, 'Temp1', '/temp', '/temp', 'Temp', '/Temp.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (9, NULL, 'Temp2', '/temp', '/temp', 'Temp', '/Temp.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (10, NULL, 'Temp3', '/temp', '/temp', 'Temp', '/Temp.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (11, '公告管理', 'Notice', '/notice', '/notice', 'Layout', '@/components/Layout.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (12, '公告列表', 'NoticeList', 'list', '/notice/list', 'List', '/Notice/List.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (13, '发布公告', 'NoticeRelease', 'release', '/notice/release', 'Release', '/Notice/Release.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (14, '编辑公告', 'NoticeEdit', 'edit/:notice_id', '/notice/edit', 'Edit', '/Notice/Edit.vue', 'notice_id', 1, NULL, 1);
+INSERT INTO `sys_route` VALUES (15, '普通用户', 'User', '/user', '/user', 'Layout', '@/components/Layout.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (16, '用户管理', 'UserList', 'list', '/user/list', 'List', '/User/List.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (17, '推广管理', 'Promotion', '/promotion', '/promotion', 'Layout', '@/components/Layout.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (18, '轮播图管理', 'PromotionSlide', 'slide', '/promotion/slide', 'Slide', '/Promotion/Slide.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (19, '友情链接', 'PromotionLink', 'link', '/promotion/link', 'List', '/Promotion/Link.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (20, NULL, 'Temp4', '/temp', '/promotion/temp', 'Temp', '/Promotion/Temp.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (21, '账户管理', 'Account', '/account', '/account', 'Layout', '@/components/Layout.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (22, '账户信息', 'AccountInfo', 'info', '/account/info', 'Info', '/Account/Info.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (23, '账户编辑', 'AccountEdit', 'edit/:account_id', '/account/edit', 'Edit', '/Account/Edit.vue', 'account_id', 1, NULL, 1);
+INSERT INTO `sys_route` VALUES (24, '信息面板', 'AccountBoard', 'board', '/account/board', 'Board', '/Account/Board.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (25, '系统管理', 'System', '/system', '/system', 'Layout', '@/components/Layout.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (26, '管理员管理', 'AdminList', 'admin/list', '/system/admin/list', 'List', '/Admin/List.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (27, '管理员编辑', 'AdminEdit', 'admin/edit/:user_id', '/system/admin/edit', 'Edit', '/Admin/Edit.vue', 'user_id', 1, NULL, 1);
+INSERT INTO `sys_route` VALUES (28, '操作按钮', 'AuthOperation', 'operation', '/system/operation', 'Operation', '/Auth/Operation.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (29, '路由管理', 'AuthRoute', 'route', '/system/route', 'Route', '/Auth/Route.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (30, '菜单管理', 'AuthMenu', 'menu', '/system/menu', 'Menu', '/Auth/Menu.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (31, '角色管理', 'AuthRole', 'role', '/system/role', 'Role', '/Role/List.vue', NULL, 0, NULL, 1);
+INSERT INTO `sys_route` VALUES (32, '角色权限', 'AuthRoleSetting', 'role/:role_id', '/system/role/', 'Setting', '/Role/Setting.vue', 'role_id', 1, '', 1);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -1176,8 +1178,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '123', 'papi酱', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 0, 'a772afed-dff7-4fe5-9333-0cda733b191b', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY4MTE0NzYwNywiZXhwIjoxNjgzNzM5NjA3LCJqdGkiOiJhNzcyYWZlZC1kZmY3LTRmZTUtOTMzMy0wY2RhNzMzYjE5MWIifQ.7Y3wETum7zTzioefjL2LwrT5GPxUWsxBOZnwB1Mgsd4', '2020-01-11 10:31:49', '2023-04-11 01:26:47');
-INSERT INTO `sys_user` VALUES (2, 'moz', '123', '夏目友人帐', '孙红雷', '女', '13475829262', '715623617@qq.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 1, 'e772bfb4-85d8-4abd-9b94-500df8677106', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY4MTE0NTY5NCwiZXhwIjoxNjgzNzM3Njk0LCJqdGkiOiJlNzcyYmZiNC04NWQ4LTRhYmQtOWI5NC01MDBkZjg2NzcxMDYifQ.UMwVitI4lhk1OsBmERx_BMlLbpqC3TTKVxRkoQv9wVs', '2022-10-11 10:31:59', '2023-04-11 00:54:54');
+INSERT INTO `sys_user` VALUES (1, 'admin', '123', 'papi酱', '黄小米', '女', '15863008280', 'nn880328@126.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 0, '99ea853a-4ed2-4f25-9f1c-c8758949b31b', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY4MTIxMjA3OCwiZXhwIjoxNjgzODA0MDc4LCJqdGkiOiI5OWVhODUzYS00ZWQyLTRmMjUtOWYxYy1jODc1ODk0OWIzMWIifQ.fFjYrMC9cDW1qKqaTIPz0MwmpVMm7TV7pM9cWLTdJ2U', '2020-01-11 10:31:49', '2023-04-11 19:21:18');
+INSERT INTO `sys_user` VALUES (2, 'moz', '123', '夏目友人帐', '孙红雷', '女', '13475829262', '715623617@qq.com', 'http://localhost:3001/images/avatar/default.jpg', 1, 1, '75d94ddb-e7ec-4ab4-8944-d4bbe779d7de', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY4MTIxMTY2NywiZXhwIjoxNjgzODAzNjY3LCJqdGkiOiI3NWQ5NGRkYi1lN2VjLTRhYjQtODk0NC1kNGJiZTc3OWQ3ZGUifQ.5ciExcyHFxybGkZKDhFtdzBf2Pc1AWe4hYxvOzPgVJA', '2022-10-11 10:31:59', '2023-04-11 19:14:27');
 INSERT INTO `sys_user` VALUES (3, 'orz', '123', '乌鸦校尉', '鹿晗', '男', '13485956526', 'love@163.com', 'http://localhost:3001/images/avatar/default.jpg', -2, 1, NULL, NULL, '2022-10-11 10:32:02', '2022-10-20 12:12:54');
 INSERT INTO `sys_user` VALUES (4, 'god', '123', '咸鱼', '黄渤', '男', '13475829262', 'godisgreed@126.com', 'http://localhost:3001/images/avatar/default.jpg', -1, 1, NULL, '', '2022-10-10 10:54:56', '2023-04-03 17:12:24');
 
@@ -1190,7 +1192,7 @@ CREATE TABLE `sys_user_group`  (
   `group_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户组名称',
   `parent_id` int NOT NULL COMMENT '父级id',
   PRIMARY KEY (`group_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户组表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户组表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user_group
@@ -1205,7 +1207,7 @@ CREATE TABLE `sys_user_group_role`  (
   `group_id` int NOT NULL COMMENT '用户组id',
   `role_id` int NOT NULL COMMENT '角色id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户组-角色中间表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户组-角色中间表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user_group_role
@@ -1220,7 +1222,7 @@ CREATE TABLE `sys_user_group_user`  (
   `group_id` int NOT NULL COMMENT '用户组id',
   `user_id` int NOT NULL COMMENT '用户id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户组-用户中间表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户组-用户中间表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user_group_user
